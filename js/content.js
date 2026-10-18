@@ -16,7 +16,7 @@ export const portfolioContent = {
     typewriterRoles: [
       "Robotics & Autonomous Systems",
       "AI / Machine Learning Engineer",
-      "National Hackathon Finalist",
+      "SIH Round 1 Selected",
       "Former IEEE Student Chairman"
     ],
     email: "abhijaysingh2006@gmail.com",
@@ -32,14 +32,14 @@ export const portfolioContent = {
     
     // Minimal, aesthetically pleasing first-person summary
     about: 
-      "I am an undergraduate specializing in Robotics and Artificial Intelligence at VTU Muddenahalli. My work bridges physical hardware systems and modern machine learning — from sensor-driven robotics to real-time predictive models. Having competed in national hackathons with ISRO and the Ministry of Education, and served as IEEE Student Chairman, I focus on building reliable, clean, and impactful software architectures."
+      "I am an undergraduate specializing in Robotics and Artificial Intelligence at VTU Muddenahalli. My work bridges physical hardware systems and modern machine learning — from sensor-driven robotics to real-time predictive models. Having cleared Round 1 (Internal College Hackathon) of Smart India Hackathon to get selected, competed in hackathons with ISRO, and served as IEEE Student Chairman, I focus on building reliable, clean, and impactful software architectures."
   },
 
   // --- Verified Numeric Counters ---
   stats: [
     { label: "Public Repositories", value: "Auto-synced", id: "stat-repos" },
     { label: "Hackathons Completed", value: "3" },
-    { label: "National Finalist", value: "2" },
+    { label: "SIH Internal Round", value: "Selected" },
     { label: "IEEE Student Chairman", value: "1 Year" },
     { label: "Academic Tenure", value: "2024 – 2028" }
   ],
@@ -71,11 +71,11 @@ export const portfolioContent = {
   // --- Hackathon Track Record ---
   hackathons: [
     {
-      title: "Smart India Hackathon (SIH) 2026",
-      level: "National Level",
-      organization: "Ministry of Education / AICTE",
-      summary: "High-intensity engineering marathon developing a real-world software prototype for government challenges.",
-      description: "Led problem analysis, architectural prototyping, and iterative presentation under rigorous national evaluation criteria."
+      title: "Smart India Hackathon (SIH)",
+      level: "Internal Round — Selected",
+      organization: "VTU Muddenahalli / Ministry of Education",
+      summary: "Competed in the internal college hackathon, cleared Round 1, and earned official nomination/selection.",
+      description: "Spearheaded problem evaluation, architectural prototyping, and defense under competitive college evaluation criteria to secure selection."
     },
     {
       title: "Bharatiya Antariksh Hackathon 2026",

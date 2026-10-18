@@ -15,7 +15,7 @@ A minimalist, high-performance static developer portfolio built with clean **Van
    - High-legibility typography using *Inter* and *JetBrains Mono*.
 3. **Verified Information & Integrity**:
    - Zero invented metrics or placeholder statistics.
-   - Features Smart India Hackathon (SIH) 2026, ISRO Bharatiya Antariksh Hackathon 2026, and SJCIT Anviya Hackathon.
+   - Features Smart India Hackathon (SIH internal round selected), ISRO Bharatiya Antariksh Hackathon, and SJCIT Anviya Hackathon.
    - Highlights 1-year tenure as IEEE Student Chairman at VTU Muddenahalli.
    - Direct WhatsApp connect link (`https://wa.me/917004793221`) without raw phone numbers in the text body.
    - Direct links to your GitHub profile: [`https://github.com/abhijaysingh2006-tech`](https://github.com/abhijaysingh2006-tech).
