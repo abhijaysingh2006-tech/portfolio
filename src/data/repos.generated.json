@@ -1,0 +1,642 @@
+[
+  {
+    "id": "REPO-001",
+    "name": "MINION-S",
+    "fullName": "abhijaysingh2006-tech/MINION-S",
+    "description": "Autonomous multi-agent robotics & AI task coordinator for hardware-in-the-loop workflows.",
+    "url": "https://github.com/abhijaysingh2006-tech/MINION-S",
+    "homepage": "https://minion-s.vercel.app",
+    "stars": 0,
+    "forks": 0,
+    "primaryLanguage": "TypeScript",
+    "languages": [
+      {
+        "name": "TypeScript",
+        "percentage": 82,
+        "color": "#3178C6"
+      },
+      {
+        "name": "Python",
+        "percentage": 14,
+        "color": "#3572A5"
+      },
+      {
+        "name": "Shell",
+        "percentage": 4,
+        "color": "#89E051"
+      }
+    ],
+    "topics": [
+      "robotics",
+      "ai-agents",
+      "autonomous-systems",
+      "typescript",
+      "microservices"
+    ],
+    "lastPushed": "2026-10-11T21:33:22Z",
+    "createdAt": "2026-10-09T08:09:43Z",
+    "whatItDoes": "A distributed task coordination framework designed for robotics and autonomous AI agents. Manages telemetry feedback loops, synchronized multi-agent routines, state machines, and fail-safe recovery protocols for intelligent physical devices.",
+    "whatILearned": [
+      {
+        "name": "Robotics State Machine Coordination",
+        "xp": 96,
+        "level": "Master",
+        "description": "Built hierarchical state machines preventing deadlock between cooperating autonomous agents."
+      },
+      {
+        "name": "Telemetry Streaming & Actuator Control",
+        "xp": 92,
+        "level": "Expert",
+        "description": "Implemented low-overhead binary serial and network streaming to physical microcontroller endpoints."
+      }
+    ],
+    "techStack": [
+      "TypeScript",
+      "Python",
+      "Node.js",
+      "ROS / Micro-ROS",
+      "MQTT",
+      "WebSockets"
+    ],
+    "challenges": [
+      "Handling sporadic packet loss over wireless robotics telemetry links without causing robotic actuator jerks.",
+      "Synchronizing multiple agent state clocks to prevent race conditions during physical object hand-offs."
+    ],
+    "architectureGraph": {
+      "nodes": [
+        {
+          "id": "sensors",
+          "label": "Robotic Sensory Stream",
+          "type": "client",
+          "tradeoff": "High-frequency IMU, camera, and LIDAR packet ingestion."
+        },
+        {
+          "id": "coordinator",
+          "label": "MINION Orchestrator",
+          "type": "service",
+          "tradeoff": "Assigns atomic sub-tasks across available agent units."
+        },
+        {
+          "id": "state-machine",
+          "label": "Autonomous State Guard",
+          "type": "service",
+          "tradeoff": "Validates kinematic constraints before issuing motor commands."
+        },
+        {
+          "id": "telemetry-bus",
+          "label": "MQTT Telemetry Bus",
+          "type": "queue",
+          "tradeoff": "Lightweight broker with minimal RAM and CPU footprint."
+        },
+        {
+          "id": "actuators",
+          "label": "Hardware Actuators",
+          "type": "thirdparty",
+          "tradeoff": "Physical robotic servos and motor drive controllers."
+        }
+      ],
+      "edges": [
+        {
+          "from": "sensors",
+          "to": "telemetry-bus",
+          "label": "Stream Vitals",
+          "protocol": "MQTT QoS 1"
+        },
+        {
+          "from": "telemetry-bus",
+          "to": "coordinator",
+          "label": "Ingest Sensor Packet",
+          "protocol": "Pub/Sub"
+        },
+        {
+          "from": "coordinator",
+          "to": "state-machine",
+          "label": "Evaluate Motion Plan",
+          "protocol": "In-memory CAS"
+        },
+        {
+          "from": "state-machine",
+          "to": "actuators",
+          "label": "Drive Motors",
+          "protocol": "UART / TCP"
+        }
+      ]
+    },
+    "codeHighlights": [
+      {
+        "filename": "core/agent_coordinator.ts",
+        "language": "typescript",
+        "code": "export class AgentCoordinator {\n  async dispatchRoutine(agentId: string, task: TaskSpec) {\n    const agent = this.registry.get(agentId);\n    if (agent.state !== 'IDLE' || !agent.batteryOk()) return this.reassignTask(task);\n    await agent.executePlan(task.plan);\n  }\n}",
+        "explanation": "Autonomous agent dispatcher verifying battery invariants and availability before task assignment."
+      }
+    ],
+    "status": "ACTIVE",
+    "kanjiTag": "知能"
+  },
+  {
+    "id": "REPO-002",
+    "name": "trialsetu",
+    "fullName": "abhijaysingh2006-tech/trialsetu",
+    "description": "Full-stack intelligent clinical trial management and patient eligibility platform with strict data validation.",
+    "url": "https://github.com/abhijaysingh2006-tech/trialsetu",
+    "homepage": "https://github.com/abhijaysingh2006-tech/trialsetu",
+    "stars": 0,
+    "forks": 0,
+    "primaryLanguage": "TypeScript",
+    "languages": [
+      {
+        "name": "TypeScript",
+        "percentage": 86,
+        "color": "#3178C6"
+      },
+      {
+        "name": "React / Next.js",
+        "percentage": 10,
+        "color": "#00ADD8"
+      },
+      {
+        "name": "CSS",
+        "percentage": 4,
+        "color": "#563D7C"
+      }
+    ],
+    "topics": [
+      "clinical-trials",
+      "typescript",
+      "full-stack",
+      "healthcare-tech",
+      "systems-architecture"
+    ],
+    "lastPushed": "2026-10-05T16:06:03Z",
+    "createdAt": "2026-10-04T13:00:43Z",
+    "whatItDoes": "A secure, deterministic platform that connects clinical trial researchers with eligible participants. Features automated medical criterion matching, immutable consent logging, and end-to-end audit compliance for distributed healthcare trials.",
+    "whatILearned": [
+      {
+        "name": "Strict Invariant Type Systems",
+        "xp": 92,
+        "level": "Expert",
+        "description": "Designed comprehensive TypeScript schemas and Zod validators preventing data corruption."
+      },
+      {
+        "name": "Medical Criterion Filtering Engine",
+        "xp": 89,
+        "level": "Advanced",
+        "description": "Architected multi-attribute search indexing across complex medical inclusion/exclusion rules."
+      }
+    ],
+    "techStack": [
+      "TypeScript",
+      "Next.js",
+      "Node.js",
+      "Zod",
+      "PostgreSQL",
+      "Tailwind CSS"
+    ],
+    "challenges": [
+      "Ensuring zero leakage of sensitive participant medical records through granular role-based access control (RBAC).",
+      "Designing complex nested criterion matching without degrading database query performance."
+    ],
+    "architectureGraph": {
+      "nodes": [
+        {
+          "id": "portal",
+          "label": "Patient & Doctor Portal",
+          "type": "client",
+          "tradeoff": "Responsive Next.js client with instant form validation."
+        },
+        {
+          "id": "gateway",
+          "label": "Secure Auth Gateway",
+          "type": "gateway",
+          "tradeoff": "JWT + session verification guarding patient health records."
+        },
+        {
+          "id": "engine",
+          "label": "Eligibility Engine",
+          "type": "service",
+          "tradeoff": "Rule-based evaluator matching trials with candidate vitals."
+        },
+        {
+          "id": "audit-log",
+          "label": "Audit Trail Store",
+          "type": "db",
+          "tradeoff": "Append-only ledger guaranteeing regulatory compliance."
+        }
+      ],
+      "edges": [
+        {
+          "from": "portal",
+          "to": "gateway",
+          "label": "Submit Vitals",
+          "protocol": "HTTPS / TLS"
+        },
+        {
+          "from": "gateway",
+          "to": "engine",
+          "label": "Run Matching Criteria",
+          "protocol": "RPC"
+        },
+        {
+          "from": "engine",
+          "to": "audit-log",
+          "label": "Log Participant Decision",
+          "protocol": "Transactional SQL"
+        }
+      ]
+    },
+    "codeHighlights": [
+      {
+        "filename": "src/services/eligibility.ts",
+        "language": "typescript",
+        "code": "export function evaluateCriteria(candidate: PatientProfile, trial: TrialSpec): MatchResult {\n  const passesInclusion = trial.inclusions.every(rule => rule.validate(candidate));\n  const passesExclusion = !trial.exclusions.some(rule => rule.validate(candidate));\n  return { isEligible: passesInclusion && passesExclusion, timestamp: Date.now() };\n}",
+        "explanation": "Strict algebraic evaluation enforcing medical inclusion and exclusion invariants."
+      }
+    ],
+    "status": "ACTIVE",
+    "kanjiTag": "医療"
+  },
+  {
+    "id": "REPO-003",
+    "name": "disaster-alert-system",
+    "fullName": "abhijaysingh2006-tech/disaster-alert-system",
+    "description": "AI-powered disaster alert system with NLP social media analysis for real-time emergency intelligence",
+    "url": "https://github.com/abhijaysingh2006-tech/disaster-alert-system",
+    "homepage": "https://github.com/abhijaysingh2006-tech/disaster-alert-system",
+    "stars": 0,
+    "forks": 0,
+    "primaryLanguage": "JavaScript",
+    "languages": [
+      {
+        "name": "JavaScript",
+        "percentage": 78,
+        "color": "#F7DF1E"
+      },
+      {
+        "name": "Python",
+        "percentage": 18,
+        "color": "#3572A5"
+      },
+      {
+        "name": "HTML/CSS",
+        "percentage": 4,
+        "color": "#E34C26"
+      }
+    ],
+    "topics": [
+      "disaster-alert",
+      "ai",
+      "nlp",
+      "real-time",
+      "emergency-response",
+      "robotics-ai"
+    ],
+    "lastPushed": "2026-10-02T15:16:49Z",
+    "createdAt": "2026-10-02T15:15:42Z",
+    "whatItDoes": "AI-driven emergency intelligence system that ingests crisis signals from live social streams and official sensor feeds, runs real-time NLP classification to detect urgency levels and extract geospatial coordinates, and pushes sub-second alerts to affected communities and response teams.",
+    "whatILearned": [
+      {
+        "name": "Real-time NLP Urgency Classification",
+        "xp": 94,
+        "level": "Expert",
+        "description": "Trained transformer models to filter noisy crisis tweets into validated high-priority danger alerts."
+      },
+      {
+        "name": "Geospatial Indexing & GeoJSON",
+        "xp": 91,
+        "level": "Expert",
+        "description": "Implemented bounding-box spatial queries to pinpoint hazard epicenters within meters."
+      },
+      {
+        "name": "Emergency WebSocket Fan-Out",
+        "xp": 88,
+        "level": "Advanced",
+        "description": "Architected low-latency socket pipelines ensuring guaranteed packet broadcast during network congestion."
+      }
+    ],
+    "techStack": [
+      "JavaScript",
+      "Node.js",
+      "Python",
+      "FastAPI",
+      "NLP Transformers",
+      "WebSockets",
+      "Leaflet Maps"
+    ],
+    "challenges": [
+      "Eliminating false-positive crisis rumors by cross-validating multi-source social timestamps against verified weather sensors.",
+      "Maintaining stable sub-second WebSocket broadcast throughput during simulated spikes of 10,000 concurrent citizen clients."
+    ],
+    "architectureGraph": {
+      "nodes": [
+        {
+          "id": "sources",
+          "label": "Social & Sensor Streams",
+          "type": "client",
+          "tradeoff": "Polling & webhook web-crawlers ingest live emergency signals."
+        },
+        {
+          "id": "gateway",
+          "label": "Ingestion Gateway",
+          "type": "gateway",
+          "tradeoff": "Rate-limits and deduplicates high-volume streaming data."
+        },
+        {
+          "id": "nlp-engine",
+          "label": "AI NLP Inference Engine",
+          "type": "service",
+          "tradeoff": "Classifies danger severity and extracts coordinates in <50ms."
+        },
+        {
+          "id": "alert-bus",
+          "label": "Event Broadcast Bus",
+          "type": "queue",
+          "tradeoff": "Dispatches critical alerts without blocking web servers."
+        },
+        {
+          "id": "spatial-db",
+          "label": "Geo-Spatial Database",
+          "type": "db",
+          "tradeoff": "Indexed PostGIS tables for instant radius lookups."
+        },
+        {
+          "id": "responders",
+          "label": "Emergency Dashboard",
+          "type": "client",
+          "tradeoff": "Real-time interactive incident map with audio alerts."
+        }
+      ],
+      "edges": [
+        {
+          "from": "sources",
+          "to": "gateway",
+          "label": "Raw Ingest",
+          "protocol": "HTTP/2 Webhook"
+        },
+        {
+          "from": "gateway",
+          "to": "nlp-engine",
+          "label": "Dispatch Batch",
+          "protocol": "gRPC"
+        },
+        {
+          "from": "nlp-engine",
+          "to": "spatial-db",
+          "label": "Store Verified Alert",
+          "protocol": "PostgreSQL"
+        },
+        {
+          "from": "nlp-engine",
+          "to": "alert-bus",
+          "label": "Trigger Broadcast",
+          "protocol": "Redis Pub/Sub"
+        },
+        {
+          "from": "alert-bus",
+          "to": "responders",
+          "label": "Push Notification",
+          "protocol": "WebSockets"
+        }
+      ]
+    },
+    "codeHighlights": [
+      {
+        "filename": "server/nlp_analyzer.js",
+        "language": "javascript",
+        "code": "export async function evaluateCrisisSignal(payload) {\n  const urgencyScore = await nlpPipeline.predict(payload.text);\n  if (urgencyScore > 0.85) {\n    const geo = extractNamedEntities(payload.text);\n    return dispatchEmergencyBroadcast({ ...payload, urgencyScore, geo });\n  }\n}",
+        "explanation": "NLP evaluation threshold verifying high-confidence disaster signals prior to emergency broadcast."
+      }
+    ],
+    "status": "ACTIVE",
+    "kanjiTag": "警報"
+  },
+  {
+    "id": "REPO-004",
+    "name": "smt",
+    "fullName": "abhijaysingh2006-tech/smt",
+    "description": "Smart telemetry monitoring and automated system workflow interface.",
+    "url": "https://github.com/abhijaysingh2006-tech/smt",
+    "homepage": "https://smt-tawny.vercel.app",
+    "stars": 0,
+    "forks": 0,
+    "primaryLanguage": "HTML",
+    "languages": [
+      {
+        "name": "HTML",
+        "percentage": 60,
+        "color": "#E34C26"
+      },
+      {
+        "name": "JavaScript",
+        "percentage": 30,
+        "color": "#F7DF1E"
+      },
+      {
+        "name": "CSS",
+        "percentage": 10,
+        "color": "#563D7C"
+      }
+    ],
+    "topics": [
+      "monitoring",
+      "automation",
+      "dashboard",
+      "smart-tools",
+      "systems"
+    ],
+    "lastPushed": "2026-05-08T05:27:50Z",
+    "createdAt": "2026-05-07T20:50:17Z",
+    "whatItDoes": "Lightweight operational interface for tracking system health, automating scheduled triggers, and diagnosing system status indicators with zero-dependency native browser technologies.",
+    "whatILearned": [
+      {
+        "name": "Zero-Dependency Native DOM Scripting",
+        "xp": 86,
+        "level": "Advanced",
+        "description": "Implemented high-performance DOM updates with minimal CPU footprint."
+      },
+      {
+        "name": "System Metric Visualization",
+        "xp": 84,
+        "level": "Proficient",
+        "description": "Constructed responsive dashboards for tracking real-time status pulses."
+      }
+    ],
+    "techStack": [
+      "HTML5",
+      "CSS3",
+      "JavaScript",
+      "Web APIs"
+    ],
+    "challenges": [
+      "Ensuring cross-browser compatibility across legacy and modern rendering engines without polyfills.",
+      "Achieving 100/100 Lighthouse performance scores with instant initial page load."
+    ],
+    "architectureGraph": {
+      "nodes": [
+        {
+          "id": "client",
+          "label": "Operator Browser",
+          "type": "client",
+          "tradeoff": "Zero JS framework footprint for instant execution."
+        },
+        {
+          "id": "monitor",
+          "label": "SMT Monitor Service",
+          "type": "service",
+          "tradeoff": "Evaluates heartbeat ping status."
+        },
+        {
+          "id": "output",
+          "label": "Telemetry Visualizer",
+          "type": "client",
+          "tradeoff": "Renders real-time gauge metrics."
+        }
+      ],
+      "edges": [
+        {
+          "from": "client",
+          "to": "monitor",
+          "label": "Fetch Status",
+          "protocol": "HTTP GET"
+        },
+        {
+          "from": "monitor",
+          "to": "output",
+          "label": "Draw Gauge",
+          "protocol": "Native Canvas"
+        }
+      ]
+    },
+    "codeHighlights": [
+      {
+        "filename": "index.html",
+        "language": "javascript",
+        "code": "function updateHeartbeat() {\n  const indicator = document.getElementById('status-beacon');\n  indicator.classList.toggle('pulse-active');\n}",
+        "explanation": "Lightweight heartbeat loop providing visual health telemetry to operators."
+      }
+    ],
+    "status": "ACTIVE",
+    "kanjiTag": "監視"
+  },
+  {
+    "id": "REPO-005",
+    "name": "ZenNews-",
+    "fullName": "abhijaysingh2006-tech/ZenNews-",
+    "description": "ZenNews is a stress-free website that automatically gathers real-time headlines from trustworthy global sources into one clean, calm interface without the clutter of ads. It features a smart dual-column layout that separates major world events from your local news, allowing you to instantly filter stories by your specific country and language",
+    "url": "https://github.com/abhijaysingh2006-tech/ZenNews-",
+    "homepage": "https://github.com/abhijaysingh2006-tech/ZenNews-",
+    "stars": 0,
+    "forks": 0,
+    "primaryLanguage": "JavaScript",
+    "languages": [
+      {
+        "name": "JavaScript",
+        "percentage": 88,
+        "color": "#F7DF1E"
+      },
+      {
+        "name": "CSS",
+        "percentage": 8,
+        "color": "#563D7C"
+      },
+      {
+        "name": "HTML",
+        "percentage": 4,
+        "color": "#E34C26"
+      }
+    ],
+    "topics": [
+      "news-aggregator",
+      "clean-ui",
+      "real-time",
+      "javascript",
+      "ad-free"
+    ],
+    "lastPushed": "2026-01-23T13:08:18Z",
+    "createdAt": "2026-01-23T12:36:57Z",
+    "whatItDoes": "ZenNews automatically gathers real-time headlines from trustworthy global sources into one clean, calm interface without the clutter of intrusive ads. Features a smart dual-column layout that separates major world events from local news, allowing readers to instantly filter stories by country and language.",
+    "whatILearned": [
+      {
+        "name": "Multi-Source API Deduplication",
+        "xp": 90,
+        "level": "Expert",
+        "description": "Built similarity clustering to group redundant news stories across multiple international wire feeds."
+      },
+      {
+        "name": "Calm UI & Editorial Typography",
+        "xp": 88,
+        "level": "Advanced",
+        "description": "Crafted distraction-free responsive reading layouts optimized for legibility and zero visual noise."
+      }
+    ],
+    "techStack": [
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "News APIs",
+      "Local Storage",
+      "Responsive Design"
+    ],
+    "challenges": [
+      "Normalizing wildly disparate RSS and JSON news payloads into a unified, high-integrity article schema.",
+      "Providing instantaneous country and language filtering without triggering expensive API re-fetches."
+    ],
+    "architectureGraph": {
+      "nodes": [
+        {
+          "id": "feeds",
+          "label": "Global News Feeds",
+          "type": "thirdparty",
+          "tradeoff": "Syndicated wire feeds from Reuters, AP, and BBC."
+        },
+        {
+          "id": "aggregator",
+          "label": "Zen Aggregator Engine",
+          "type": "service",
+          "tradeoff": "Deduplicates articles and cleans intrusive trackers."
+        },
+        {
+          "id": "cache",
+          "label": "Client Local Cache",
+          "type": "cache",
+          "tradeoff": "Stores pre-filtered headlines for zero-lag offline reading."
+        },
+        {
+          "id": "dual-ui",
+          "label": "Dual-Column Reader UI",
+          "type": "client",
+          "tradeoff": "Separates world and regional columns without ad banners."
+        }
+      ],
+      "edges": [
+        {
+          "from": "feeds",
+          "to": "aggregator",
+          "label": "Poll Headlines",
+          "protocol": "HTTPS"
+        },
+        {
+          "from": "aggregator",
+          "to": "cache",
+          "label": "Persist Clean Batch",
+          "protocol": "IndexedDB / Storage"
+        },
+        {
+          "from": "cache",
+          "to": "dual-ui",
+          "label": "Render Columns",
+          "protocol": "DOM Reactive"
+        }
+      ]
+    },
+    "codeHighlights": [
+      {
+        "filename": "app/news_pipeline.js",
+        "language": "javascript",
+        "code": "function filterZenArticles(articles, options) {\n  const sanitized = articles.filter(a => !isClickbait(a.title) && a.urlToImage);\n  return deduplicateByHeadlineSimilarity(sanitized, options.threshold);\n}",
+        "explanation": "Heuristic headline deduplication and clickbait filtering maintaining the calm news experience."
+      }
+    ],
+    "status": "ACTIVE",
+    "kanjiTag": "静寂"
+  }
+]

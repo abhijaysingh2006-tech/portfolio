@@ -1,0 +1,23 @@
+name: Auto-Sync Portfolio on New Repo / Commit
+
+on:
+  repository_dispatch:
+  push:
+    branches:
+      - main
+      - master
+  schedule:
+    # Auto-check every 6 hours as a backup cron
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Portfolio Webhook to Re-sync Repos
+        run: |
+          echo "Pinging Portfolio Webhook for @abhijaysingh2006-tech..."
+          curl -X POST "${{ secrets.PORTFOLIO_URL || 'https://systems-portfolio.vercel.app' }}/api/github-webhook" \
+            -H "Content-Type: application/json" \
+            -d '{"action": "sync", "sender": "github-actions"}' || true

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhijay Singh — Robotics & AI Systems</title>
+  
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="Portfolio of Abhijay Singh — Robotics & Artificial Intelligence undergraduate, National Hackathon Finalist, and former IEEE Student Chairman." />
+  <meta name="theme-color" content="#09090b" />
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js WebGL Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Clean Monochrome Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Subtle grid texture -->
+  <div class="page-grid-overlay"></div>
+
+  <!-- Minimalist Fixed Header -->
+  <header id="navbar" class="nav-header">
+    <div class="container nav-wrapper">
+      <a href="#" class="nav-brand">
+        <span class="nav-brand-dot"></span>
+        <span>abhijay.singh</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li class="nav-item"><a href="#about">About</a></li>
+          <li class="nav-item"><a href="#projects">Repositories</a></li>
+          <li class="nav-item"><a href="#skills">Skills</a></li>
+          <li class="nav-item"><a href="#hackathons">Hackathons</a></li>
+          <li class="nav-item"><a href="#leadership">Leadership</a></li>
+          <li class="nav-item"><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <!-- Theme Switcher -->
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle monochrome theme">
+          <i id="theme-icon" data-lucide="moon" style="width: 17px; height: 17px;"></i>
+        </button>
+
+        <!-- Direct GitHub Profile -->
+        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-outline github-profile-link" style="padding: 6px 12px; font-size: 0.82rem;">
+          <i data-lucide="github" style="width: 15px; height: 15px;"></i>
+          <span>GitHub</span>
+        </a>
+
+        <!-- Let's Talk CTA -->
+        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-solid whatsapp-link" style="padding: 6px 14px; font-size: 0.82rem;">
+          <span>Get in touch</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section with Interactive 3D WebGL Spatial Core -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-grid-wrapper">
+        <!-- Left Editorial Column -->
+        <div class="hero-content-col">
+          <div class="hero-meta-badge">
+            <span class="hero-pulse-dot"></span>
+            <span id="hero-institution">Robotics & AI — VTU Muddenahalli</span>
+          </div>
+
+          <h1 class="hero-title" id="hero-name">Abhijay Singh</h1>
+
+          <div class="typewriter-line">
+            <span>&gt; </span>
+            <span id="typewriter-text"></span>
+            <span class="cursor-blink"></span>
+          </div>
+
+          <p class="hero-description" id="hero-tagline">
+            Building resilient autonomous systems, machine learning pipelines, and real-world engineering solutions.
+          </p>
+
+          <!-- Verified Track Record Highlights -->
+          <div class="hero-highlights-strip">
+            <span class="hero-highlight-pill">
+              <i data-lucide="award" style="width: 13px; height: 13px;"></i>
+              <span>SIH 2026 National Finalist</span>
+            </span>
+            <span class="hero-highlight-pill">
+              <i data-lucide="compass" style="width: 13px; height: 13px;"></i>
+              <span>ISRO Antariksh Hackathon</span>
+            </span>
+            <span class="hero-highlight-pill">
+              <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
+              <span>Former IEEE Chairman</span>
+            </span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-solid github-profile-link">
+              <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+              <span>GitHub Profile</span>
+            </a>
+
+            <a href="#projects" class="btn btn-outline">
+              <i data-lucide="folder-git-2" style="width: 16px; height: 16px;"></i>
+              <span>Explore Projects</span>
+            </a>
+
+            <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-outline whatsapp-link">
+              <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+              <span>WhatsApp</span>
+            </a>
+
+            <a id="hero-resume-btn" href="assets/resume.pdf" class="btn btn-outline" download>
+              <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+              <span>Résumé</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right 3D WebGL Spatial Core Viewport -->
+        <div class="hero-webgl-col">
+          <div class="webgl-frame">
+            <div class="webgl-frame-header">
+              <div class="webgl-header-left">
+                <span class="webgl-status-dot"></span>
+                <span class="webgl-title">FIG. 01 // SPATIAL ROBOTICS CORE</span>
+              </div>
+              <span class="webgl-badge">WEBGL 2.0</span>
+            </div>
+
+            <!-- Three.js Canvas Mount -->
+            <div id="webgl-hero-container" class="webgl-canvas-container" title="Drag to inspect 3D core"></div>
+
+            <div class="webgl-frame-footer">
+              <div class="webgl-hint">
+                <i data-lucide="orbit" style="width: 13px; height: 13px;"></i>
+                <span>Interactive · Move cursor or drag to tilt</span>
+              </div>
+              <span class="webgl-fps-pill">60 FPS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verified Stats Strip -->
+    <section class="stats-strip">
+      <div class="container">
+        <div class="stats-grid" id="stats-grid">
+          <!-- Rendered dynamically by main.js from content.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-label">01 // Overview</div>
+        <h2 class="section-heading">Background & Objective</h2>
+        <p class="section-subtext" id="about-bio-text" style="max-width: 780px; font-size: 1.05rem; line-height: 1.75;">
+          <!-- Rendered dynamically from content.js -->
+        </p>
+      </div>
+    </section>
+
+    <!-- AUTOMATED GITHUB REPOSITORIES SECTION -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="projects-header-bar">
+          <div>
+            <div class="section-label">02 // Open Source Repositories</div>
+            <h2 class="section-heading">GitHub Projects</h2>
+          </div>
+          <div class="live-sync-indicator">
+            <span class="live-sync-dot"></span>
+            <span id="sync-status-text">Auto-syncing from GitHub</span>
+          </div>
+        </div>
+        <p class="section-subtext">
+          Directly synced from <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: var(--text-main); font-weight: 600; text-decoration: underline;">@abhijaysingh2006-tech</a>. Every new public repository you publish appears here automatically.
+        </p>
+
+        <!-- Dynamic Grid populated via GitHub API -->
+        <div class="projects-grid" id="projects-grid">
+          <!-- Populated by main.js fetchAndRenderGitHubProjects -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-label">03 // Capabilities</div>
+        <h2 class="section-heading">Skills & Technical Domains</h2>
+        <p class="section-subtext">Technologies, programming languages, and tooling verified through practical execution.</p>
+
+        <div class="skills-grid-clean" id="skills-grid">
+          <!-- Rendered dynamically from content.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Hackathons Section -->
+    <section class="section" id="hackathons">
+      <div class="container">
+        <div class="section-label">04 // Competitive Sprints</div>
+        <h2 class="section-heading">Hackathon Track Record</h2>
+        <p class="section-subtext">Intensive prototyping under strict deadlines with national-level real-world evaluation.</p>
+
+        <div class="editorial-cards-grid" id="hackathons-grid">
+          <!-- Rendered dynamically from content.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Leadership Section -->
+    <section class="section" id="leadership">
+      <div class="container">
+        <div class="section-label">05 // Student Governance</div>
+        <h2 class="section-heading">Leadership Experience</h2>
+        <p class="section-subtext">Organizational leadership, stakeholder coordination, and mentoring.</p>
+
+        <div id="leadership-container">
+          <!-- Rendered dynamically from content.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Education Section -->
+    <section class="section" id="education">
+      <div class="container">
+        <div class="section-label">06 // Academics</div>
+        <h2 class="section-heading">Education</h2>
+
+        <div class="editorial-cards-grid" id="education-grid">
+          <!-- Rendered dynamically from content.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Block -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-block">
+          <h2>Initiate Collaboration</h2>
+          <p>
+            Seeking internship and entry-level engineering roles in Robotics, Embedded AI, and Machine Learning.
+          </p>
+          <div class="contact-actions">
+            <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-solid whatsapp-link">
+              <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+              <span>WhatsApp Chat</span>
+            </a>
+
+            <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-outline github-profile-link">
+              <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+              <span>GitHub Profile</span>
+            </a>
+
+            <a id="contact-email-btn" href="mailto:abhijaysingh2006@gmail.com" class="btn btn-outline">
+              <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
+              <span>Email Directly</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Clean Editorial Footer -->
+  <footer class="footer-clean">
+    <div class="container footer-row">
+      <div>
+        © 2026 Abhijay Singh. Robotics & AI Undergraduate · VTU Muddenahalli
+      </div>
+      <div>
+        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">
+          github.com/abhijaysingh2006-tech
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
