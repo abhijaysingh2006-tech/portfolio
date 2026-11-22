@@ -5,6 +5,7 @@
 
 import { portfolioContent } from './content.js';
 import { initWebGLCore } from './webgl-core.js';
+import { initShootingStars } from './shooting-stars.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Render all structured profile information
@@ -21,12 +22,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Initialize Interactive 3D WebGL Spatial Reactor
   initWebGLCore();
 
-  // 4. UI Interactions
+  // 4. Initialize Animated Shooting Stars & Night Sky
+  initShootingStars();
+
+  // 5. UI Interactions
   initThemeToggle();
   initTypewriter();
   initScrollNav();
 
-  // 5. Initialize Icons
+  // 6. Initialize Icons
   if (window.lucide) {
     window.lucide.createIcons();
   }
@@ -261,7 +265,7 @@ function renderEducation() {
 // --- Interactive UI ---
 function initThemeToggle() {
   const toggleBtn = document.getElementById('theme-toggle');
-  const savedTheme = localStorage.getItem('site_theme') || 'light';
+  const savedTheme = localStorage.getItem('site_theme') || 'dark';
 
   document.documentElement.setAttribute('data-theme', savedTheme);
   updateThemeIcon(savedTheme);

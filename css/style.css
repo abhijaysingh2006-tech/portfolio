@@ -896,3 +896,182 @@ body {
   }
 }
 
+/* =============================================================================
+   NIGHT SKY & ANIMATED SHOOTING STARS
+   ============================================================================= */
+
+.night-sky-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 80% 15%, #0f1c3f 0%, #090e1e 40%, #04060c 80%, #020306 100%);
+  transition: opacity var(--transition-smooth);
+}
+
+[data-theme="dark"] body {
+  background-color: transparent;
+}
+
+[data-theme="light"] .night-sky-container {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Twinkling background stars */
+.twinkling-stars-1,
+.twinkling-stars-2,
+.twinkling-stars-3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.twinkling-stars-1 {
+  width: 1px;
+  height: 1px;
+  background: #ffffff;
+  box-shadow:
+    3vw 7vh #ffffff, 8vw 15vh #7dd3fc, 14vw 4vh #ffffff, 19vw 22vh #93c5fd,
+    25vw 11vh #ffffff, 31vw 28vh #e0f2fe, 36vw 8vh #7dd3fc, 42vw 18vh #ffffff,
+    48vw 5vh #93c5fd, 54vw 24vh #ffffff, 61vw 12vh #e0f2fe, 67vw 29vh #7dd3fc,
+    73vw 9vh #ffffff, 79vw 21vh #93c5fd, 84vw 6vh #ffffff, 91vw 17vh #e0f2fe,
+    96vw 25vh #7dd3fc, 5vw 37vh #ffffff, 12vw 45vh #93c5fd, 18vw 33vh #e0f2fe,
+    24vw 52vh #ffffff, 30vw 41vh #7dd3fc, 38vw 58vh #ffffff, 45vw 47vh #93c5fd,
+    51vw 63vh #e0f2fe, 58vw 39vh #ffffff, 65vw 55vh #7dd3fc, 71vw 43vh #ffffff,
+    78vw 67vh #93c5fd, 85vw 49vh #ffffff, 92vw 61vh #e0f2fe, 97vw 53vh #7dd3fc,
+    4vw 73vh #ffffff, 11vw 82vh #93c5fd, 17vw 69vh #e0f2fe, 23vw 89vh #ffffff,
+    32vw 77vh #7dd3fc, 39vw 85vh #ffffff, 46vw 71vh #93c5fd, 53vw 93vh #e0f2fe,
+    60vw 81vh #ffffff, 68vw 75vh #7dd3fc, 75vw 88vh #ffffff, 82vw 79vh #93c5fd,
+    89vw 95vh #e0f2fe, 95vw 84vh #ffffff;
+  animation: starTwinkleSlow 4.5s ease-in-out infinite alternate;
+}
+
+.twinkling-stars-2 {
+  width: 1.5px;
+  height: 1.5px;
+  background: #38bdf8;
+  box-shadow:
+    6vw 12vh #38bdf8, 16vw 25vh #ffffff, 27vw 16vh #67e8f9, 39vw 31vh #ffffff,
+    50vw 14vh #38bdf8, 62vw 27vh #ffffff, 74vw 19vh #67e8f9, 86vw 34vh #ffffff,
+    9vw 48vh #38bdf8, 21vw 60vh #ffffff, 34vw 45vh #67e8f9, 47vw 64vh #ffffff,
+    59vw 51vh #38bdf8, 72vw 69vh #ffffff, 83vw 56vh #67e8f9, 94vw 72vh #ffffff,
+    8vw 86vh #38bdf8, 22vw 92vh #ffffff, 36vw 80vh #67e8f9, 52vw 88vh #ffffff,
+    66vw 84vh #38bdf8, 80vw 91vh #ffffff, 93vw 83vh #67e8f9;
+  animation: starTwinkleMedium 3.6s ease-in-out infinite alternate 1.8s;
+}
+
+.twinkling-stars-3 {
+  width: 2px;
+  height: 2px;
+  background: #ffffff;
+  box-shadow:
+    10vw 8vh #ffffff, 29vw 21vh #bae6fd, 52vw 9vh #ffffff, 76vw 23vh #bae6fd,
+    93vw 11vh #ffffff, 15vw 55vh #bae6fd, 43vw 38vh #ffffff, 69vw 62vh #bae6fd,
+    88vw 44vh #ffffff, 26vw 74vh #bae6fd, 57vw 83vh #ffffff, 84vw 78vh #bae6fd;
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.9));
+  animation: starTwinkleFast 2.8s ease-in-out infinite alternate 0.9s;
+}
+
+@keyframes starTwinkleSlow {
+  0% { opacity: 0.25; }
+  100% { opacity: 0.9; }
+}
+
+@keyframes starTwinkleMedium {
+  0% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
+@keyframes starTwinkleFast {
+  0% { opacity: 0.3; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1.25); }
+}
+
+/* Shooting Stars Layer */
+.shooting-stars-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Individual Shooting Star (flies diagonally: top-right to bottom-left) */
+.shooting-star {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 229, 255, 0) 0%,
+    rgba(56, 189, 248, 0.35) 45%,
+    rgba(255, 255, 255, 0.95) 100%
+  );
+  border-radius: 999px;
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.85));
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: shootStar var(--duration, 1.4s) cubic-bezier(0.22, 0.1, 0.25, 1) forwards;
+}
+
+/* Glowing Star Head */
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 6px 2px #00e5ff,
+    0 0 14px 4px rgba(255, 255, 255, 0.9);
+}
+
+@keyframes shootStar {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(135deg) scaleX(0.1) scaleY(var(--scale, 1));
+  }
+  15% {
+    opacity: 1;
+    transform: translate3d(
+      calc(var(--travel-x, -800px) * 0.15),
+      calc(var(--travel-y, 600px) * 0.15),
+      0
+    ) rotate(135deg) scaleX(1) scaleY(var(--scale, 1));
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(
+      var(--travel-x, -800px),
+      var(--travel-y, 600px),
+      0
+    ) rotate(135deg) scaleX(0.75) scaleY(var(--scale, 1));
+  }
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .twinkling-stars-1,
+  .twinkling-stars-2,
+  .twinkling-stars-3 {
+    animation: none !important;
+    opacity: 0.6;
+  }
+  .shooting-stars-layer {
+    display: none !important;
+  }
+}
+
+
