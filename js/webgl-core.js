@@ -39,8 +39,54 @@ let triggerBuddyCatchAnim = () => {};
 let triggerBuddySpin = () => {};
 
 // =============================================================================
-// CHEERFUL WEB AUDIO CHIME & SPEECH SYNTHESIS
+// CHEERFUL ROBOT VOICE & AUDIO SYNTHESIS
+// Pre-rendered studio-quality ElevenLabs voice assets (Jessica - Playful & Bright)
+// Plays static audio assets locally with 0ms latency and ZERO exposed API keys.
 // =============================================================================
+let currentAudio = null;
+
+function speakSkillVoice(skillKey, fallbackName) {
+  if (currentAudio) {
+    try {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    } catch (_) {}
+  }
+
+  const audioPath = `assets/audio/skills/${skillKey || 'buddy'}.mp3`;
+  const audio = new Audio(audioPath);
+  currentAudio = audio;
+
+  audio.play().catch(() => {
+    // Graceful fallback to browser speech synthesis if audio playback is blocked
+    fallbackWebSpeech(fallbackName || skillKey);
+  });
+}
+
+function fallbackWebSpeech(text) {
+  if (!('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}✨⭐🎉👋🤖]/gu, '').trim();
+    if (!cleanText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.15;
+    utterance.pitch = 1.35;
+    utterance.volume = 0.85;
+
+    const voices = window.speechSynthesis.getVoices();
+    if (voices && voices.length > 0) {
+      const preferred = voices.find(v => 
+        (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Zira') || v.name.includes('Female')) && v.lang.startsWith('en')
+      ) || voices.find(v => v.lang.startsWith('en'));
+      if (preferred) utterance.voice = preferred;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  } catch (_) {}
+}
+
 let audioCtx = null;
 
 function playCheerfulChime() {
@@ -74,33 +120,6 @@ function playCheerfulChime() {
     });
   } catch (err) {
     // AudioContext blocked or unsupported
-  }
-}
-
-function speakCheerfulMessage(text) {
-  if (!('speechSynthesis' in window)) return;
-  try {
-    window.speechSynthesis.cancel();
-    const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}✨⭐🎉👋🤖]/gu, '').trim();
-    if (!cleanText) return;
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.15;   // Upbeat, energetic tempo
-    utterance.pitch = 1.35;  // Higher, cheerful, friendly robot pitch
-    utterance.volume = 0.85;
-
-    // Pick best available cheerful / natural voice
-    const voices = window.speechSynthesis.getVoices();
-    if (voices && voices.length > 0) {
-      const preferred = voices.find(v => 
-        (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Zira') || v.name.includes('Female')) && v.lang.startsWith('en')
-      ) || voices.find(v => v.lang.startsWith('en'));
-      if (preferred) utterance.voice = preferred;
-    }
-
-    window.speechSynthesis.speak(utterance);
-  } catch (err) {
-    // Speech synthesis blocked
   }
 }
 
@@ -470,7 +489,7 @@ function setupBuddyRobotScene(container) {
     spinAngle = 0;
     setExpr('wow');
     playCheerfulChime();
-    speakCheerfulMessage("Hi! I'm Buddy, Abhijay's portfolio robot! Let's explore!");
+    speakSkillVoice('buddy', "Hi! I am Buddy!");
 
     setTimeout(() => {
       setExpr('happy');
@@ -771,13 +790,13 @@ function updateCheerfulSpeech(skill) {
   if (statusText) {
     statusText.style.opacity = '0';
     setTimeout(() => {
-      statusText.innerHTML = `Yay! 🎉 <strong>Skill Acquired: ${skill.name}!</strong> ${skill.phrase} ⭐`;
+      statusText.innerHTML = `Yay! 🎉 <strong>Skill Acquired: ${skill.name}!</strong> ⭐`;
       statusText.style.opacity = '1';
     }, 90);
   }
 
-  // Cheerful voice output
-  speakCheerfulMessage(`Yay! Skill acquired: ${skill.name}! ${skill.phrase}`);
+  // Play pre-rendered studio-quality ElevenLabs voice (speaks ONLY the skill name)
+  speakSkillVoice(skill.key, skill.name);
 }
 
 // =============================================================================
@@ -792,8 +811,13 @@ function setupRobotStatusBar() {
     voiceBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       playCheerfulChime();
-      const text = document.getElementById('robot-speech-text')?.textContent || "Hi! I'm Buddy! Click falling skill logos to catch & acquire them with me!";
-      speakCheerfulMessage(text);
+      const currentSkillKey = Array.from(acquiredSkillsSet).pop();
+      if (currentSkillKey) {
+        const item = skillsCatalog.find(s => s.key === currentSkillKey);
+        speakSkillVoice(currentSkillKey, item?.name);
+      } else {
+        speakSkillVoice('buddy', "Hi! I am Buddy!");
+      }
     });
   }
 
