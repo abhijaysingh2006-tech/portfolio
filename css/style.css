@@ -1,47 +1,47 @@
 /* =============================================================================
    STYLE.CSS - Professional Editorial Portfolio Architecture
-   Palette: Midnight Black / Warm Linen with Root-Defense Teal (#2dd4bf)
-   and Sunset Amber (#f59e0b / #fb923c).
-   Includes: Canvas Stars, WebGL Hero, Winner Showcase, Skills Filter, Lightbox.
+   Palette: Midnight Cosmic Black (#09090b) / Clean Warm Linen (#f6f3ec)
+   Accents: Root-Defense Mint/Teal (#2dd4bf) & Sunset Amber (#f59e0b / #fb923c).
+   Includes: Canvas Stars, WebGL Hero, Tech Brand Logos, Winner Showcase, Lightbox.
    ============================================================================= */
 
 :root {
-  /* Editorial Light Mode (Warm Off-White & Deep Ink Charcoal) */
+  /* Editorial Light Mode */
   --bg-main: #f6f3ec;
   --bg-subtle: #ede9df;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
-  --bg-glass: rgba(246, 243, 236, 0.88);
+  --bg-glass: rgba(246, 243, 236, 0.92);
 
-  --text-main: #141416;
-  --text-muted: #4b515d;
-  --text-faint: #787f8d;
+  --text-main: #111827;
+  --text-muted: #374151;
+  --text-faint: #6b7280;
 
-  --border-subtle: #ded8cb;
-  --border-strong: #141416;
+  --border-subtle: #dcd6c8;
+  --border-strong: #111827;
 
   /* Brand Accents */
   --teal-primary: #0d9488;
   --teal-accent: #14b8a6;
-  --teal-surface: rgba(20, 184, 166, 0.1);
+  --teal-surface: rgba(20, 184, 166, 0.12);
   --teal-border: rgba(20, 184, 166, 0.35);
 
   --amber-primary: #d97706;
   --amber-accent: #f59e0b;
-  --amber-surface: rgba(245, 158, 11, 0.1);
+  --amber-surface: rgba(245, 158, 11, 0.12);
   --amber-border: rgba(245, 158, 11, 0.35);
 
-  --accent-contrast: #141416;
+  --accent-contrast: #111827;
   --accent-contrast-inv: #ffffff;
 
-  --tag-bg: #ece7db;
-  --tag-text: #27272a;
+  --tag-bg: #e8e3d5;
+  --tag-text: #1f2937;
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.07);
-  --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.12);
-  --glow-teal: 0 0 25px rgba(20, 184, 166, 0.2);
-  --glow-amber: 0 0 25px rgba(245, 158, 11, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.09);
+  --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.14);
+  --glow-teal: 0 0 25px rgba(20, 184, 166, 0.25);
+  --glow-amber: 0 0 25px rgba(245, 158, 11, 0.25);
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
@@ -56,42 +56,42 @@
   --transition-smooth: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Midnight Dark Mode with Teal & Warm Amber Accents */
+/* Midnight Dark Mode with High-Legibility Contrast */
 [data-theme="dark"] {
   --bg-main: #09090b;
-  --bg-subtle: #11141c;
-  --bg-surface: #141824;
-  --bg-surface-elevated: #1a2030;
-  --bg-glass: rgba(9, 9, 11, 0.85);
+  --bg-subtle: #111624;
+  --bg-surface: #141a29;
+  --bg-surface-elevated: #1a2236;
+  --bg-glass: rgba(9, 9, 11, 0.88);
 
   --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-faint: #64748b;
+  --text-muted: #cbd5e1;
+  --text-faint: #94a3b8;
 
-  --border-subtle: #242c3f;
+  --border-subtle: #273349;
   --border-strong: #38bdf8;
 
   --teal-primary: #2dd4bf;
   --teal-accent: #5eead4;
-  --teal-surface: rgba(45, 212, 191, 0.12);
-  --teal-border: rgba(45, 212, 191, 0.35);
+  --teal-surface: rgba(45, 212, 191, 0.15);
+  --teal-border: rgba(45, 212, 191, 0.4);
 
   --amber-primary: #fb923c;
   --amber-accent: #f59e0b;
-  --amber-surface: rgba(245, 158, 11, 0.12);
-  --amber-border: rgba(245, 158, 11, 0.35);
+  --amber-surface: rgba(245, 158, 11, 0.15);
+  --amber-border: rgba(245, 158, 11, 0.4);
 
   --accent-contrast: #f8fafc;
   --accent-contrast-inv: #09090b;
 
-  --tag-bg: #1e2638;
-  --tag-text: #e2e8f0;
+  --tag-bg: #1c2538;
+  --tag-text: #f1f5f9;
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.6);
-  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.55);
-  --shadow-hover: 0 16px 44px rgba(0, 0, 0, 0.75);
-  --glow-teal: 0 0 30px rgba(45, 212, 191, 0.28);
-  --glow-amber: 0 0 30px rgba(245, 158, 11, 0.28);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.6);
+  --shadow-hover: 0 16px 44px rgba(0, 0, 0, 0.8);
+  --glow-teal: 0 0 32px rgba(45, 212, 191, 0.35);
+  --glow-amber: 0 0 32px rgba(245, 158, 11, 0.35);
 }
 
 /* Reset & Global */
@@ -104,37 +104,33 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  background-color: #05070d;
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-main);
+  background-color: transparent !important;
   color: var(--text-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  transition: background-color var(--transition-smooth), color var(--transition-smooth);
+  transition: color var(--transition-smooth);
 }
 
-[data-theme="dark"] body {
-  background: radial-gradient(circle at 80% 10%, #0e172a 0%, #09090b 50%, #05070c 100%);
-  background-attachment: fixed;
-}
-
-/* Canvas Starfield (Fixed Background) */
+/* Canvas Starfield (Always Active & Fixed Under Content) */
 .star-canvas {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
-  transition: opacity var(--transition-smooth);
+  display: block;
 }
 
 [data-theme="light"] .star-canvas {
-  opacity: 0.15;
+  opacity: 0.35;
 }
 
 /* Hairline Grid Texture Overlay */
@@ -142,19 +138,20 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
-  background-image: radial-gradient(var(--border-subtle) 1px, transparent 1px);
-  background-size: 32px 32px;
-  opacity: 0.4;
+  z-index: 1;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.3;
 }
 
-[data-theme="dark"] .page-grid-overlay {
-  opacity: 0.15;
+[data-theme="light"] .page-grid-overlay {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+  opacity: 0.25;
 }
 
 main, footer, header {
   position: relative;
-  z-index: 2;
+  z-index: 10;
 }
 
 /* Layout Container */
@@ -165,7 +162,7 @@ main, footer, header {
   padding: 0 24px;
 }
 
-/* Typography Hierarchy */
+/* Typography */
 h1, h2, h3, h4 {
   color: var(--text-main);
   font-weight: 700;
@@ -201,7 +198,7 @@ a {
 
 .nav-header.scrolled {
   box-shadow: var(--shadow-sm);
-  border-color: var(--border-subtle);
+  border-color: var(--teal-border);
 }
 
 .nav-wrapper {
@@ -218,7 +215,6 @@ a {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: 0.95rem;
-  letter-spacing: -0.02em;
   color: var(--text-main);
 }
 
@@ -292,6 +288,16 @@ a {
   border: 1px solid var(--text-main);
 }
 
+[data-theme="dark"] .btn-solid {
+  background: #f8fafc;
+  color: #09090b;
+}
+
+[data-theme="light"] .btn-solid {
+  background: #0f172a;
+  color: #ffffff;
+}
+
 .btn-solid:hover {
   opacity: 0.92;
   transform: translateY(-1px);
@@ -299,14 +305,14 @@ a {
 }
 
 .btn-outline {
-  background: transparent;
+  background: var(--bg-surface);
   color: var(--text-main);
   border: 1px solid var(--border-subtle);
 }
 
 .btn-outline:hover {
-  border-color: var(--text-main);
-  background: var(--bg-surface);
+  border-color: var(--teal-primary);
+  color: var(--teal-primary);
   transform: translateY(-1px);
 }
 
@@ -322,18 +328,6 @@ a {
   transform: translateY(-1px);
 }
 
-.btn-amber {
-  background: var(--amber-surface);
-  color: var(--amber-primary);
-  border: 1px solid var(--amber-border);
-}
-
-.btn-amber:hover {
-  background: var(--amber-primary);
-  color: #451a03;
-  transform: translateY(-1px);
-}
-
 .theme-toggle-btn {
   display: flex;
   align-items: center;
@@ -341,7 +335,7 @@ a {
   width: 36px;
   height: 36px;
   border-radius: var(--radius-sm);
-  background: transparent;
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   color: var(--text-main);
   cursor: pointer;
@@ -349,8 +343,8 @@ a {
 }
 
 .theme-toggle-btn:hover {
-  background: var(--bg-surface);
-  border-color: var(--text-main);
+  border-color: var(--teal-primary);
+  color: var(--teal-primary);
 }
 
 /* =============================================================================
@@ -667,7 +661,7 @@ a {
 }
 
 /* =============================================================================
-   ABOUT SECTION WITH REFINED PORTRAIT FRAME
+   ABOUT SECTION WITH UN-CROPPED PORTRAIT FRAME
    ============================================================================= */
 .about-grid-wrapper {
   display: grid;
@@ -679,43 +673,44 @@ a {
 .portrait-card-frame {
   position: relative;
   border-radius: var(--radius-xl);
-  padding: 8px;
-  background: linear-gradient(145deg, rgba(45, 212, 191, 0.3), rgba(245, 158, 11, 0.3), var(--border-subtle));
+  padding: 10px;
+  background: linear-gradient(145deg, rgba(45, 212, 191, 0.35), rgba(245, 158, 11, 0.35), var(--border-subtle));
   box-shadow: var(--shadow-md), var(--glow-teal);
   transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
   perspective: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .portrait-card-inner {
   position: relative;
   border-radius: calc(var(--radius-xl) - 4px);
   overflow: hidden;
-  background: var(--bg-surface-elevated);
+  background: #070a12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Whole Photo Kept 100% In Frame with Zero Cropping */
 .portrait-img {
   width: 100%;
   height: auto;
+  max-height: 540px;
   display: block;
-  object-fit: cover;
-  aspect-ratio: 3 / 4;
-  filter: contrast(1.03) saturate(1.05);
+  object-fit: contain;
   transition: transform var(--transition-smooth);
 }
 
 .portrait-card-frame:hover .portrait-img {
-  transform: scale(1.02);
+  transform: scale(1.015);
 }
 
-.portrait-floating-chip {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
+/* Clean Footer Tag Placed BELOW Image (Never Covering Shoes or Flowers) */
+.portrait-footer-chip {
   padding: 10px 14px;
-  background: var(--bg-glass);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   display: flex;
@@ -789,10 +784,6 @@ a {
 /* =============================================================================
    FEATURED WINNER CARD: TECH HABBA 2026 / ROOT-DEFENSE
    ============================================================================= */
-.winner-card-container {
-  margin-top: 10px;
-}
-
 .winner-card {
   position: relative;
   border-radius: var(--radius-xl);
@@ -851,7 +842,7 @@ a {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: 32px;
-  align-items: start;
+  align-items: center;
 }
 
 .winner-project-title-row {
@@ -901,20 +892,21 @@ a {
   color: var(--tag-text);
 }
 
-/* Winner Photo Frame with Clickable Lightbox */
+/* Winner Photo Frame with 100% Uncropped Image in Frame */
 .winner-photo-wrapper {
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border-subtle);
-  background: var(--bg-subtle);
+  background: #060910;
   cursor: pointer;
   box-shadow: var(--shadow-md);
   transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
 }
 
 .winner-photo-wrapper:hover {
-  transform: translateY(-2px);
   border-color: var(--amber-border);
   box-shadow: var(--glow-amber);
 }
@@ -922,40 +914,34 @@ a {
 .winner-photo-img {
   width: 100%;
   height: auto;
+  max-height: 380px;
   display: block;
-  object-fit: cover;
-  aspect-ratio: 4 / 3;
+  object-fit: contain;
   transition: transform var(--transition-smooth);
 }
 
 .winner-photo-wrapper:hover .winner-photo-img {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
-.winner-photo-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(9, 9, 11, 0.45);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 16px;
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-}
-
-.winner-photo-wrapper:hover .winner-photo-overlay {
-  opacity: 1;
-}
-
-.photo-overlay-hint {
+.winner-photo-caption-bar {
+  padding: 8px 12px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.photo-expand-hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--amber-primary);
   font-weight: 600;
-  color: #ffffff;
 }
 
 /* 6-Step Animated Pipeline Architecture */
@@ -1193,7 +1179,71 @@ a {
 }
 
 /* =============================================================================
-   SKILLS SECTION (INTERACTIVE CARDS + FILTER TABS)
+   CORE PROGRAMMING LANGUAGES BAR (WITH CRISP VECTOR LOGOS)
+   ============================================================================= */
+.core-languages-wrapper {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.core-lang-header {
+  margin-bottom: 14px;
+}
+
+.core-lang-title {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-primary);
+  font-weight: 700;
+}
+
+.core-languages-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.core-lang-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  transition: all var(--transition-fast);
+  cursor: default;
+}
+
+.core-lang-badge:hover {
+  border-color: var(--teal-primary);
+  background: var(--tag-bg);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.core-lang-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.core-lang-name {
+  white-space: nowrap;
+}
+
+/* =============================================================================
+   SKILLS SECTION (INTERACTIVE CARDS + LOGOS + FILTER TABS)
    ============================================================================= */
 .skills-filter-tabs {
   display: flex;
@@ -1289,9 +1339,9 @@ a {
 }
 
 .skill-proficiency-chip {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   padding: 6px 12px;
   border-radius: var(--radius-sm);
   background: var(--bg-subtle);
@@ -1304,6 +1354,16 @@ a {
 .skill-proficiency-chip:hover {
   background: var(--tag-bg);
   border-color: var(--teal-border);
+}
+
+.skill-mini-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skill-chip-name {
+  font-weight: 600;
 }
 
 .skill-level-tag {
@@ -1654,9 +1714,9 @@ a {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(4, 6, 12, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(4, 6, 12, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1683,10 +1743,10 @@ a {
 
 .lightbox-img {
   max-width: 100%;
-  max-height: 80vh;
+  max-height: 82vh;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
   object-fit: contain;
 }
 
@@ -1789,6 +1849,9 @@ a {
 @media (max-width: 480px) {
   .pipeline-grid {
     grid-template-columns: 1fr;
+  }
+  .core-languages-bar {
+    justify-content: center;
   }
 }
 

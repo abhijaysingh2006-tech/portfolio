@@ -31,7 +31,7 @@
 </head>
 <body>
 
-  <!-- Full-Screen Interactive Canvas Starfield (Twinkling + Shooting Stars) -->
+  <!-- Full-Screen Interactive Canvas Starfield (Twinkling Stars + Diagonal Meteors) -->
   <canvas id="star-canvas" class="star-canvas" aria-hidden="true"></canvas>
 
   <!-- Hairline Grid Texture Overlay -->
@@ -178,24 +178,25 @@
       </div>
     </section>
 
-    <!-- Section 01: Overview & About with Portrait -->
+    <!-- Section 01: Overview & About with Portrait (Whole Photo Fully in Frame) -->
     <section class="section" id="about">
       <div class="container">
         <div class="about-grid-wrapper">
-          <!-- Portrait Photo in Refined Frame with Micro-Tilt -->
+          <!-- Portrait Photo in Refined Frame (Fully Visible, No Cropping) -->
           <div class="portrait-card-frame" id="portrait-card">
             <div class="portrait-card-inner">
               <picture>
-                <source srcset="assets/images/profile-portrait-400.webp 400w, assets/images/profile-portrait-800.webp 800w" sizes="(max-width: 600px) 100vw, 400px" type="image/webp">
-                <img src="assets/images/profile-portrait.jpg" alt="Abhijay Singh — Robotics & AI Systems Engineering" width="400" height="533" loading="lazy" class="portrait-img">
+                <source srcset="assets/images/profile-portrait-400.webp 400w, assets/images/profile-portrait-800.webp 800w" sizes="(max-width: 600px) 100vw, 420px" type="image/webp">
+                <img src="assets/images/profile-portrait.jpg" alt="Abhijay Singh — Robotics & AI Systems Engineering" width="682" height="1024" loading="lazy" class="portrait-img">
               </picture>
-              <div class="portrait-floating-chip">
-                <span>VTU Muddenahalli · Bengaluru</span>
-                <span class="chip-status">
-                  <span class="chip-status-dot"></span>
-                  <span>Active 2026</span>
-                </span>
-              </div>
+            </div>
+            <!-- Clean Badge Positioned Below Photo (Never Obscures Person) -->
+            <div class="portrait-footer-chip">
+              <span class="portrait-loc-tag">VTU Muddenahalli · Bengaluru</span>
+              <span class="chip-status">
+                <span class="chip-status-dot"></span>
+                <span>Active 2026</span>
+              </span>
             </div>
           </div>
 
@@ -275,17 +276,15 @@
                 </div>
               </div>
 
-              <!-- Award Photo with Click-to-Zoom Lightbox -->
-              <div class="winner-photo-wrapper" id="award-photo-container" title="Click to view award photo full-size">
+              <!-- Award Photo with Full Uncropped Framing & Lightbox -->
+              <div class="winner-photo-wrapper" id="award-photo-container" title="Click to expand award photo">
                 <picture>
-                  <source srcset="assets/images/tech-habba-award-600.webp 600w, assets/images/tech-habba-award-1024.webp 1024w" sizes="(max-width: 600px) 100vw, 500px" type="image/webp">
+                  <source srcset="assets/images/tech-habba-award-600.webp 600w, assets/images/tech-habba-award-1024.webp 1024w" sizes="(max-width: 600px) 100vw, 550px" type="image/webp">
                   <img src="assets/images/tech-habba-award.jpg" alt="Abhijay Singh receiving 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology" width="1024" height="768" loading="lazy" class="winner-photo-img">
                 </picture>
-                <div class="winner-photo-overlay">
-                  <div class="photo-overlay-hint">
-                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
-                    <span>Acharya Institute of Technology · Tech Habba 2026</span>
-                  </div>
+                <div class="winner-photo-caption-bar">
+                  <span class="photo-caption-title">Tech Habba 2026 · Acharya Institute of Technology</span>
+                  <span class="photo-expand-hint"><i data-lucide="maximize-2" style="width: 13px; height: 13px;"></i> Expand Photo</span>
                 </div>
               </div>
             </div>
@@ -380,12 +379,22 @@
       </div>
     </section>
 
-    <!-- Section 03: Skills & Technical Domains (Grouped + Interactive Filter) -->
+    <!-- Section 03: Skills & Technical Domains (With Brand Vector Logos) -->
     <section class="section" id="skills">
       <div class="container">
         <div class="section-label">03 // Capabilities</div>
         <h2 class="section-heading">Skills & Technical Domains</h2>
-        <p class="section-subtext">Technologies, languages, and cryptography primitives verified through practical execution.</p>
+        <p class="section-subtext">Verified programming languages, robotics toolchains, and security architectures with authentic vector logos.</p>
+
+        <!-- Featured Brand Logos Quick-Strip -->
+        <div class="core-languages-wrapper">
+          <div class="core-lang-header">
+            <span class="core-lang-title">Core Programming Languages & Tooling</span>
+          </div>
+          <div class="core-languages-bar" id="core-languages-bar">
+            <!-- Populated dynamically with crisp SVG logos -->
+          </div>
+        </div>
 
         <!-- Category Filter Tabs -->
         <div class="skills-filter-tabs" id="skills-filter-tabs">
@@ -399,7 +408,7 @@
         </div>
 
         <div class="skills-interactive-grid" id="skills-interactive-grid">
-          <!-- Rendered dynamically from content.js -->
+          <!-- Rendered dynamically from content.js with brand logos -->
         </div>
       </div>
     </section>

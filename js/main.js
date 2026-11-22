@@ -1,17 +1,19 @@
 // =============================================================================
 // MAIN.JS - Dynamic Renderer & Automated GitHub Repository Sync
-// Includes: Canvas Stars, WebGL Core, Winner Showcase, Skills Filter, Lightbox.
+// Includes: Canvas Stars, WebGL Core, Tech Logos, Skills Filter, Lightbox.
 // =============================================================================
 
 import { portfolioContent } from './content.js';
 import { initWebGLCore } from './webgl-core.js';
 import { initShootingStars } from './shooting-stars.js';
+import { techLogos } from './tech-logos.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Render all structured profile information
   renderProfileData();
   renderStats();
   renderFeaturedWinner();
+  renderCoreLanguagesBar();
   renderSkills();
   renderHackathons();
   renderLeadership();
@@ -61,7 +63,6 @@ async function fetchAndRenderGitHubProjects() {
     const repos = await response.json();
     const validRepos = Array.isArray(repos) && repos.length > 0 ? repos : fallbackProjects;
 
-    // Update repository count stat
     if (repoCountStat) {
       repoCountStat.textContent = validRepos.length;
     }
@@ -140,7 +141,7 @@ function renderProfileData() {
   const aboutBio = document.getElementById('about-bio-text');
   if (aboutBio) aboutBio.textContent = personal.about;
 
-  // WhatsApp Button
+  // WhatsApp Buttons
   const waBtns = document.querySelectorAll('.whatsapp-link');
   waBtns.forEach((btn) => {
     btn.href = personal.whatsAppUrl;
@@ -148,7 +149,7 @@ function renderProfileData() {
     btn.rel = "noopener noreferrer";
   });
 
-  // GitHub Profile Button
+  // GitHub Profile Buttons
   const ghBtns = document.querySelectorAll('.github-profile-link');
   ghBtns.forEach((btn) => {
     btn.href = personal.githubUrl;
@@ -253,7 +254,26 @@ function renderFeaturedWinner() {
   }
 }
 
-// --- Grouped Skills & Filter Tabs ---
+// --- Featured Core Languages Showcase Bar ---
+function renderCoreLanguagesBar() {
+  const container = document.getElementById('core-languages-bar');
+  const { coreLanguages } = portfolioContent;
+  if (!container || !coreLanguages) return;
+
+  container.innerHTML = coreLanguages
+    .map((lang) => {
+      const logoSvg = techLogos[lang.logo] || '';
+      return `
+      <div class="core-lang-badge" title="${lang.name} · ${lang.category}">
+        <span class="core-lang-icon">${logoSvg}</span>
+        <span class="core-lang-name">${lang.name}</span>
+      </div>
+    `;
+    })
+    .join('');
+}
+
+// --- Grouped Skills with Logos & Filter Tabs ---
 function renderSkills() {
   const { skillGroups } = portfolioContent;
   const container = document.getElementById('skills-interactive-grid');
@@ -266,33 +286,35 @@ function renderSkills() {
       : skillGroups.filter((g) => g.id === filter);
 
     container.innerHTML = filtered
-      .map(
-        (group) => `
-      <div class="skill-interactive-card" data-group="${group.id}">
-        <div class="skill-card-top">
-          <div class="skill-icon-box">
-            <i data-lucide="${group.icon}" style="width: 20px; height: 20px;"></i>
-          </div>
-          <div class="skill-header-meta">
-            <h3>${group.title}</h3>
-            <p>${group.description}</p>
-          </div>
-        </div>
-        <div class="skill-chips-container">
-          ${group.skills
-            .map(
-              (s) => `
-            <div class="skill-proficiency-chip">
-              <span>${s.name}</span>
-              <span class="skill-level-tag">· ${s.level}</span>
+      .map((group) => {
+        return `
+        <div class="skill-interactive-card" data-group="${group.id}">
+          <div class="skill-card-top">
+            <div class="skill-icon-box">
+              <i data-lucide="${group.icon}" style="width: 20px; height: 20px;"></i>
             </div>
-          `
-            )
-            .join('')}
+            <div class="skill-header-meta">
+              <h3>${group.title}</h3>
+              <p>${group.description}</p>
+            </div>
+          </div>
+          <div class="skill-chips-container">
+            ${group.skills
+              .map((s) => {
+                const logoSvg = s.logo && techLogos[s.logo] ? `<span class="skill-mini-logo">${techLogos[s.logo]}</span>` : '';
+                return `
+                <div class="skill-proficiency-chip">
+                  ${logoSvg}
+                  <span class="skill-chip-name">${s.name}</span>
+                  <span class="skill-level-tag">· ${s.level}</span>
+                </div>
+              `;
+              })
+              .join('')}
+          </div>
         </div>
-      </div>
-    `
-      )
+      `;
+      })
       .join('');
 
     if (window.lucide) window.lucide.createIcons();
@@ -390,6 +412,7 @@ function initLightbox() {
   const modalCaption = document.getElementById('lightbox-caption');
   const closeBtn = document.getElementById('lightbox-close');
   const awardPhotoWrapper = document.getElementById('award-photo-container');
+  const portraitPhotoWrapper = document.getElementById('portrait-card');
 
   function openLightbox(src, caption) {
     if (!modal || !modalImg) return;
@@ -412,6 +435,16 @@ function initLightbox() {
       'assets/images/tech-habba-award.webp',
       'Abhijay Singh receiving 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology'
     );
+  });
+
+  portraitPhotoWrapper?.addEventListener('click', (e) => {
+    // Only open if clicked on image area
+    if (e.target.closest('.portrait-img') || e.target.closest('.portrait-card-inner')) {
+      openLightbox(
+        'assets/images/profile-portrait.webp',
+        'Abhijay Singh — Robotics & AI Systems Engineering'
+      );
+    }
   });
 
   closeBtn?.addEventListener('click', closeLightbox);
@@ -443,8 +476,8 @@ function initPortraitTilt() {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
 
-    const rotateX = ((y - centerY) / centerY) * -6; // Max 6 deg
-    const rotateY = ((x - centerX) / centerX) * 6;
+    const rotateX = ((y - centerY) / centerY) * -5;
+    const rotateY = ((x - centerX) / centerX) * 5;
 
     card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
   });
@@ -454,9 +487,10 @@ function initPortraitTilt() {
   });
 }
 
-// --- Theme Toggle ---
+// --- Theme Toggle (Default to Dark for Full Starfield Experience) ---
 function initThemeToggle() {
   const toggleBtn = document.getElementById('theme-toggle');
+  // Always default to dark unless explicitly toggled
   const savedTheme = localStorage.getItem('site_theme') || 'dark';
 
   document.documentElement.setAttribute('data-theme', savedTheme);
@@ -530,7 +564,6 @@ function initScrollNav() {
     }
   });
 
-  // Active section indicator via IntersectionObserver
   const observerOptions = {
     root: null,
     rootMargin: '-20% 0px -70% 0px',

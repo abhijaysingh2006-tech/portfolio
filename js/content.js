@@ -118,6 +118,24 @@ export const portfolioContent = {
     }
   },
 
+  // --- Featured Core Languages Showcase Bar ---
+  coreLanguages: [
+    { name: "Python", logo: "python", category: "Core & AI" },
+    { name: "C++", logo: "cpp", category: "Robotics / ROS" },
+    { name: "C", logo: "c", category: "Firmware & Kernel" },
+    { name: "JavaScript", logo: "javascript", category: "Web & Dynamic" },
+    { name: "TypeScript", logo: "typescript", category: "Typed Systems" },
+    { name: "Go", logo: "golang", category: "Systems & Daemons" },
+    { name: "ROS", logo: "ros", category: "Robot Operating System" },
+    { name: "Solidity", logo: "solidity", category: "Smart Contracts" },
+    { name: "Linux", logo: "linux", category: "Kernel & Security" },
+    { name: "Git", logo: "git", category: "Version Control" },
+    { name: "Arduino", logo: "arduino", category: "Embedded Hardware" },
+    { name: "PostgreSQL", logo: "postgresql", category: "Relational DB" },
+    { name: "SQLite", logo: "sqlite", category: "Embedded DB" },
+    { name: "OpenCV", logo: "opencv", category: "Computer Vision" }
+  ],
+
   // --- Grouped Skills & Tooling ---
   skillGroups: [
     {
@@ -126,12 +144,12 @@ export const portfolioContent = {
       icon: "cpu",
       description: "Sensor-driven robotics, autonomous control algorithms, and embedded systems.",
       skills: [
-        { name: "Robotics Systems", level: "Autonomous Core" },
-        { name: "Computer Vision", level: "OpenCV / YOLO" },
-        { name: "ROS", level: "Robot OS Nodes" },
-        { name: "Embedded Systems", level: "Microcontrollers" },
-        { name: "Arduino / C++", level: "Sensors & Actuators" },
-        { name: "Hardware Interfacing", level: "UART / I2C / SPI" }
+        { name: "ROS", level: "Robot OS Nodes", logo: "ros" },
+        { name: "Arduino / C++", level: "Sensors & Actuators", logo: "arduino" },
+        { name: "C++", level: "Autonomous Core", logo: "cpp" },
+        { name: "OpenCV", level: "Real-time Vision", logo: "opencv" },
+        { name: "Embedded Systems", level: "Microcontrollers", logo: "c" },
+        { name: "Hardware Interfacing", level: "UART / I2C / SPI", logo: "arduino" }
       ]
     },
     {
@@ -140,12 +158,12 @@ export const portfolioContent = {
       icon: "brain",
       description: "Predictive modeling, deep learning pipelines, and spatial data analytics.",
       skills: [
-        { name: "Python ML Stack", level: "NumPy / Pandas / SciPy" },
-        { name: "Deep Learning", level: "Neural Network Pipelines" },
-        { name: "Computer Vision", level: "Object & Motion Tracking" },
-        { name: "Geospatial Data ML", level: "Earth Observation Data" },
-        { name: "Predictive Analytics", level: "Real-time Inference" },
-        { name: "Model Evaluation", level: "Metrics & Validation" }
+        { name: "Python ML Stack", level: "NumPy / Pandas / SciPy", logo: "python" },
+        { name: "Deep Learning", level: "Neural Network Pipelines", logo: "python" },
+        { name: "Computer Vision", level: "Object & Motion Tracking", logo: "opencv" },
+        { name: "Geospatial Data ML", level: "Earth Observation Data", logo: "python" },
+        { name: "Predictive Analytics", level: "Real-time Inference", logo: "python" },
+        { name: "Model Evaluation", level: "Validation & Benchmarks", logo: "python" }
       ]
     },
     {
@@ -154,12 +172,12 @@ export const portfolioContent = {
       icon: "shield-check",
       description: "Tamper-evident audit trails, asymmetric cryptography, and forward security.",
       skills: [
-        { name: "Tamper-Evident Logs", level: "Off-host Proofs" },
-        { name: "Hash Chains & SHA-256", level: "Cryptographic Integrity" },
-        { name: "Merkle Trees", level: "Inclusion Proofs" },
-        { name: "Ed25519 Signatures", level: "Asymmetric Auth" },
-        { name: "Key Ratchet", level: "Forward Secrecy" },
-        { name: "Threat Modelling", level: "STRIDE / Attack Trees" }
+        { name: "Tamper-Evident Logs", level: "Off-host Proofs", logo: "security" },
+        { name: "Hash Chains & SHA-256", level: "Cryptographic Integrity", logo: "security" },
+        { name: "Merkle Trees", level: "Inclusion Proofs", logo: "blockchain" },
+        { name: "Ed25519 Signatures", level: "Asymmetric Auth", logo: "security" },
+        { name: "Key Ratchet", level: "Forward Secrecy", logo: "security" },
+        { name: "Threat Modelling", level: "STRIDE / Attack Trees", logo: "security" }
       ]
     },
     {
@@ -168,11 +186,11 @@ export const portfolioContent = {
       icon: "blocks",
       description: "Public ledger anchoring, EVM smart contracts, and decentralized verification.",
       skills: [
-        { name: "Solidity", level: "Smart Contracts" },
-        { name: "Quai Network", level: "Proof-of-Work EVM" },
-        { name: "EVM Tooling", level: "Contract Architecture" },
-        { name: "Hardhat / Anvil", level: "Fallback & Local Node" },
-        { name: "Merkle Root Anchoring", level: "State Notarization" }
+        { name: "Solidity", level: "Smart Contracts", logo: "solidity" },
+        { name: "Quai Network", level: "Proof-of-Work EVM", logo: "blockchain" },
+        { name: "EVM Tooling", level: "Contract Architecture", logo: "solidity" },
+        { name: "Hardhat / Anvil", level: "Fallback & Local Node", logo: "solidity" },
+        { name: "Merkle Root Anchoring", level: "State Notarization", logo: "blockchain" }
       ]
     },
     {
@@ -181,11 +199,12 @@ export const portfolioContent = {
       icon: "server",
       description: "Log streaming agents, off-host witness services, and robust databases.",
       skills: [
-        { name: "Python & Go", level: "System Services" },
-        { name: "Linux Systems", level: "auth / syslog / sudo" },
-        { name: "SQLite & PostgreSQL", level: "Relational Persistence" },
-        { name: "Heartbeat Monitors", level: "5s Daemon Alarms" },
-        { name: "REST APIs", level: "Service Integration" }
+        { name: "Python", level: "Automation & Services", logo: "python" },
+        { name: "Go / Golang", level: "High-Throughput Daemons", logo: "golang" },
+        { name: "Linux Systems", level: "auth / syslog / sudo", logo: "linux" },
+        { name: "PostgreSQL", level: "Relational Persistence", logo: "postgresql" },
+        { name: "SQLite", level: "Lightweight Storage", logo: "sqlite" },
+        { name: "Heartbeat Monitors", level: "5s Daemon Alarms", logo: "linux" }
       ]
     },
     {
@@ -194,12 +213,12 @@ export const portfolioContent = {
       icon: "code",
       description: "Component architecture, interactive WebGL, and collaborative version control.",
       skills: [
-        { name: "HTML5 / Semantic UI", level: "Modern Web Standards" },
-        { name: "CSS3 / Modern Layouts", level: "Flexbox / Grid / Glass" },
-        { name: "JavaScript (ES Modules)", level: "Clean Vanilla JS" },
-        { name: "Three.js WebGL", level: "3D Spatial Visualization" },
-        { name: "Git & GitHub", level: "CI/CD & Version Control" },
-        { name: "VS Code & Terminal", level: "Development Workflow" }
+        { name: "JavaScript", level: "ES Modules / Modern", logo: "javascript" },
+        { name: "TypeScript", level: "Typed UI Architecture", logo: "typescript" },
+        { name: "HTML5", level: "Semantic Markup", logo: "html5" },
+        { name: "CSS3", level: "Modern Grid & Animations", logo: "css3" },
+        { name: "Git & GitHub", level: "CI/CD & Version Control", logo: "git" },
+        { name: "Three.js WebGL", level: "3D Spatial Visualization", logo: "javascript" }
       ]
     }
   ],
