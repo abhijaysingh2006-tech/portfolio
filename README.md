@@ -7,7 +7,7 @@ A high-performance, responsive developer portfolio built with clean **Vanilla HT
 ## ✨ Key Highlights & Features
 
 1. **🏆 Featured Winner: Root-Defense (Tech Habba 2026)**:
-   - **Result**: 3rd Prize Winner (₹10,000 cash award), Team Elite, Acharya Institute of Technology, Bengaluru (21 November 2026).
+   - **Result**: 3rd Prize Winner (₹10,000 cash award), Team Flute, Acharya Institute of Technology, Bengaluru (21 November 2026).
    - **Architecture**: Tamper-evident security logging anchored on Quai Network (Proof-of-Work EVM).
    - **Interactive 6-Step Ingestion Pipeline**: Log Sources → Agent (hash chain + sign + key ratchet) → Off-host Witness (append-only, 5s heartbeat alarm) → Merkle Batcher → Quai Smart Contract → Auditor Portal (recompute & verify in 1-click).
    - **Threat Model Matrix**: Full breakdown of attack vectors, detection guarantees, and honest security boundaries.

@@ -50,7 +50,7 @@ export const portfolioContent = {
     event: "Tech Habba 2026",
     organization: "Acharya Institute of Technology, Bengaluru",
     date: "21 November 2026",
-    team: "Team Elite",
+    team: "Team Flute",
     result: "3rd Prize Winner",
     cashPrize: "₹10,000",
     project: "Root-Defense",
@@ -230,7 +230,7 @@ export const portfolioContent = {
       level: "3rd Prize Winner (₹10,000)",
       organization: "Acharya Institute of Technology, Bengaluru",
       date: "21 November 2026",
-      team: "Team Elite",
+      team: "Team Flute",
       summary: "Won 3rd prize for Root-Defense: tamper-evident security logs anchored on Quai Network.",
       description: "Built an off-host witness architecture with forward-secure key ratcheting, Merkle batching, and EVM smart contracts to prevent attackers with root access from erasing evidence of a breach.",
       featured: true

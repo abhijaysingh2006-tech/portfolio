@@ -97,6 +97,12 @@ export function initShootingStars() {
   function updateAndDraw(now) {
     const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
 
+    // In light mode: Clear and skip rendering (night sky is exclusively for dark mode)
+    if (!isDark) {
+      ctx.clearRect(0, 0, width, height);
+      return;
+    }
+
     // Clear frame
     ctx.clearRect(0, 0, width, height);
 
