@@ -1,17 +1,20 @@
 // =============================================================================
-// WEBGL-CORE.JS - Cheerful 3D Yellow Robot Companion & Falling Skills Catcher
+// WEBGL-CORE.JS - Buddy the Robot (3D Hero Companion) & Falling Skills Catcher
 // Features:
-// 1. Procedural 3D Cheerful Yellow Robot with:
-//    - Expressive glowing face (cyan oval eyes + cute smiling mouth ◡ from reference image)
-//    - Spherical yellow helmet, silver crest band, side ear headphone pods
-//    - Floating zero-g yellow boots with silver soles
-// 2. Real-time cursor tracking (head, eyes, and torso pitch/yaw).
-// 3. Falling Skills Catch Mini-Game:
-//    - Authentic skill logos (Python, ROS, C++, etc.) float down in glowing bubbles
-//    - INSTANT single-click / touch catch (pointerdown + touchstart + hit-box)
-//    - Sparkle burst particle FX & celebratory "✨ Skill Acquired" toast
-//    - Cheerful robot victory cheers with happy squint eyes (^ ^)
-// 4. Status Bar positioned BELOW the canvas so the robot is 100% visible!
+// 1. Procedural 3D Buddy the Robot matching the reference design:
+//    - Glossy bumblebee yellow head and body with soft metallic sheen
+//    - Dark curved screen visor with expressive animated eyes (pupils follow cursor!)
+//    - Multiple expressions: 'happy', 'joy', 'wink', 'love' (heart eyes!), 'wow'
+//    - Glowing teal eyebrows, animated smiling / laughing mouth, pulsing pink blush cheeks
+//    - Headphone ear discs, glowing antenna bulb with breathing pulse, chest diamond
+//    - Floating arms and feet with smooth organic zero-gravity hover & shadow
+// 2. Interactive Skills Catcher Mini-Game:
+//    - Skill logos fall down in glowing orbs
+//    - Single-click / touch instant catch (pointerdown + touchstart)
+//    - Celebratory upward jump, wave, and joy/love expression
+//    - Web Audio API cheerful upward major arpeggio chime (C5-E5-G5-C6)
+//    - Upbeat, enthusiastic speech synthesis (higher pitch, energetic tempo)
+// 3. Status Bar below canvas for 100% unobstructed robot visibility
 // =============================================================================
 
 import { techLogos } from './tech-logos.js';
@@ -23,28 +26,98 @@ export function initWebGLCore() {
   if (typeof THREE === 'undefined') {
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = () => setupCheerfulRobotScene(container);
+    script.onload = () => setupBuddyRobotScene(container);
     document.head.appendChild(script);
     return;
   }
 
-  setupCheerfulRobotScene(container);
+  setupBuddyRobotScene(container);
 }
 
 // Global action triggers
-let triggerCheerfulCatchAnim = () => {};
-let triggerCheerfulSpin = () => {};
+let triggerBuddyCatchAnim = () => {};
+let triggerBuddySpin = () => {};
 
-function setupCheerfulRobotScene(container) {
-  // 1. Scene & Camera Setup
+// =============================================================================
+// CHEERFUL WEB AUDIO CHIME & SPEECH SYNTHESIS
+// =============================================================================
+let audioCtx = null;
+
+function playCheerfulChime() {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    if (!audioCtx) audioCtx = new AudioContextClass();
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    // Upward cheerful major arpeggio: C5 (523.25Hz), E5 (659.25Hz), G5 (783.99Hz), C6 (1046.50Hz)
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    const now = audioCtx.currentTime;
+
+    notes.forEach((freq, idx) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'triangle'; // Warm, bell-like, friendly chime
+      osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+
+      gain.gain.setValueAtTime(0.18, now + idx * 0.07);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.32);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(now + idx * 0.07);
+      osc.stop(now + idx * 0.07 + 0.33);
+    });
+  } catch (err) {
+    // AudioContext blocked or unsupported
+  }
+}
+
+function speakCheerfulMessage(text) {
+  if (!('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}✨⭐🎉👋🤖]/gu, '').trim();
+    if (!cleanText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.15;   // Upbeat, energetic tempo
+    utterance.pitch = 1.35;  // Higher, cheerful, friendly robot pitch
+    utterance.volume = 0.85;
+
+    // Pick best available cheerful / natural voice
+    const voices = window.speechSynthesis.getVoices();
+    if (voices && voices.length > 0) {
+      const preferred = voices.find(v => 
+        (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Victoria') || v.name.includes('Zira') || v.name.includes('Female')) && v.lang.startsWith('en')
+      ) || voices.find(v => v.lang.startsWith('en'));
+      if (preferred) utterance.voice = preferred;
+    }
+
+    window.speechSynthesis.speak(utterance);
+  } catch (err) {
+    // Speech synthesis blocked
+  }
+}
+
+// =============================================================================
+// THREE.JS SCENE SETUP - BUDDY THE ROBOT
+// =============================================================================
+function setupBuddyRobotScene(container) {
   const scene = new THREE.Scene();
   const width = container.clientWidth || 480;
   const height = container.clientHeight || 420;
 
-  const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-  camera.position.set(0, 0.1, 6.6);
+  // Perspective Camera
+  const cam = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+  cam.position.set(0, 1.0, 6.8);
+  cam.lookAt(0, 0.95, 0);
 
-  // 2. High-performance WebGL Renderer
+  // High-performance WebGL Renderer
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true,
@@ -53,336 +126,305 @@ function setupCheerfulRobotScene(container) {
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.25;
+  renderer.toneMappingExposure = 1.2;
 
   container.innerHTML = '';
   container.appendChild(renderer.domElement);
 
-  // Theme Detection
-  const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+  // 1. Lighting System (Matches Buddy Reference)
+  const hemiLight = new THREE.HemisphereLight(0xfff4d0, 0x3a4a7a, 0.95);
+  scene.add(hemiLight);
 
-  const getRobotPalette = () => {
-    const dark = isDark();
-    return {
-      yellowBody: dark ? 0xf59e0b : 0xeab308,     // Glossy Bumblebee Yellow / Warm Amber
-      yellowHighlight: dark ? 0xfbbf24 : 0xfde047,
-      silverMetal: 0x94a3b8,                      // Brushed Silver Joint Rods & Soles
-      darkMetal: 0x334155,                        // Dark Titanium Accents
-      visorGlass: dark ? 0x07111e : 0x0f172a,     // Glossy Astronaut Bubble Visor
-      eyeCyan: 0x38bdf8,                          // Cheerful Cyan LED Face (Eyes & Smile)
-      lightAmbient: dark ? 1.1 : 1.4,
-      lightDirectional: dark ? 1.6 : 1.9,
-      keyWarmth: 0xffedd5,
-    };
-  };
-
-  let palette = getRobotPalette();
-
-  // 3. Lighting System
-  const ambientLight = new THREE.AmbientLight(0xffffff, palette.lightAmbient);
-  scene.add(ambientLight);
-
-  const keyLight = new THREE.DirectionalLight(palette.keyWarmth, palette.lightDirectional);
-  keyLight.position.set(4, 5, 5);
+  const keyLight = new THREE.DirectionalLight(0xffffff, 0.95);
+  keyLight.position.set(3, 5, 4);
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.1);
-  fillLight.position.set(-4, -2, -3);
-  scene.add(fillLight);
+  const rimLight = new THREE.DirectionalLight(0x2dd4bf, 0.65);
+  rimLight.position.set(-4, 2, -3);
+  scene.add(rimLight);
 
-  const faceGlowLight = new THREE.PointLight(palette.eyeCyan, 1.4, 5);
-  faceGlowLight.position.set(0, 0.8, 1.3);
-  scene.add(faceGlowLight);
-
-  // 4. Robot Hierarchy & Assembly
-  const robotRoot = new THREE.Group();
-  scene.add(robotRoot);
-
-  // Material Library
-  const yellowMat = new THREE.MeshStandardMaterial({
-    color: palette.yellowBody,
-    metalness: 0.22,
-    roughness: 0.22,
+  // 2. Buddy Materials
+  const yellow = new THREE.MeshStandardMaterial({
+    color: 0xffc93c,
+    roughness: 0.35,
+    metalness: 0.05,
   });
 
-  const yellowHighlightMat = new THREE.MeshStandardMaterial({
-    color: palette.yellowHighlight,
-    metalness: 0.25,
-    roughness: 0.18,
+  const yellow2 = new THREE.MeshStandardMaterial({
+    color: 0xffe27a,
+    roughness: 0.4,
   });
 
-  const silverMat = new THREE.MeshStandardMaterial({
-    color: palette.silverMetal,
-    metalness: 0.88,
+  const metal = new THREE.MeshStandardMaterial({
+    color: 0xcfd6e4,
+    roughness: 0.2,
+    metalness: 0.9,
+  });
+
+  const screen = new THREE.MeshStandardMaterial({
+    color: 0x10172e,
+    roughness: 0.15,
+    metalness: 0.3,
+  });
+
+  const glow = new THREE.MeshStandardMaterial({
+    color: 0x2dd4bf,
+    emissive: 0x2dd4bf,
+    emissiveIntensity: 0.9,
+  });
+
+  const pink = new THREE.MeshStandardMaterial({
+    color: 0xff8fa3,
+    emissive: 0xff6f8a,
+    emissiveIntensity: 0.35,
+  });
+
+  const white = new THREE.MeshStandardMaterial({
+    color: 0xeafffb,
+    emissive: 0xaaf5ea,
+    emissiveIntensity: 0.7,
     roughness: 0.2,
   });
 
-  const darkMetalMat = new THREE.MeshStandardMaterial({
-    color: palette.darkMetal,
-    metalness: 0.82,
-    roughness: 0.35,
+  const dark = new THREE.MeshBasicMaterial({ color: 0x0b1230 });
+  const shineM = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const redM = new THREE.MeshBasicMaterial({ color: 0xff4f6d });
+  const tongueM = new THREE.MeshBasicMaterial({ color: 0xff9fb0 });
+
+  // Extruded Heart Geometry for 'love' expression
+  const hs = new THREE.Shape();
+  hs.moveTo(0, -0.1);
+  hs.bezierCurveTo(-0.2, 0.02, -0.12, 0.18, 0, 0.08);
+  hs.bezierCurveTo(0.12, 0.18, 0.2, 0.02, 0, -0.1);
+  const heartG = new THREE.ExtrudeGeometry(hs, { depth: 0.03, bevelEnabled: false });
+
+  // 3. Buddy Hierarchy
+  const bot = new THREE.Group();
+  scene.add(bot);
+
+  function addMesh(geo, mat, x, y, z, parent) {
+    const obj = new THREE.Mesh(geo, mat);
+    obj.position.set(x, y, z);
+    (parent || bot).add(obj);
+    return obj;
+  }
+
+  // A. Torso Body
+  const body = addMesh(new THREE.SphereGeometry(0.72, 48, 32), yellow, 0, 0.3, 0);
+  body.scale.set(1, 0.95, 0.95);
+
+  // B. Head Group
+  const head = new THREE.Group();
+  head.position.y = 1.45;
+  bot.add(head);
+
+  // Yellow spherical helmet
+  addMesh(new THREE.SphereGeometry(0.95, 56, 40), yellow, 0, 0, 0, head);
+
+  // Glossy dark curved visor screen
+  const face = addMesh(new THREE.SphereGeometry(0.7, 48, 32), screen, 0, -0.02, 0.7, head);
+  face.scale.set(1.05, 0.78, 0.45);
+
+  // C. Expressive Eyes Setup (White Sclera + Movable Dark Pupil + Reflections + Arc + Heart)
+  let browT = 0;
+  let eyeS = 1;
+  let eyeT = 1;
+  let lookX = 0;
+  let lookY = 0;
+
+  function makeEye(x) {
+    const g = new THREE.Group();
+    g.position.set(x, 0.1, 0.97);
+    head.add(g);
+
+    const o = {};
+    o.open = new THREE.Group();
+    g.add(o.open);
+
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.15, 28, 20), white);
+    ball.scale.set(1, 1.25, 0.35);
+    o.open.add(ball);
+
+    o.pupil = new THREE.Mesh(new THREE.SphereGeometry(0.085, 20, 16), dark);
+    o.pupil.position.z = 0.04;
+    o.pupil.scale.set(1, 1.1, 0.5);
+    o.open.add(o.pupil);
+
+    // Cute eye catchlights (highlights)
+    const s1 = new THREE.Mesh(new THREE.SphereGeometry(0.03, 12, 10), shineM);
+    s1.position.set(0.035, 0.04, 0.1);
+    o.pupil.add(s1);
+
+    const s2 = new THREE.Mesh(new THREE.SphereGeometry(0.014, 10, 8), shineM);
+    s2.position.set(-0.03, -0.035, 0.1);
+    o.pupil.add(s2);
+
+    // Glowing arc for joy / wink
+    o.arc = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.035, 10, 28, Math.PI), glow);
+    o.arc.position.y = -0.04;
+    g.add(o.arc);
+
+    // Glowing pink heart for love
+    o.heart = new THREE.Mesh(heartG, pink);
+    o.heart.position.z = 0.03;
+    g.add(o.heart);
+
+    return o;
+  }
+
+  const eL = makeEye(-0.3);
+  const eR = makeEye(0.3);
+
+  // Glowing teal eyebrows
+  function makeBrow(s) {
+    const b = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.022, 8, 20, Math.PI * 0.6), glow);
+    b.position.set(s * 0.3, 0.34, 0.95);
+    b.rotation.z = s * 0.2 * Math.PI;
+    head.add(b);
+    return b;
+  }
+  const browL = makeBrow(-1);
+  const browR = makeBrow(1);
+
+  // Mouths: Smile arc, Mouth open with tongue, and Mouth 'O'
+  const smile = addMesh(new THREE.TorusGeometry(0.17, 0.03, 10, 28, Math.PI), glow, 0, -0.12, 1.0, head);
+  smile.rotation.z = Math.PI;
+
+  const mouthOpen = new THREE.Group();
+  mouthOpen.position.set(0, -0.1, 1.03);
+  head.add(mouthOpen);
+  mouthOpen.add(new THREE.Mesh(new THREE.CircleGeometry(0.19, 32, Math.PI, Math.PI), redM));
+  const tg = new THREE.Mesh(new THREE.CircleGeometry(0.06, 20), tongueM);
+  tg.position.set(0, -0.125, 0.002);
+  mouthOpen.add(tg);
+
+  const mouthO = new THREE.Mesh(new THREE.CircleGeometry(0.07, 24), redM);
+  mouthO.position.set(0, -0.14, 1.03);
+  head.add(mouthO);
+
+  // Glowing pink blush cheeks
+  const cheekL = addMesh(new THREE.CircleGeometry(0.085, 24), pink, -0.5, -0.08, 0.95, head);
+  cheekL.rotation.y = -0.5;
+
+  const cheekR = addMesh(new THREE.CircleGeometry(0.085, 24), pink, 0.5, -0.08, 0.95, head);
+  cheekR.rotation.y = 0.5;
+
+  // Expression controller
+  function setExpr(name) {
+    const e = { L: 'open', R: 'open', m: 'smile', b: 0 };
+    eyeT = 1;
+
+    if (name === 'joy') {
+      e.L = e.R = 'arc';
+      e.m = 'open';
+      e.b = 0.1;
+    } else if (name === 'wink') {
+      e.R = 'arc';
+      e.m = 'open';
+      e.b = 0.04;
+    } else if (name === 'love') {
+      e.L = e.R = 'heart';
+      e.m = 'open';
+    } else if (name === 'wow') {
+      e.m = 'o';
+      e.b = 0.2;
+      eyeT = 1.25;
+    }
+
+    [[eL, e.L], [eR, e.R]].forEach(([eyeObj, state]) => {
+      eyeObj.open.visible = state === 'open';
+      eyeObj.arc.visible = state === 'arc';
+      eyeObj.heart.visible = state === 'heart';
+    });
+
+    smile.visible = e.m === 'smile';
+    mouthOpen.visible = e.m === 'open';
+    mouthO.visible = e.m === 'o';
+    browT = e.b;
+  }
+
+  setExpr('happy');
+
+  // D. Ear Discs & Antenna
+  [-1, 1].forEach((s) => {
+    const e = addMesh(new THREE.CylinderGeometry(0.2, 0.2, 0.16, 32), metal, s * 0.96, 0, 0, head);
+    e.rotation.z = Math.PI / 2;
+    const gInner = addMesh(new THREE.CylinderGeometry(0.1, 0.1, 0.18, 24), glow, s * 0.98, 0, 0, head);
+    gInner.rotation.z = Math.PI / 2;
   });
 
-  const visorMat = new THREE.MeshStandardMaterial({
-    color: palette.visorGlass,
-    metalness: 0.95,
-    roughness: 0.06,
+  // Antenna stalk and glowing bulb
+  addMesh(new THREE.CylinderGeometry(0.025, 0.025, 0.4, 12), metal, 0, 1.1, 0, head);
+  const bulb = addMesh(new THREE.SphereGeometry(0.1, 24, 20), glow, 0, 1.34, 0, head);
+
+  // E. Chest Badge (Silver ring + Amber Octahedron Diamond)
+  addMesh(new THREE.TorusGeometry(0.19, 0.045, 16, 40), metal, 0, 0.35, 0.68, bot);
+  const dia = addMesh(
+    new THREE.OctahedronGeometry(0.1),
+    new THREE.MeshStandardMaterial({
+      color: 0xff9f1c,
+      emissive: 0xff9f1c,
+      emissiveIntensity: 0.6,
+    }),
+    0, 0.35, 0.68, bot
+  );
+  dia.scale.set(0.8, 1.2, 0.4);
+
+  // F. Floating Arms
+  function createArm(s) {
+    const armGroup = new THREE.Group();
+    armGroup.position.set(s * 1.05, 0.45, 0);
+    bot.add(armGroup);
+
+    addMesh(new THREE.CylinderGeometry(0.1, 0.1, 0.42, 20), metal, 0, 0, 0, armGroup);
+    addMesh(new THREE.SphereGeometry(0.16, 24, 20), yellow, 0, -0.3, 0, armGroup);
+    armGroup.rotation.z = -s * 0.45;
+    return armGroup;
+  }
+
+  const armL = createArm(-1);
+  const armR = createArm(1);
+
+  // G. Feet
+  [-0.32, 0.32].forEach((x) => {
+    addMesh(new THREE.CylinderGeometry(0.2, 0.26, 0.2, 28), yellow2, x, -0.62, 0.06);
+    addMesh(new THREE.CylinderGeometry(0.22, 0.28, 0.05, 28), metal, x, -0.74, 0.06);
   });
 
-  // Glowing Cyan Face Material (Matches Reference Face Image!)
-  const cyanEyeMat = new THREE.MeshBasicMaterial({
-    color: palette.eyeCyan,
-  });
+  // H. Soft Ground Shadow
+  const shadowCanvas = document.createElement('canvas');
+  shadowCanvas.width = shadowCanvas.height = 128;
+  const shadowCtx = shadowCanvas.getContext('2d');
+  const grad = shadowCtx.createRadialGradient(64, 64, 4, 64, 64, 62);
+  grad.addColorStop(0, 'rgba(0, 0, 0, 0.38)');
+  grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  shadowCtx.fillStyle = grad;
+  shadowCtx.fillRect(0, 0, 128, 128);
 
-  // A. Torso Assembly (Cute rounded yellow chassis)
-  const torsoGroup = new THREE.Group();
-  robotRoot.add(torsoGroup);
-
-  const chestGeo = new THREE.SphereGeometry(0.72, 24, 24);
-  chestGeo.scale(0.92, 1.05, 0.88);
-  const chestMesh = new THREE.Mesh(chestGeo, yellowMat);
-  chestMesh.position.y = -0.15;
-  torsoGroup.add(chestMesh);
-
-  // Center chest badge / dial ("1" dial ring)
-  const dialBezel = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 16, 24), silverMat);
-  dialBezel.position.set(0, -0.12, 0.62);
-  torsoGroup.add(dialBezel);
-
-  const dialInner = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.05, 24), darkMetalMat);
-  dialInner.rotateX(Math.PI / 2);
-  dialInner.position.set(0, -0.12, 0.6);
-  torsoGroup.add(dialInner);
-
-  // Neck ball joint
-  const neckMesh = new THREE.Mesh(new THREE.SphereGeometry(0.24, 16, 16), silverMat);
-  neckMesh.position.y = 0.62;
-  torsoGroup.add(neckMesh);
-
-  // B. Head Assembly (Large cute spherical helmet with silver crest & headphone ears)
-  const headGroup = new THREE.Group();
-  headGroup.position.set(0, 0.95, 0);
-  torsoGroup.add(headGroup);
-
-  // Spherical yellow helmet
-  const helmetGeo = new THREE.SphereGeometry(1.12, 32, 32);
-  helmetGeo.scale(1.0, 0.98, 0.94);
-  const helmetMesh = new THREE.Mesh(helmetGeo, yellowMat);
-  headGroup.add(helmetMesh);
-
-  // Silver crown crest arching over helmet from back to front
-  const crestGeo = new THREE.TorusGeometry(1.13, 0.048, 16, 64, Math.PI);
-  crestGeo.rotateY(Math.PI / 2);
-  const crestMesh = new THREE.Mesh(crestGeo, silverMat);
-  crestMesh.position.set(0, 0, 0);
-  headGroup.add(crestMesh);
-
-  // Symmetrical curved dark glossy bubble visor on the front face
-  const visorGeo = new THREE.SphereGeometry(0.96, 32, 32);
-  visorGeo.scale(0.94, 0.82, 0.48);
-  const visorMesh = new THREE.Mesh(visorGeo, visorMat);
-  visorMesh.position.set(0, 0.08, 0.62);
-  headGroup.add(visorMesh);
+  const shadowMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.6, 2.6),
+    new THREE.MeshBasicMaterial({
+      map: new THREE.CanvasTexture(shadowCanvas),
+      transparent: true,
+      depthWrite: false,
+    })
+  );
+  shadowMesh.rotation.x = -Math.PI / 2;
+  shadowMesh.position.y = -1.05;
+  scene.add(shadowMesh);
 
   // ===========================================================================
-  // GLOWING ROBOT FACE (Matching Reference Image: Cyan Oval Eyes + Cheerful Smile ◡)
+  // INTERACTION & CURSOR PUPIL TRACKING
   // ===========================================================================
-  const faceGroup = new THREE.Group();
-  headGroup.add(faceGroup);
-
-  // 1. Left Oval Eye (Vertical Oval with glowing rim placed directly in front of visor)
-  const leftEyeGroup = new THREE.Group();
-  leftEyeGroup.position.set(-0.28, 0.16, 1.12);
-  leftEyeGroup.rotation.y = -0.12;
-  faceGroup.add(leftEyeGroup);
-
-  const eyeCylGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.04, 32);
-  eyeCylGeo.rotateX(Math.PI / 2);
-  eyeCylGeo.scale(0.88, 1.48, 1.0); // Vertical oval shape
-  const leftEyeMesh = new THREE.Mesh(eyeCylGeo, cyanEyeMat);
-  leftEyeGroup.add(leftEyeMesh);
-
-  const eyeRimGeo = new THREE.TorusGeometry(0.13, 0.032, 16, 32);
-  eyeRimGeo.scale(0.88, 1.48, 1.0);
-  const leftEyeRim = new THREE.Mesh(eyeRimGeo, cyanEyeMat);
-  leftEyeGroup.add(leftEyeRim);
-
-  // 2. Right Oval Eye
-  const rightEyeGroup = new THREE.Group();
-  rightEyeGroup.position.set(0.28, 0.16, 1.12);
-  rightEyeGroup.rotation.y = 0.12;
-  faceGroup.add(rightEyeGroup);
-
-  const rightEyeMesh = new THREE.Mesh(eyeCylGeo, cyanEyeMat);
-  rightEyeGroup.add(rightEyeMesh);
-
-  const rightEyeRim = new THREE.Mesh(eyeRimGeo, cyanEyeMat);
-  rightEyeGroup.add(rightEyeRim);
-
-  // 3. Cute Curved Glowing Smile Mouth (◡)
-  const smileGeo = new THREE.TorusGeometry(0.24, 0.038, 16, 32, Math.PI);
-  smileGeo.rotateZ(Math.PI); // Invert arch so it curves into a cheerful upward smile!
-  smileGeo.rotateX(Math.PI / 10);
-  const smileMesh = new THREE.Mesh(smileGeo, cyanEyeMat);
-  smileMesh.position.set(0, -0.16, 1.14);
-  faceGroup.add(smileMesh);
-
-  // 4. Cheerful Happy Eyes (^ ^) for skill-catching victory celebration!
-  const happyEyesGroup = new THREE.Group();
-  happyEyesGroup.visible = false;
-  headGroup.add(happyEyesGroup);
-
-  const happyArcGeo = new THREE.TorusGeometry(0.13, 0.036, 12, 18, Math.PI);
-  const happyEyeLeft = new THREE.Mesh(happyArcGeo, cyanEyeMat);
-  happyEyeLeft.position.set(-0.28, 0.15, 1.12);
-  happyEyesGroup.add(happyEyeLeft);
-
-  const happyEyeRight = new THREE.Mesh(happyArcGeo, cyanEyeMat);
-  happyEyeRight.position.set(0.28, 0.15, 1.12);
-  happyEyesGroup.add(happyEyeRight);
-
-  // Side Headphone Ear Pods (Left & Right)
-  const earLeftGroup = new THREE.Group();
-  earLeftGroup.position.set(-1.12, 0.08, 0);
-  headGroup.add(earLeftGroup);
-
-  const earLeftMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.22, 24), darkMetalMat);
-  earLeftMesh.rotateZ(Math.PI / 2);
-  earLeftGroup.add(earLeftMesh);
-
-  const earLeftRing = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.04, 16, 24), silverMat);
-  earLeftRing.rotateY(Math.PI / 2);
-  earLeftRing.position.x = -0.12;
-  earLeftGroup.add(earLeftRing);
-
-  const earRightGroup = new THREE.Group();
-  earRightGroup.position.set(1.12, 0.08, 0);
-  headGroup.add(earRightGroup);
-
-  const earRightMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.22, 24), darkMetalMat);
-  earRightMesh.rotateZ(Math.PI / 2);
-  earRightGroup.add(earRightMesh);
-
-  const earRightRing = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.04, 16, 24), silverMat);
-  earRightRing.rotateY(Math.PI / 2);
-  earRightRing.position.x = 0.12;
-  earRightGroup.add(earRightRing);
-
-  // C. Left Arm Assembly (Cheerful Outstretched Posture)
-  const leftArmGroup = new THREE.Group();
-  leftArmGroup.position.set(-0.76, 0.32, 0);
-  torsoGroup.add(leftArmGroup);
-
-  const leftShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), silverMat);
-  leftArmGroup.add(leftShoulder);
-
-  const leftUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.45, 12), silverMat);
-  leftUpperArm.position.set(-0.16, -0.22, 0.1);
-  leftUpperArm.rotation.set(-0.3, 0, 0.6);
-  leftArmGroup.add(leftUpperArm);
-
-  const leftElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), darkMetalMat);
-  leftElbow.position.set(-0.36, -0.42, 0.22);
-  leftArmGroup.add(leftElbow);
-
-  const leftForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.12, 0.46, 16), yellowMat);
-  leftForearm.position.set(-0.52, -0.62, 0.38);
-  leftForearm.rotation.set(-0.5, 0.3, 0.8);
-  leftArmGroup.add(leftForearm);
-
-  const leftHand = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.2, 0.08), silverMat);
-  leftHand.position.set(-0.66, -0.82, 0.52);
-  leftHand.rotation.set(-0.3, 0.5, 0.6);
-  leftArmGroup.add(leftHand);
-
-  // D. Right Arm Assembly (Animated Catching & Cheerful Waving)
-  const rightArmGroup = new THREE.Group();
-  rightArmGroup.position.set(0.76, 0.32, 0);
-  torsoGroup.add(rightArmGroup);
-
-  const rightShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), silverMat);
-  rightArmGroup.add(rightShoulder);
-
-  const rightUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.45, 12), silverMat);
-  rightUpperArm.position.set(0.16, -0.22, 0.1);
-  rightUpperArm.rotation.set(-0.3, 0, -0.6);
-  rightArmGroup.add(rightUpperArm);
-
-  const rightElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), darkMetalMat);
-  rightElbow.position.set(0.36, -0.42, 0.22);
-  rightArmGroup.add(rightElbow);
-
-  const rightForearmGroup = new THREE.Group();
-  rightForearmGroup.position.set(0.36, -0.42, 0.22);
-  rightArmGroup.add(rightForearmGroup);
-
-  const rightForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.12, 0.46, 16), yellowMat);
-  rightForearm.position.set(0.16, -0.2, 0.16);
-  rightForearm.rotation.set(-0.5, -0.3, -0.8);
-  rightForearmGroup.add(rightForearm);
-
-  const rightHand = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.2, 0.08), silverMat);
-  rightHand.position.set(0.3, -0.4, 0.3);
-  rightHand.rotation.set(-0.3, -0.5, -0.6);
-  rightForearmGroup.add(rightHand);
-
-  // E. Legs & Floating Yellow Boots
-  const leftLegGroup = new THREE.Group();
-  leftLegGroup.position.set(-0.34, -0.72, 0);
-  torsoGroup.add(leftLegGroup);
-
-  const leftHip = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), darkMetalMat);
-  leftLegGroup.add(leftHip);
-
-  const leftThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.35, 14), yellowMat);
-  leftThigh.position.set(-0.06, -0.2, 0.05);
-  leftThigh.rotation.set(-0.35, 0, 0.2);
-  leftLegGroup.add(leftThigh);
-
-  const leftBoot = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.38, 0.58), yellowHighlightMat);
-  leftBoot.position.set(-0.1, -0.48, 0.24);
-  leftBoot.rotation.set(0.4, 0, 0.2);
-  leftLegGroup.add(leftBoot);
-
-  const leftSole = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.08, 0.6), silverMat);
-  leftSole.position.set(-0.1, -0.66, 0.24);
-  leftSole.rotation.set(0.4, 0, 0.2);
-  leftLegGroup.add(leftSole);
-
-  const rightLegGroup = new THREE.Group();
-  rightLegGroup.position.set(0.34, -0.72, 0);
-  torsoGroup.add(rightLegGroup);
-
-  const rightHip = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), darkMetalMat);
-  rightLegGroup.add(rightHip);
-
-  const rightThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.35, 14), yellowMat);
-  rightThigh.position.set(0.06, -0.2, -0.05);
-  rightThigh.rotation.set(-0.15, 0, -0.2);
-  rightLegGroup.add(rightThigh);
-
-  const rightBoot = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.38, 0.58), yellowHighlightMat);
-  rightBoot.position.set(0.1, -0.48, 0.12);
-  rightBoot.rotation.set(0.2, 0, -0.2);
-  rightLegGroup.add(rightBoot);
-
-  const rightSole = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.08, 0.6), silverMat);
-  rightSole.position.set(0.1, -0.66, 0.12);
-  rightSole.rotation.set(0.2, 0, -0.2);
-  rightLegGroup.add(rightSole);
-
-  // 5. Cursor Tracking & Motion
-  let mouseX = 0;
-  let mouseY = 0;
-  let targetMouseX = 0;
-  let targetMouseY = 0;
+  let mouseTargetX = 0;
+  let mouseTargetY = 0;
 
   const updatePointer = (clientX, clientY) => {
     const rect = container.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    targetMouseX = Math.max(-1.5, Math.min(1.5, (clientX - centerX) / (rect.width * 0.7)));
-    targetMouseY = Math.max(-1.5, Math.min(1.5, (clientY - centerY) / (rect.height * 0.7)));
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    mouseTargetX = Math.max(-1.5, Math.min(1.5, (clientX - cx) / (rect.width * 0.5)));
+    mouseTargetY = Math.max(-1.5, Math.min(1.5, (clientY - cy) / (rect.height * 0.5)));
   };
 
   window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY));
@@ -391,179 +433,155 @@ function setupCheerfulRobotScene(container) {
   }, { passive: true });
 
   container.addEventListener('mouseleave', () => {
-    targetMouseX = 0;
-    targetMouseY = 0;
+    mouseTargetX = 0;
+    mouseTargetY = 0;
   });
 
-  // 6. Cheerful Animation States
-  let isCheerfulCatching = false;
-  let cheerfulTimer = 0;
-  let cheerfulBounce = 0;
+  // ===========================================================================
+  // CELEBRATION & ACTIONS
+  // ===========================================================================
+  let isCatching = false;
+  let catchTimer = 0;
+  let botBounce = 0;
 
   let isSpinning = false;
   let spinAngle = 0;
 
-  triggerCheerfulCatchAnim = (targetNormX, targetNormY) => {
-    isCheerfulCatching = true;
-    cheerfulTimer = 0;
-    cheerfulBounce = 0.45; // Joyful bounce upward!
+  const celebratoryExpressions = ['joy', 'love', 'wink'];
+  let exprIndex = 0;
 
-    // Switch eyes to happy squint (^ ^) and smile grows
-    leftEyeGroup.visible = false;
-    rightEyeGroup.visible = false;
-    happyEyesGroup.visible = true;
-    smileMesh.scale.set(1.2, 1.2, 1.2);
+  triggerBuddyCatchAnim = (targetNormX, targetNormY) => {
+    isCatching = true;
+    catchTimer = 0;
+    botBounce = 0.38; // Cheerful upward jump
 
-    // Direct head toward caught skill
-    targetMouseX = targetNormX || 0;
-    targetMouseY = targetNormY || -0.5;
+    // Rotate through happy expressions
+    const chosenExpr = celebratoryExpressions[exprIndex % celebratoryExpressions.length];
+    exprIndex++;
+    setExpr(chosenExpr);
+
+    // Direct head slightly toward caught orb
+    mouseTargetX = targetNormX || 0;
+    mouseTargetY = targetNormY || -0.4;
   };
 
-  triggerCheerfulSpin = () => {
+  triggerBuddySpin = () => {
     isSpinning = true;
     spinAngle = 0;
-    leftEyeGroup.visible = false;
-    rightEyeGroup.visible = false;
-    happyEyesGroup.visible = true;
-    smileMesh.scale.set(1.2, 1.2, 1.2);
+    setExpr('wow');
+    playCheerfulChime();
+    speakCheerfulMessage("Hi! I'm Buddy, Abhijay's portfolio robot! Let's explore!");
+
     setTimeout(() => {
-      leftEyeGroup.visible = true;
-      rightEyeGroup.visible = true;
-      happyEyesGroup.visible = false;
-      smileMesh.scale.set(1.0, 1.0, 1.0);
-    }, 1800);
+      setExpr('happy');
+    }, 2000);
   };
 
   container.addEventListener('click', (e) => {
-    // Only spin if clicked canvas directly and not a skill bubble
     if (!e.target.closest('.falling-skill-orb')) {
-      triggerCheerfulSpin();
+      triggerBuddySpin();
     }
   });
 
-  // 7. Blinking Logic
-  let blinkTimer = 0;
-  let nextBlink = 3.2;
-  let isBlinking = false;
-
-  // 8. Render Animation Loop
+  // ===========================================================================
+  // MAIN ANIMATION LOOP
+  // ===========================================================================
   const clock = new THREE.Clock();
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function animate() {
-    requestAnimationFrame(animate);
+  function renderLoop() {
+    requestAnimationFrame(renderLoop);
 
     const delta = clock.getDelta();
-    const elapsed = clock.getElapsedTime();
+    const t = clock.getElapsedTime();
 
     // Smooth cursor interpolation
-    mouseX += (targetMouseX - mouseX) * 0.08;
-    mouseY += (targetMouseY - mouseY) * 0.08;
+    lookX += (mouseTargetX - lookX) * 0.1;
+    lookY += (mouseTargetY - lookY) * 0.1;
 
-    // Head tracks cursor
-    headGroup.rotation.y = mouseX * 0.75;
-    headGroup.rotation.x = -mouseY * 0.45;
+    // Organic hover floating
+    if (!prefersReducedMotion) {
+      bot.position.y = Math.sin(t * 2) * 0.08 + botBounce;
+      bot.position.x = lookX * 0.15;
+      head.rotation.y = lookX * 0.45;
+      head.rotation.x = -lookY * 0.25;
+      head.rotation.z = Math.sin(t * 1.5) * 0.04;
 
-    // Torso banking
-    torsoGroup.rotation.y = mouseX * 0.25;
-    torsoGroup.rotation.z = -mouseX * 0.1;
+      // Antenna bulb pulsing glow
+      bulb.material.emissiveIntensity = 0.7 + 0.4 * Math.sin(t * 4);
 
-    // Organic cheerful floating hover
-    const hoverY = Math.sin(elapsed * 2.8) * 0.14;
-    robotRoot.position.y = hoverY + cheerfulBounce - (mouseY * 0.12);
-    robotRoot.position.x = mouseX * 0.3;
+      // Cheeks pulsing
+      cheekL.scale.setScalar(1 + 0.08 * Math.sin(t * 3));
+      cheekR.scale.setScalar(cheekL.scale.x);
 
-    // Playful floating kicking boots
-    leftLegGroup.rotation.x = Math.sin(elapsed * 2.5) * 0.18;
-    rightLegGroup.rotation.x = -Math.sin(elapsed * 2.5) * 0.18;
+      // Heart eye pulsing (when love expression is on)
+      eL.heart.scale.setScalar(1.5 + 0.12 * Math.sin(t * 6));
+      eR.heart.scale.setScalar(eL.heart.scale.x);
 
-    // Handling cheerful catch celebration
-    if (isCheerfulCatching) {
-      cheerfulTimer += delta;
-      cheerfulBounce = Math.max(0, cheerfulBounce - delta * 0.7);
+      // Eyebrows height interpolation
+      browL.position.y += (0.34 + browT - browL.position.y) * 0.12;
+      browR.position.y = browL.position.y;
 
-      // Raise both arms in victory celebration!
-      leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -1.2, 0.15);
-      leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, -0.6, 0.15);
-      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 1.2, 0.15);
-      rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, -0.6, 0.15);
+      // Natural eye blinking (every ~4s)
+      const blink = (t % 4) < 0.12 ? 0.15 : 1;
+      eyeS += (eyeT - eyeS) * 0.2;
 
-      if (cheerfulTimer >= 2.0) {
-        isCheerfulCatching = false;
-        leftEyeGroup.visible = true;
-        rightEyeGroup.visible = true;
-        happyEyesGroup.visible = false;
-        smileMesh.scale.set(1.0, 1.0, 1.0);
+      // Smooth pupil tracking of cursor!
+      [eL, eR].forEach((e) => {
+        e.open.scale.set(eyeS, eyeS * blink, 1);
+        e.pupil.position.x += (lookX * 0.05 - e.pupil.position.x) * 0.15;
+        e.pupil.position.y += (-lookY * 0.05 - e.pupil.position.y) * 0.15;
+      });
+
+      // Catch celebration animation
+      if (isCatching) {
+        catchTimer += delta;
+        botBounce = Math.max(0, botBounce - delta * 0.55);
+
+        // Raise arms high in joyful wave
+        armL.rotation.z = THREE.MathUtils.lerp(armL.rotation.z, 1.35, 0.15);
+        armR.rotation.z = THREE.MathUtils.lerp(armR.rotation.z, -1.35, 0.15);
+
+        if (catchTimer >= 2.0) {
+          isCatching = false;
+          setExpr('happy');
+        }
+      } else {
+        botBounce = 0;
+        // Idle organic arm sway
+        armR.rotation.z = -0.45 - 0.45 * Math.max(0, Math.sin(t * 3));
+        armL.rotation.z = 0.45 + Math.sin(t * 2) * 0.06;
       }
-    } else {
-      cheerfulBounce = 0;
-      // Cheerful idle outstretched arms
-      leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, 0.1 + Math.sin(elapsed * 2.0) * 0.08, 0.08);
-      leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 0.0, 0.08);
-      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -0.1 - Math.sin(elapsed * 2.0) * 0.08, 0.08);
-      rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 0.0, 0.08);
-    }
 
-    // Full 360 victory spin
-    if (isSpinning) {
-      spinAngle += delta * 8.0;
-      robotRoot.rotation.y = spinAngle;
-      if (spinAngle >= Math.PI * 2) {
-        isSpinning = false;
-        robotRoot.rotation.y = 0;
-      }
-    }
-
-    // Eye blinking
-    if (!happyEyesGroup.visible) {
-      blinkTimer += delta;
-      if (blinkTimer >= nextBlink && !isBlinking) {
-        isBlinking = true;
-        leftEyeGroup.scale.y = 0.08;
-        rightEyeGroup.scale.y = 0.08;
-        setTimeout(() => {
-          leftEyeGroup.scale.y = 1.0;
-          rightEyeGroup.scale.y = 1.0;
-          isBlinking = false;
-          blinkTimer = 0;
-          nextBlink = 3.0 + Math.random() * 3.5;
-        }, 130);
+      // 360 Spin on click
+      if (isSpinning) {
+        spinAngle += delta * 7.5;
+        bot.rotation.y = spinAngle;
+        if (spinAngle >= Math.PI * 2) {
+          isSpinning = false;
+          bot.rotation.y = 0;
+        }
       }
     }
 
-    renderer.render(scene, camera);
+    renderer.render(scene, cam);
   }
 
-  animate();
+  requestAnimationFrame(renderLoop);
 
-  // 9. Resize Handling
+  // Resize handler
   const handleResize = () => {
     if (!container) return;
     const w = container.clientWidth || 480;
     const h = container.clientHeight || 420;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    cam.aspect = w / h;
+    cam.updateProjectionMatrix();
     renderer.setSize(w, h);
   };
 
   window.addEventListener('resize', handleResize);
 
-  // 10. Theme Mutation Observer
-  const observer = new MutationObserver(() => {
-    palette = getRobotPalette();
-    yellowMat.color.setHex(palette.yellowBody);
-    yellowHighlightMat.color.setHex(palette.yellowHighlight);
-    visorMat.color.setHex(palette.visorGlass);
-    ambientLight.color.setHex(0xffffff);
-    ambientLight.intensity = palette.lightAmbient;
-    keyLight.intensity = palette.lightDirectional;
-  });
-
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme'],
-  });
-
-  // 11. Mount Falling Skills Mini-Game & Status Bar
+  // Mount Falling Skills Mini-Game & Status Bar
   setupFallingSkillsMiniGame(container);
   setupRobotStatusBar();
 }
@@ -649,7 +667,6 @@ function setupFallingSkillsMiniGame(container) {
 
     // =========================================================================
     // INSTANT SINGLE-CLICK / TOUCH CATCH HANDLER
-    // (Uses pointerdown + touchstart for instant 0ms response on very first tap!)
     // =========================================================================
     let caught = false;
     const handleCatch = (e) => {
@@ -668,39 +685,41 @@ function setupFallingSkillsMiniGame(container) {
       const relX = orbRect.left - containerRect.left + orbRect.width / 2;
       const relY = orbRect.top - containerRect.top + orbRect.height / 2;
 
-      // Normalized coordinates for 3D Robot to look and reach toward
+      // Normalized coordinates for Buddy to look toward
       const normX = ((relX / containerRect.width) - 0.5) * 2;
       const normY = ((relY / containerRect.height) - 0.5) * 2;
 
-      // 1. Trigger Cheerful Robot Catch Animation
-      triggerCheerfulCatchAnim(normX, normY);
+      // 1. Buddy Catch Jump Animation & Joy/Love/Wink Expression
+      triggerBuddyCatchAnim(normX, normY);
 
-      // 2. Burst Particle FX
+      // 2. Play Cheerful Synthesized Chime (C5 -> E5 -> G5 -> C6)
+      playCheerfulChime();
+
+      // 3. Burst Particle FX
       spawnBurstParticles(fallingLayer, relX, relY);
 
-      // 3. Floating "Skill Acquired" Toast
+      // 4. Floating "Skill Acquired" Toast
       spawnSkillAcquiredToast(fallingLayer, relX, relY, skill.name);
 
-      // 4. Update Acquired Skills Counter
+      // 5. Update Acquired Skills Counter
       acquiredSkillsSet.add(skill.key);
       updateScorePill();
 
-      // 5. Update Status Bar below canvas with Cheerful Praise
+      // 6. Update Status Bar below canvas with Cheerful Praise & Voice
       updateCheerfulSpeech(skill);
 
       // Remove orb immediately
       orb.remove();
     };
 
-    // Instant registration: pointerdown fires on very first click/touchdown
     orb.addEventListener('pointerdown', handleCatch);
     orb.addEventListener('touchstart', handleCatch, { passive: false });
     orb.addEventListener('click', handleCatch);
   }
 
   // Periodic spawn loop
-  setInterval(spawnFallingSkill, 2000);
-  setTimeout(spawnFallingSkill, 500);
+  setInterval(spawnFallingSkill, 2100);
+  setTimeout(spawnFallingSkill, 600);
 }
 
 function updateScorePill() {
@@ -713,16 +732,16 @@ function updateScorePill() {
 }
 
 function spawnBurstParticles(parent, x, y) {
-  const colors = ['#f59e0b', '#fbbf24', '#38bdf8', '#ffffff', '#22c55e'];
-  for (let i = 0; i < 14; i++) {
+  const colors = ['#f59e0b', '#fbbf24', '#2dd4bf', '#ffffff', '#22c55e', '#ff8fa3'];
+  for (let i = 0; i < 16; i++) {
     const spark = document.createElement('div');
     spark.className = 'skill-burst-spark';
     spark.style.left = `${x}px`;
     spark.style.top = `${y}px`;
     spark.style.background = colors[i % colors.length];
 
-    const angle = (i / 14) * Math.PI * 2 + Math.random() * 0.4;
-    const dist = 32 + Math.random() * 40;
+    const angle = (i / 16) * Math.PI * 2 + Math.random() * 0.4;
+    const dist = 36 + Math.random() * 44;
     const dx = Math.cos(angle) * dist;
     const dy = Math.sin(angle) * dist;
 
@@ -754,24 +773,11 @@ function updateCheerfulSpeech(skill) {
     setTimeout(() => {
       statusText.innerHTML = `Yay! 🎉 <strong>Skill Acquired: ${skill.name}!</strong> ${skill.phrase} ⭐`;
       statusText.style.opacity = '1';
-    }, 100);
+    }, 90);
   }
 
-  speakMessage(`Skill acquired: ${skill.name}!`);
-}
-
-function speakMessage(text) {
-  if ('speechSynthesis' in window) {
-    try {
-      window.speechSynthesis.cancel();
-      const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/gu, '');
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.rate = 1.1;
-      utterance.pitch = 1.25;
-      utterance.volume = 0.75;
-      window.speechSynthesis.speak(utterance);
-    } catch (err) {}
-  }
+  // Cheerful voice output
+  speakCheerfulMessage(`Yay! Skill acquired: ${skill.name}! ${skill.phrase}`);
 }
 
 // =============================================================================
@@ -785,13 +791,14 @@ function setupRobotStatusBar() {
   if (voiceBtn) {
     voiceBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      const text = document.getElementById('robot-speech-text')?.textContent || "Hi! Welcome to my portfolio!";
-      speakMessage(text);
+      playCheerfulChime();
+      const text = document.getElementById('robot-speech-text')?.textContent || "Hi! I'm Buddy! Click falling skill logos to catch & acquire them with me!";
+      speakCheerfulMessage(text);
     });
   }
 
   statusBar.addEventListener('click', (e) => {
     if (e.target.closest('#robot-voice-btn')) return;
-    triggerCheerfulSpin();
+    triggerBuddySpin();
   });
 }
