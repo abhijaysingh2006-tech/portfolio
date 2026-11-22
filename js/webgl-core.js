@@ -240,12 +240,6 @@ function setupCheerfulRobotScene(container) {
   const happyEyeRight = new THREE.Mesh(happyArcGeo, cyanEyeMat);
   happyEyeRight.position.set(0.28, 0.15, 1.12);
   happyEyesGroup.add(happyEyeRight);
-  happyEyeLeft.position.set(-0.28, 0.14, 0.94);
-  happyEyesGroup.add(happyEyeLeft);
-
-  const happyEyeRight = new THREE.Mesh(happyArcGeo, cyanEyeMat);
-  happyEyeRight.position.set(0.28, 0.14, 0.94);
-  happyEyesGroup.add(happyEyeRight);
 
   // Side Headphone Ear Pods (Left & Right)
   const earLeftGroup = new THREE.Group();
