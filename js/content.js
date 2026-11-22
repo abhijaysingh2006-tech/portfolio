@@ -1,7 +1,7 @@
 // =============================================================================
 // CONTENT.JS - Central Data Store for Abhijay Singh's Portfolio
-// ALL personal information, verified stats, hackathons, and education live here.
-// Live projects are fetched automatically from GitHub (with fallback).
+// ALL verified facts, hackathon records, cryptography/systems architecture,
+// skills, and education live here. "No invented metrics" rule strictly enforced.
 // =============================================================================
 
 export const portfolioContent = {
@@ -12,75 +12,223 @@ export const portfolioContent = {
     title: "Robotics & Artificial Intelligence Undergraduate",
     institution: "VTU Muddenahalli, Karnataka",
     location: "Bengaluru, India",
-    tagline: "Building resilient autonomous systems, machine learning pipelines, and real-world engineering solutions.",
+    tagline: "Building resilient autonomous systems, machine learning pipelines, and tamper-evident security architectures.",
     typewriterRoles: [
       "Robotics & Autonomous Systems",
       "AI / Machine Learning Engineer",
-      "SIH Round 1 Selected",
+      "Security & Cryptography Systems",
+      "Tech Habba 2026 Winner (3rd Prize)",
       "Former IEEE Student Chairman"
     ],
     email: "abhijaysingh2006@gmail.com",
-    // WhatsApp URL (number kept strictly within the link)
     whatsAppUrl: "https://wa.me/917004793221",
-    // Resume document inside assets/
     resumeUrl: "assets/resume.pdf",
+    rootDefensePdfUrl: "assets/Root-Defense.pdf",
     
     // Live GitHub Profile
     githubUsername: "abhijaysingh2006-tech",
     githubUrl: "https://github.com/abhijaysingh2006-tech",
     linkedinUrl: "[TODO url]",
     
-    // Minimal, aesthetically pleasing first-person summary
+    // Minimal, aesthetically pleasing verified summary
     about: 
-      "I am an undergraduate specializing in Robotics and Artificial Intelligence at VTU Muddenahalli. My work bridges physical hardware systems and modern machine learning — from sensor-driven robotics to real-time predictive models. Having cleared Round 1 (Internal College Hackathon) of Smart India Hackathon to get selected, competed in hackathons with ISRO, and served as IEEE Student Chairman, I focus on building reliable, clean, and impactful software architectures."
+      "I am an undergraduate specializing in Robotics and Artificial Intelligence at VTU Muddenahalli. My engineering work bridges physical hardware, autonomous intelligence, and tamper-evident distributed systems. Winner of 3rd Prize (₹10,000) at Tech Habba 2026 for Root-Defense (tamper-evident security logging anchored on Quai Network), selected in Round 1 of Smart India Hackathon, competitor in ISRO's Bharatiya Antariksh Hackathon, and former IEEE Student Chairman. I focus on building reliable, verifiable, and resilient software-hardware architectures."
   },
 
   // --- Verified Numeric Counters ---
   stats: [
+    { label: "Tech Habba 2026", value: "3rd Prize (₹10K)", id: "stat-award" },
     { label: "Public Repositories", value: "Auto-synced", id: "stat-repos" },
-    { label: "Hackathons Completed", value: "3" },
+    { label: "Hackathons Completed", value: "4" },
     { label: "SIH Internal Round", value: "Selected" },
     { label: "IEEE Student Chairman", value: "1 Year" },
     { label: "Academic Tenure", value: "2024 – 2028" }
   ],
 
+  // --- Featured Hackathon Winner: Root-Defense ---
+  featuredHackathon: {
+    event: "Tech Habba 2026",
+    organization: "Acharya Institute of Technology, Bengaluru",
+    date: "21 November 2026",
+    team: "Team Elite",
+    result: "3rd Prize Winner",
+    cashPrize: "₹10,000",
+    project: "Root-Defense",
+    tagline: "Tamper-evident security logs that an attacker with root access can't quietly erase.",
+    summary: "Each log line is hashed, signed and sent to an off-host witness; batches fold into a Merkle root anchored on a smart contract on Quai Network; an auditor portal recomputes everything and shows Genuine or Tampered with the exact entry that changed; a 5-second heartbeat raises an alarm if the agent goes silent; key ratchet makes stolen keys useless for re-signing history; only hashes and roots go on-chain, raw logs stay encrypted.",
+    techStack: [
+      "Python / Go",
+      "SHA-256",
+      "Ed25519",
+      "Merkle Trees",
+      "Solidity",
+      "Quai Network (EVM)",
+      "SQLite / Postgres",
+      "Hardhat / Anvil Fallback",
+      "Web Dashboard"
+    ],
+    awardImage: {
+      webp: "assets/images/tech-habba-award.webp",
+      webp600: "assets/images/tech-habba-award-600.webp",
+      webp1024: "assets/images/tech-habba-award-1024.webp",
+      fallback: "assets/images/tech-habba-award.jpg",
+      alt: "Abhijay Singh receiving 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology",
+      width: 1024,
+      height: 768
+    },
+    pipeline: [
+      { step: "01", name: "Log Sources", detail: "auth, syslog, app & sudo logs", desc: "Local system events generated by monitored server." },
+      { step: "02", name: "Host Agent", detail: "hash chain + sign + key ratchet", desc: "Streams entries instantly; forward-secure keys self-delete." },
+      { step: "03", name: "Off-Host Witness", detail: "append-only · 5s heartbeat alarm", desc: "Isolated server stores encrypted raw logs; triggers alarm on silence." },
+      { step: "04", name: "Merkle Batcher", detail: "cryptographic batch aggregation", desc: "Folds log stream hashes into a single tamper-evident Merkle root." },
+      { step: "05", name: "Quai Smart Contract", detail: "stores roots + block timestamps", desc: "Immutable public notarization on public Proof-of-Work EVM chain." },
+      { step: "06", name: "Auditor Portal", detail: "recompute & compare in 1-click", desc: "Verifies inclusion proofs; outputs Genuine or Tampered with exact line." }
+    ],
+    caseStudy: {
+      problem: "Once attackers gain root access on a server, they can quietly rewrite or wipe auth, syslog, and sudo records that expose their intrusion. Following a breach, proving which logs are genuine to CERT-In (which mandates 180 days of log retention and reporting within 6 hours) or in court becomes impossible. We can't stop root from editing local files, so we make every edit detectable, locatable, and provable.",
+      approach: "Copy every line out in seconds, notarise batches on Quai Network via Merkle roots, and allow one-click audit verification. The incident detection window drops from hours to seconds.",
+      threatModel: [
+        { attack: "Edit or delete an old entry", caught: "Yes", status: "caught", how: "Hash chain breaks; calculated Merkle root ≠ on-chain anchored value." },
+        { attack: "Wipe the local log database", caught: "Yes", status: "caught", how: "Off-host witness and Quai blockchain still hold immutable proof and copies." },
+        { attack: "Kill the agent or cut network", caught: "Yes, in seconds", status: "caught", how: "5-second heartbeat stops; witness alarm fires, coverage gap is logged." },
+        { attack: "Steal the key, re-sign history", caught: "Yes", status: "caught", how: "Forward-secure key ratchet: ephemeral old signing keys are already deleted." },
+        { attack: "Alter a line before it's sent", caught: "Not prevented", status: "not-prevented", how: "Pre-transmission window is seconds, not zero (attacker with root can tamper pre-send)." },
+        { attack: "Hack host and witness together", caught: "Reduced", status: "reduced", how: "Historical on-chain roots hold; mitigated via 2-of-3 witness consensus quorum." },
+        { attack: "Write fake events in real time", caught: "Partly", status: "partly", how: "Late insertion is caught by sequential timestamps; fabricated live events are not." }
+      ],
+      privacyNote: "Privacy guarantee: Only cryptographic hashes, Merkle roots, and heartbeat digests reach the public blockchain. Raw log contents remain encrypted on the witness, accessible solely by authorized auditors.",
+      improvementsNext: [
+        {
+          title: "Kernel-level eBPF Probe",
+          desc: "Intercept syscalls (sys_enter_write) directly inside the Linux kernel before userspace disk persistence to close the sub-second pre-transmission window."
+        },
+        {
+          title: "Multi-Witness BFT Quorum",
+          desc: "Deploy across 3+ independent cloud and bare-metal nodes so no single compromised witness can withhold evidence or suppress alerts."
+        },
+        {
+          title: "Zero-Knowledge Inclusion Proofs",
+          desc: "Enable third-party auditors to cryptographically verify log validity without exposing confidential internal schemas, IP addresses, or payload details."
+        },
+        {
+          title: "Automated CERT-In Reporting Webhook",
+          desc: "Trigger compliance incident packs and dispatch signed audit reports automatically within minutes of a heartbeat failure or root verification mismatch."
+        }
+      ]
+    }
+  },
+
   // --- Grouped Skills & Tooling ---
-  skills: [
+  skillGroups: [
     {
-      category: "Programming & Core",
-      items: ["Python", "C", "C++", "JavaScript", "TypeScript"]
+      id: "robotics-ai",
+      title: "Robotics & Embedded AI",
+      icon: "cpu",
+      description: "Sensor-driven robotics, autonomous control algorithms, and embedded systems.",
+      skills: [
+        { name: "Robotics Systems", level: "Autonomous Core" },
+        { name: "Computer Vision", level: "OpenCV / YOLO" },
+        { name: "ROS", level: "Robot OS Nodes" },
+        { name: "Embedded Systems", level: "Microcontrollers" },
+        { name: "Arduino / C++", level: "Sensors & Actuators" },
+        { name: "Hardware Interfacing", level: "UART / I2C / SPI" }
+      ]
     },
     {
-      category: "Robotics & AI Domains",
-      items: ["Robotics Systems", "Machine Learning", "Computer Vision", "ROS", "Embedded Systems", "Arduino"]
+      id: "machine-learning",
+      title: "Machine Learning",
+      icon: "brain",
+      description: "Predictive modeling, deep learning pipelines, and spatial data analytics.",
+      skills: [
+        { name: "Python ML Stack", level: "NumPy / Pandas / SciPy" },
+        { name: "Deep Learning", level: "Neural Network Pipelines" },
+        { name: "Computer Vision", level: "Object & Motion Tracking" },
+        { name: "Geospatial Data ML", level: "Earth Observation Data" },
+        { name: "Predictive Analytics", level: "Real-time Inference" },
+        { name: "Model Evaluation", level: "Metrics & Validation" }
+      ]
     },
     {
-      category: "Engineering & Dev Tools",
-      items: ["Git & GitHub", "Linux", "VS Code", "REST APIs", "Modern Web Architecture"]
+      id: "security-crypto",
+      title: "Security & Cryptography",
+      icon: "shield-check",
+      description: "Tamper-evident audit trails, asymmetric cryptography, and forward security.",
+      skills: [
+        { name: "Tamper-Evident Logs", level: "Off-host Proofs" },
+        { name: "Hash Chains & SHA-256", level: "Cryptographic Integrity" },
+        { name: "Merkle Trees", level: "Inclusion Proofs" },
+        { name: "Ed25519 Signatures", level: "Asymmetric Auth" },
+        { name: "Key Ratchet", level: "Forward Secrecy" },
+        { name: "Threat Modelling", level: "STRIDE / Attack Trees" }
+      ]
     },
     {
-      category: "Leadership & Collaboration",
-      items: ["Technical Leadership", "Cross-functional Teamwork", "Project Ideation", "Public Speaking", "Problem Solving"]
+      id: "blockchain",
+      title: "Blockchain & Decentralized",
+      icon: "blocks",
+      description: "Public ledger anchoring, EVM smart contracts, and decentralized verification.",
+      skills: [
+        { name: "Solidity", level: "Smart Contracts" },
+        { name: "Quai Network", level: "Proof-of-Work EVM" },
+        { name: "EVM Tooling", level: "Contract Architecture" },
+        { name: "Hardhat / Anvil", level: "Fallback & Local Node" },
+        { name: "Merkle Root Anchoring", level: "State Notarization" }
+      ]
     },
     {
-      category: "Languages",
-      items: ["English", "Hindi"]
+      id: "backend-systems",
+      title: "Backend & Systems",
+      icon: "server",
+      description: "Log streaming agents, off-host witness services, and robust databases.",
+      skills: [
+        { name: "Python & Go", level: "System Services" },
+        { name: "Linux Systems", level: "auth / syslog / sudo" },
+        { name: "SQLite & PostgreSQL", level: "Relational Persistence" },
+        { name: "Heartbeat Monitors", level: "5s Daemon Alarms" },
+        { name: "REST APIs", level: "Service Integration" }
+      ]
+    },
+    {
+      id: "web-tools",
+      title: "Web & Engineering Tools",
+      icon: "code",
+      description: "Component architecture, interactive WebGL, and collaborative version control.",
+      skills: [
+        { name: "HTML5 / Semantic UI", level: "Modern Web Standards" },
+        { name: "CSS3 / Modern Layouts", level: "Flexbox / Grid / Glass" },
+        { name: "JavaScript (ES Modules)", level: "Clean Vanilla JS" },
+        { name: "Three.js WebGL", level: "3D Spatial Visualization" },
+        { name: "Git & GitHub", level: "CI/CD & Version Control" },
+        { name: "VS Code & Terminal", level: "Development Workflow" }
+      ]
     }
   ],
 
-  // --- Hackathon Track Record ---
+  // --- Hackathon Track Record (Ordered Newest First) ---
   hackathons: [
+    {
+      title: "Tech Habba 2026",
+      level: "3rd Prize Winner (₹10,000)",
+      organization: "Acharya Institute of Technology, Bengaluru",
+      date: "21 November 2026",
+      team: "Team Elite",
+      summary: "Won 3rd prize for Root-Defense: tamper-evident security logs anchored on Quai Network.",
+      description: "Built an off-host witness architecture with forward-secure key ratcheting, Merkle batching, and EVM smart contracts to prevent attackers with root access from erasing evidence of a breach.",
+      featured: true
+    },
     {
       title: "Smart India Hackathon (SIH)",
       level: "Internal Round — Selected",
       organization: "VTU Muddenahalli / Ministry of Education",
-      summary: "Competed in the internal college hackathon, cleared Round 1, and earned official nomination/selection.",
+      date: "2024",
+      summary: "Competed in the internal college hackathon, cleared Round 1, and earned official nomination.",
       description: "Spearheaded problem evaluation, architectural prototyping, and defense under competitive college evaluation criteria to secure selection."
     },
     {
       title: "Bharatiya Antariksh Hackathon 2026",
       level: "National Level",
       organization: "ISRO (Indian Space Research Organisation)",
+      date: "2026",
       summary: "Engineered space-data processing algorithms leveraging Earth observation datasets.",
       description: "Applied machine learning and geospatial data manipulation to extract actionable planetary intelligence."
     },
@@ -88,6 +236,7 @@ export const portfolioContent = {
       title: "Anviya Hackathon",
       level: "Inter-College Level",
       organization: "SJCIT",
+      date: "2024",
       summary: "Transformed an early concept into a working functional prototype in a single sprint.",
       description: "Rapid iteration, hardware/software interfacing, and collaborative technical execution."
     }

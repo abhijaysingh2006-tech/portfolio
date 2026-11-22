@@ -1,38 +1,80 @@
-# Abhijay Singh — Robotics & AI Systems Portfolio
+# Abhijay Singh — Robotics, AI & Systems Security Portfolio
 
-A minimalist, high-performance static developer portfolio built with clean **Vanilla HTML5, CSS3, and JavaScript (ES Modules)**.
+A high-performance, responsive developer portfolio built with clean **Vanilla HTML5, CSS3, and JavaScript (ES Modules)** with an interactive **3D WebGL Spatial Core**, **Canvas Shooting Starfield**, and a featured **Tech Habba 2026 Winner Showcase**.
 
 ---
 
-## ✨ Features
-1. **Automated GitHub Repository Sync**:
-   - Directly fetches your public repositories from [`https://api.github.com/users/abhijaysingh2006-tech/repos`](https://api.github.com/users/abhijaysingh2006-tech).
-   - Any time you push or create a new public repository on GitHub, it automatically populates on your website without editing code.
-   - Includes graceful cached fallback items in case of unauthenticated rate limits.
-2. **Aesthetically Soothing Monochrome Palette**:
-   - Editorial Black & White design with crisp hairline borders and subtle grid textures.
-   - Built-in Dark Mode & Light Mode toggle with local preference persistence.
-   - High-legibility typography using *Inter* and *JetBrains Mono*.
-3. **Verified Information & Integrity**:
-   - Zero invented metrics or placeholder statistics.
-   - Features Smart India Hackathon (SIH internal round selected), ISRO Bharatiya Antariksh Hackathon, and SJCIT Anviya Hackathon.
-   - Highlights 1-year tenure as IEEE Student Chairman at VTU Muddenahalli.
-   - Direct WhatsApp connect link (`https://wa.me/917004793221`) without raw phone numbers in the text body.
-   - Direct links to your GitHub profile: [`https://github.com/abhijaysingh2006-tech`](https://github.com/abhijaysingh2006-tech).
+## ✨ Key Highlights & Features
+
+1. **🏆 Featured Winner: Root-Defense (Tech Habba 2026)**:
+   - **Result**: 3rd Prize Winner (₹10,000 cash award), Team Elite, Acharya Institute of Technology, Bengaluru (21 November 2026).
+   - **Architecture**: Tamper-evident security logging anchored on Quai Network (Proof-of-Work EVM).
+   - **Interactive 6-Step Ingestion Pipeline**: Log Sources → Agent (hash chain + sign + key ratchet) → Off-host Witness (append-only, 5s heartbeat alarm) → Merkle Batcher → Quai Smart Contract → Auditor Portal (recompute & verify in 1-click).
+   - **Threat Model Matrix**: Full breakdown of attack vectors, detection guarantees, and honest security boundaries.
+   - **PDF Whitepaper & Deck**: Linked directly in assets (`assets/Root-Defense.pdf`).
+
+2. **🌌 High-Performance Canvas Starfield & Shooting Stars**:
+   - Pure vanilla Canvas engine with twinkling stars (white, teal, amber) and realistic diagonal shooting stars with glowing heads and fading tails.
+   - Fixed background at `z-index: -1`, `pointer-events: none`.
+   - Automatic battery/CPU optimization: pauses during tab backgrounding (`visibilitychange` / `document.hidden`).
+   - Accessible: automatically respects `prefers-reduced-motion`.
+
+3. **🪐 Interactive 3D WebGL Spatial Robotics Core**:
+   - Three.js gyroscopic reactor with nested titanium/carbon rings, pulsing energy core, and interactive cursor/touch drag physics.
+   - Runs smoothly at 60 FPS with responsive viewport scaling.
+
+4. **⚡ Grouped Skills with Interactive Discipline Filter**:
+   - Skills categorized into:
+     - *Robotics & Embedded AI* (ROS, OpenCV, Embedded Systems, Arduino)
+     - *Machine Learning* (Neural Networks, Computer Vision, Geospatial Data)
+     - *Security & Cryptography* (Tamper-evident logs, Merkle trees, SHA-256, Ed25519, Key Ratchet)
+     - *Blockchain & Decentralized* (Solidity, Quai Network, EVM, Hardhat/Anvil)
+     - *Backend & Systems* (Python, Go, Linux auth/syslog, SQLite, PostgreSQL)
+     - *Web & Tooling* (HTML5, Modern CSS, ES Modules, Git/GitHub)
+   - Interactive category filter tabs for instant responsive sorting.
+
+5. **📸 High-Performance WebP Responsive Photos**:
+   - **Portrait**: Refined frame in the Overview section with subtle 3D hover tilt and status badge.
+   - **Award Photo**: Integrated inside the Winner Card with a click-to-expand accessible lightbox modal.
+   - WebP format with JPEG fallbacks and responsive `srcset` (`400w`, `800w`, `600w`, `1024w`).
+
+6. **🎨 Cohesive Color Grading**:
+   - Deep Midnight Black (`#09090b`) for dark mode with subtle glassmorphism.
+   - Warm Linen (`#f6f3ec`) for light mode.
+   - **Primary Accent**: Root-Defense Teal (`#2dd4bf` / `#14b8a6`) from project deck.
+   - **Secondary Accent**: Sunset Amber (`#f59e0b` / `#fb923c`) from natural photo tones.
+   - WCAG AA compliant text contrast across both themes.
+
+7. **🔄 Automated Live GitHub Repository Sync**:
+   - Fetches live repositories dynamically from [`api.github.com/users/abhijaysingh2006-tech/repos`](https://github.com/abhijaysingh2006-tech).
+   - Automatically renders new public repositories with language tags and star counts.
+   - Graceful fallback cache if unauthenticated rate limits occur.
 
 ---
 
 ## 📁 Architecture
 
 ```text
-├── index.html       # Clean semantic HTML structure
+├── index.html                  # Semantic, accessible HTML5 structure
 ├── css/
-│   └── style.css    # Monochrome aesthetic, typography, dark/light themes
+│   └── style.css               # Cohesive palette, WebGL frame, Winner card, Lightbox
 ├── js/
-│   ├── content.js   # Central profile store (personal info, hackathons, skills)
-│   └── main.js      # Automated GitHub API sync, dynamic DOM rendering, theme toggle
+│   ├── content.js              # Central verified store (facts, winner deck, skills)
+│   ├── main.js                 # GitHub API sync, dynamic DOM rendering, theme & lightbox
+│   ├── webgl-core.js           # Interactive Three.js 3D spatial robotics core
+│   └── shooting-stars.js       # Canvas starfield & meteor animation engine
 ├── assets/
-│   └── resume.pdf   # Resume document ready for download
+│   ├── images/
+│   │   ├── profile-portrait.webp       # Optimized portrait (WebP)
+│   │   ├── profile-portrait-400.webp   # Responsive mobile width
+│   │   ├── profile-portrait-800.webp   # Retina desktop width
+│   │   ├── profile-portrait.jpg        # Standard JPEG fallback
+│   │   ├── tech-habba-award.webp       # Tech Habba award winning photo (WebP)
+│   │   ├── tech-habba-award-600.webp   # Responsive card width
+│   │   ├── tech-habba-award-1024.webp  # Full lightbox resolution
+│   │   └── tech-habba-award.jpg        # Standard JPEG fallback
+│   ├── resume.pdf              # Verified résumé
+│   └── Root-Defense.pdf        # Tech Habba 2026 Root-Defense architecture paper
 └── README.md
 ```
 
@@ -40,24 +82,12 @@ A minimalist, high-performance static developer portfolio built with clean **Van
 
 ## 🚀 Running Locally
 
-You can preview the site immediately with any local server:
-
 ```powershell
 # Using Python
-python -m http.server 3000
+python -m http.server 8080
 
-# Or using npx
-npx serve .
+# Or using npx http-server
+npx http-server -p 8080 -c-1
 ```
 
-Visit `http://localhost:3000` in your browser.
-
----
-
-## 🌐 Deploy to Vercel (Instant Zero-Config)
-
-This site is 100% static:
-1. Push your changes to your GitHub repository.
-2. Go to [Vercel](https://vercel.com/) and click **Add New > Project**.
-3. Import your GitHub repository.
-4. Leave settings as **Static** and deploy.
+Visit `http://localhost:8080` in your browser.

@@ -3,11 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abhijay Singh — Robotics & AI Systems</title>
+  <title>Abhijay Singh — Robotics, AI & Systems Security</title>
   
   <!-- SEO & Social Meta -->
-  <meta name="description" content="Portfolio of Abhijay Singh — Robotics & Artificial Intelligence undergraduate, Smart India Hackathon internal round selection, and former IEEE Student Chairman." />
+  <meta name="description" content="Portfolio of Abhijay Singh — Robotics & AI undergraduate at VTU Muddenahalli, 3rd Prize Winner at Tech Habba 2026 for Root-Defense (tamper-evident security logging), SIH Round 1 selection, and former IEEE Student Chairman." />
   <meta name="theme-color" content="#09090b" />
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Abhijay Singh — Robotics, AI & Systems Security" />
+  <meta property="og:description" content="Robotics & AI undergraduate, 3rd Prize Winner at Tech Habba 2026, Smart India Hackathon Round 1 selected, and former IEEE Student Chairman." />
+  <meta property="og:image" content="assets/images/profile-portrait.webp" />
 
   <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,21 +26,16 @@
   <!-- Three.js WebGL Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-  <!-- Clean Monochrome Stylesheet -->
+  <!-- Clean Editorial Stylesheet -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- Full-Screen Night Sky & Shooting Stars Background -->
-  <div class="night-sky-container" id="night-sky-bg" aria-hidden="true">
-    <div class="twinkling-stars-1"></div>
-    <div class="twinkling-stars-2"></div>
-    <div class="twinkling-stars-3"></div>
-    <div class="shooting-stars-layer" id="shooting-stars-layer"></div>
-  </div>
+  <!-- Full-Screen Interactive Canvas Starfield (Twinkling + Shooting Stars) -->
+  <canvas id="star-canvas" class="star-canvas" aria-hidden="true"></canvas>
 
-  <!-- Subtle grid texture -->
-  <div class="page-grid-overlay"></div>
+  <!-- Hairline Grid Texture Overlay -->
+  <div class="page-grid-overlay" aria-hidden="true"></div>
 
   <!-- Minimalist Fixed Header -->
   <header id="navbar" class="nav-header">
@@ -44,11 +45,12 @@
         <span>abhijay.singh</span>
       </a>
 
-      <nav>
+      <nav aria-label="Main Navigation">
         <ul class="nav-links">
           <li class="nav-item"><a href="#about">About</a></li>
-          <li class="nav-item"><a href="#projects">Repositories</a></li>
+          <li class="nav-item"><a href="#winner">Winner</a></li>
           <li class="nav-item"><a href="#skills">Skills</a></li>
+          <li class="nav-item"><a href="#projects">Repositories</a></li>
           <li class="nav-item"><a href="#hackathons">Hackathons</a></li>
           <li class="nav-item"><a href="#leadership">Leadership</a></li>
           <li class="nav-item"><a href="#contact">Contact</a></li>
@@ -57,8 +59,8 @@
 
       <div class="nav-actions">
         <!-- Theme Switcher -->
-        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle monochrome theme">
-          <i id="theme-icon" data-lucide="moon" style="width: 17px; height: 17px;"></i>
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle visual theme">
+          <i id="theme-icon" data-lucide="sun" style="width: 17px; height: 17px;"></i>
         </button>
 
         <!-- Direct GitHub Profile -->
@@ -68,7 +70,7 @@
         </a>
 
         <!-- Let's Talk CTA -->
-        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-solid whatsapp-link" style="padding: 6px 14px; font-size: 0.82rem;">
+        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link" style="padding: 6px 14px; font-size: 0.82rem;">
           <span>Get in touch</span>
         </a>
       </div>
@@ -95,11 +97,15 @@
           </div>
 
           <p class="hero-description" id="hero-tagline">
-            Building resilient autonomous systems, machine learning pipelines, and real-world engineering solutions.
+            Building resilient autonomous systems, machine learning pipelines, and tamper-evident security architectures.
           </p>
 
           <!-- Verified Track Record Highlights -->
           <div class="hero-highlights-strip">
+            <a href="#winner" class="hero-highlight-pill highlight-winner">
+              <i data-lucide="trophy" style="width: 14px; height: 14px;"></i>
+              <span>Tech Habba 2026 Winner (3rd Prize)</span>
+            </a>
             <span class="hero-highlight-pill">
               <i data-lucide="award" style="width: 13px; height: 13px;"></i>
               <span>SIH Internal Round Selected</span>
@@ -149,7 +155,7 @@
             </div>
 
             <!-- Three.js Canvas Mount -->
-            <div id="webgl-hero-container" class="webgl-canvas-container" title="Drag to inspect 3D core"></div>
+            <div id="webgl-hero-container" class="webgl-canvas-container" title="Drag or move cursor to tilt 3D core"></div>
 
             <div class="webgl-frame-footer">
               <div class="webgl-hint">
@@ -172,23 +178,238 @@
       </div>
     </section>
 
-    <!-- About Section -->
+    <!-- Section 01: Overview & About with Portrait -->
     <section class="section" id="about">
       <div class="container">
-        <div class="section-label">01 // Overview</div>
-        <h2 class="section-heading">Background & Objective</h2>
-        <p class="section-subtext" id="about-bio-text" style="max-width: 780px; font-size: 1.05rem; line-height: 1.75;">
-          <!-- Rendered dynamically from content.js -->
-        </p>
+        <div class="about-grid-wrapper">
+          <!-- Portrait Photo in Refined Frame with Micro-Tilt -->
+          <div class="portrait-card-frame" id="portrait-card">
+            <div class="portrait-card-inner">
+              <picture>
+                <source srcset="assets/images/profile-portrait-400.webp 400w, assets/images/profile-portrait-800.webp 800w" sizes="(max-width: 600px) 100vw, 400px" type="image/webp">
+                <img src="assets/images/profile-portrait.jpg" alt="Abhijay Singh — Robotics & AI Systems Engineering" width="400" height="533" loading="lazy" class="portrait-img">
+              </picture>
+              <div class="portrait-floating-chip">
+                <span>VTU Muddenahalli · Bengaluru</span>
+                <span class="chip-status">
+                  <span class="chip-status-dot"></span>
+                  <span>Active 2026</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Overview Text Column -->
+          <div class="about-bio-col">
+            <div class="section-label">01 // Overview</div>
+            <h2 class="section-heading">Engineering Autonomous & Verifiable Systems</h2>
+            <p class="about-bio-text" id="about-bio-text">
+              <!-- Rendered dynamically from content.js -->
+            </p>
+
+            <div class="about-highlights-list">
+              <div class="about-highlight-box">
+                <h4>
+                  <i data-lucide="cpu" style="width: 16px; height: 16px;"></i>
+                  <span>Robotics & Embedded AI</span>
+                </h4>
+                <p>Sensor telemetry fusion, computer vision inference, ROS control loops, and microcontroller interfacing.</p>
+              </div>
+
+              <div class="about-highlight-box">
+                <h4>
+                  <i data-lucide="shield-check" style="width: 16px; height: 16px;"></i>
+                  <span>Cryptographic Defense</span>
+                </h4>
+                <p>Tamper-evident hash chains, off-host witness architectures, and decentralized public blockchain anchoring.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- AUTOMATED GITHUB REPOSITORIES SECTION -->
+    <!-- Section 02: Featured Winner — Root-Defense (Tech Habba 2026) -->
+    <section class="section" id="winner">
+      <div class="container">
+        <div class="section-label">02 // Featured Hackathon Winner</div>
+        <h2 class="section-heading">Root-Defense — Tamper-Evident Security Logs</h2>
+        <p class="section-subtext">
+          Awarded 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology, Bengaluru by Team Elite on 21 November 2026.
+        </p>
+
+        <!-- Highlighted Winner Card -->
+        <div class="winner-card" id="winner-showcase-card">
+          <!-- Winner Top Banner -->
+          <div class="winner-card-banner">
+            <div class="winner-badge-left">
+              <i data-lucide="trophy" style="width: 18px; height: 18px;"></i>
+              <span>3rd Prize Winner · ₹10,000 Award · Team Elite</span>
+            </div>
+            <span class="winner-badge-right">Tech Habba 2026 // Acharya Institute of Technology</span>
+          </div>
+
+          <div class="winner-card-content">
+            <!-- Project Intro & Award Image Grid -->
+            <div class="winner-intro-grid">
+              <div>
+                <div class="winner-project-title-row">
+                  <h3 class="winner-project-name">Root-Defense</h3>
+                  <span class="tech-chip" style="background: var(--teal-surface); color: var(--teal-primary); border-color: var(--teal-border);">Quai Network Anchor</span>
+                </div>
+                <p class="winner-project-tagline">
+                  Tamper-evident security logs that an attacker with root access can't quietly erase.
+                </p>
+                <p class="winner-project-summary">
+                  Each log line is hashed, signed and sent to an off-host witness as it's written. Batches fold into a Merkle root anchored on an EVM smart contract on Quai Network. An auditor portal recomputes everything and shows Genuine or Tampered with the exact entry that changed. A 5-second heartbeat triggers an alert if the agent goes silent, while a forward-secure key ratchet makes stolen keys useless for re-signing past history.
+                </p>
+                <div class="tech-chips-wrap" id="winner-tech-chips">
+                  <!-- Rendered dynamically -->
+                </div>
+
+                <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+                  <a href="assets/Root-Defense.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-teal">
+                    <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                    <span>Read Whitepaper / Deck (PDF)</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Award Photo with Click-to-Zoom Lightbox -->
+              <div class="winner-photo-wrapper" id="award-photo-container" title="Click to view award photo full-size">
+                <picture>
+                  <source srcset="assets/images/tech-habba-award-600.webp 600w, assets/images/tech-habba-award-1024.webp 1024w" sizes="(max-width: 600px) 100vw, 500px" type="image/webp">
+                  <img src="assets/images/tech-habba-award.jpg" alt="Abhijay Singh receiving 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology" width="1024" height="768" loading="lazy" class="winner-photo-img">
+                </picture>
+                <div class="winner-photo-overlay">
+                  <div class="photo-overlay-hint">
+                    <i data-lucide="maximize-2" style="width: 16px; height: 16px;"></i>
+                    <span>Acharya Institute of Technology · Tech Habba 2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6-Step Pipeline Architecture Diagram -->
+            <div class="pipeline-section">
+              <div class="pipeline-header">
+                <div class="pipeline-title">
+                  <i data-lucide="git-merge" style="width: 15px; height: 15px;"></i>
+                  <span>End-to-End Cryptographic Ingestion Pipeline</span>
+                </div>
+                <span class="webgl-fps-pill">Detection Window: Seconds vs. Hours</span>
+              </div>
+              <div class="pipeline-grid" id="pipeline-steps-grid">
+                <!-- Rendered dynamically from content.js -->
+              </div>
+            </div>
+
+            <!-- Case Study & Threat Model Block -->
+            <div class="case-study-box">
+              <div class="case-study-split">
+                <div>
+                  <h4 class="case-block-title">
+                    <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: var(--amber-primary);"></i>
+                    <span>01. The Problem</span>
+                  </h4>
+                  <p class="case-block-desc">
+                    Once attackers gain root access on a server, they can quietly rewrite or wipe auth, syslog, and sudo records that expose their intrusion. Following a breach, proving which logs are genuine to auditors or in court becomes impossible.
+                  </p>
+                  <div class="cert-compliance-strip">
+                    <span class="cert-pill">180 Days Log Retention (CERT-In)</span>
+                    <span class="cert-pill">6 Hours Incident Window</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="case-block-title">
+                    <i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
+                    <span>02. The Approach</span>
+                  </h4>
+                  <p class="case-block-desc">
+                    We can't stop root from editing local files. We make every edit <strong>detectable, locatable, and provable</strong>. Logs leave the server in seconds, fold into Merkle roots anchored to Quai Network, and verify via a one-click auditor portal.
+                  </p>
+                  <div class="cert-compliance-strip">
+                    <span class="cert-pill">Proof-of-Work EVM</span>
+                    <span class="cert-pill">Hardhat / Anvil Fallback</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Threat Model Table -->
+              <div>
+                <h4 class="case-block-title" style="margin-bottom: 12px;">
+                  <i data-lucide="shield" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
+                  <span>03. Threat Model (Honest Boundaries & Attack Resistance)</span>
+                </h4>
+                <div class="threat-model-container">
+                  <table class="threat-model-table">
+                    <thead>
+                      <tr>
+                        <th>Attack Vector</th>
+                        <th>Caught?</th>
+                        <th>Mitigation Mechanism</th>
+                      </tr>
+                    </thead>
+                    <tbody id="threat-model-tbody">
+                      <!-- Rendered dynamically from content.js -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Privacy Guarantee Banner -->
+              <div class="privacy-banner">
+                <i data-lucide="lock" style="width: 18px; height: 18px; color: var(--teal-primary); flex-shrink: 0;"></i>
+                <span><strong>Privacy Guarantee:</strong> Only cryptographic hashes, Merkle roots, and heartbeat digests reach the public blockchain. Raw log contents remain encrypted on the off-host witness, accessible solely by authorized auditors.</span>
+              </div>
+
+              <!-- What I'd Improve Next -->
+              <div>
+                <h4 class="case-block-title" style="margin-bottom: 12px;">
+                  <i data-lucide="trending-up" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
+                  <span>04. What I'd Improve Next</span>
+                </h4>
+                <div class="improvements-grid" id="improvements-grid">
+                  <!-- Rendered dynamically from content.js -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 03: Skills & Technical Domains (Grouped + Interactive Filter) -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-label">03 // Capabilities</div>
+        <h2 class="section-heading">Skills & Technical Domains</h2>
+        <p class="section-subtext">Technologies, languages, and cryptography primitives verified through practical execution.</p>
+
+        <!-- Category Filter Tabs -->
+        <div class="skills-filter-tabs" id="skills-filter-tabs">
+          <button class="skill-tab-btn active" data-filter="all">All Disciplines</button>
+          <button class="skill-tab-btn" data-filter="robotics-ai">Robotics & AI</button>
+          <button class="skill-tab-btn" data-filter="machine-learning">Machine Learning</button>
+          <button class="skill-tab-btn" data-filter="security-crypto">Security & Crypto</button>
+          <button class="skill-tab-btn" data-filter="blockchain">Blockchain</button>
+          <button class="skill-tab-btn" data-filter="backend-systems">Backend & Systems</button>
+          <button class="skill-tab-btn" data-filter="web-tools">Web & Tooling</button>
+        </div>
+
+        <div class="skills-interactive-grid" id="skills-interactive-grid">
+          <!-- Rendered dynamically from content.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 04: AUTOMATED GITHUB REPOSITORIES -->
     <section class="section" id="projects">
       <div class="container">
         <div class="projects-header-bar">
           <div>
-            <div class="section-label">02 // Open Source Repositories</div>
+            <div class="section-label">04 // Open Source Repositories</div>
             <h2 class="section-heading">GitHub Projects</h2>
           </div>
           <div class="live-sync-indicator">
@@ -197,7 +418,7 @@
           </div>
         </div>
         <p class="section-subtext">
-          Directly synced from <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: var(--text-main); font-weight: 600; text-decoration: underline;">@abhijaysingh2006-tech</a>. Every new public repository you publish appears here automatically.
+          Directly synced from <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: var(--teal-primary); font-weight: 600; text-decoration: underline;">@abhijaysingh2006-tech</a>. Every new public repository you publish appears here automatically.
         </p>
 
         <!-- Dynamic Grid populated via GitHub API -->
@@ -207,38 +428,25 @@
       </div>
     </section>
 
-    <!-- Skills Section -->
-    <section class="section" id="skills">
-      <div class="container">
-        <div class="section-label">03 // Capabilities</div>
-        <h2 class="section-heading">Skills & Technical Domains</h2>
-        <p class="section-subtext">Technologies, programming languages, and tooling verified through practical execution.</p>
-
-        <div class="skills-grid-clean" id="skills-grid">
-          <!-- Rendered dynamically from content.js -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Hackathons Section -->
+    <!-- Section 05: Hackathons Timeline (Newest First) -->
     <section class="section" id="hackathons">
       <div class="container">
-        <div class="section-label">04 // Competitive Sprints</div>
+        <div class="section-label">05 // Competitive Sprints</div>
         <h2 class="section-heading">Hackathon Track Record</h2>
         <p class="section-subtext">Intensive prototyping under strict deadlines with national-level real-world evaluation.</p>
 
-        <div class="editorial-cards-grid" id="hackathons-grid">
+        <div class="hackathon-timeline" id="hackathons-timeline">
           <!-- Rendered dynamically from content.js -->
         </div>
       </div>
     </section>
 
-    <!-- Leadership Section -->
+    <!-- Section 06: Leadership Section -->
     <section class="section" id="leadership">
       <div class="container">
-        <div class="section-label">05 // Student Governance</div>
+        <div class="section-label">06 // Student Governance</div>
         <h2 class="section-heading">Leadership Experience</h2>
-        <p class="section-subtext">Organizational leadership, stakeholder coordination, and mentoring.</p>
+        <p class="section-subtext">Organizational leadership, stakeholder coordination, and technical mentorship.</p>
 
         <div id="leadership-container">
           <!-- Rendered dynamically from content.js -->
@@ -246,10 +454,10 @@
       </div>
     </section>
 
-    <!-- Education Section -->
+    <!-- Section 07: Education Section -->
     <section class="section" id="education">
       <div class="container">
-        <div class="section-label">06 // Academics</div>
+        <div class="section-label">07 // Academics</div>
         <h2 class="section-heading">Education</h2>
 
         <div class="editorial-cards-grid" id="education-grid">
@@ -258,16 +466,16 @@
       </div>
     </section>
 
-    <!-- Contact Block -->
+    <!-- Section 08: Contact Block -->
     <section class="section" id="contact">
       <div class="container">
         <div class="contact-block">
           <h2>Initiate Collaboration</h2>
           <p>
-            Seeking internship and entry-level engineering roles in Robotics, Embedded AI, and Machine Learning.
+            Seeking internship and engineering roles in Robotics, Embedded AI, Machine Learning, and Systems Security.
           </p>
           <div class="contact-actions">
-            <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-solid whatsapp-link">
+            <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link">
               <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
               <span>WhatsApp Chat</span>
             </a>
@@ -294,12 +502,23 @@
         © 2026 Abhijay Singh. Robotics & AI Undergraduate · VTU Muddenahalli
       </div>
       <div>
-        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">
+        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: var(--teal-primary); text-decoration: underline;">
           github.com/abhijaysingh2006-tech
         </a>
       </div>
     </div>
   </footer>
+
+  <!-- Lightbox Modal for Photo Inspection -->
+  <div id="image-lightbox" class="lightbox-modal" aria-hidden="true" role="dialog" aria-label="Image Preview Lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close-btn" id="lightbox-close" aria-label="Close Lightbox">
+        <i data-lucide="x" style="width: 24px; height: 24px;"></i>
+      </button>
+      <img id="lightbox-img" src="" alt="Enlarged preview" class="lightbox-img" />
+      <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script type="module" src="js/main.js"></script>

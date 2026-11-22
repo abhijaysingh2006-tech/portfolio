@@ -1,6 +1,6 @@
 // =============================================================================
 // MAIN.JS - Dynamic Renderer & Automated GitHub Repository Sync
-// Fetches live public repositories from GitHub API with graceful caching.
+// Includes: Canvas Stars, WebGL Core, Winner Showcase, Skills Filter, Lightbox.
 // =============================================================================
 
 import { portfolioContent } from './content.js';
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Render all structured profile information
   renderProfileData();
   renderStats();
+  renderFeaturedWinner();
   renderSkills();
   renderHackathons();
   renderLeadership();
@@ -22,13 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Initialize Interactive 3D WebGL Spatial Reactor
   initWebGLCore();
 
-  // 4. Initialize Animated Shooting Stars & Night Sky
+  // 4. Initialize Animated Canvas Shooting Stars & Starfield
   initShootingStars();
 
-  // 5. UI Interactions
+  // 5. Interactive UI Listeners
   initThemeToggle();
   initTypewriter();
   initScrollNav();
+  initLightbox();
+  initPortraitTilt();
 
   // 6. Initialize Icons
   if (window.lucide) {
@@ -41,7 +44,8 @@ async function fetchAndRenderGitHubProjects() {
   const container = document.getElementById('projects-grid');
   const syncLabel = document.getElementById('sync-status-text');
   const repoCountStat = document.getElementById('stat-repos-val');
-  const { githubUsername, fallbackProjects } = portfolioContent.personal;
+  const { githubUsername } = portfolioContent.personal;
+  const { fallbackProjects } = portfolioContent;
 
   if (!container) return;
 
@@ -55,8 +59,6 @@ async function fetchAndRenderGitHubProjects() {
     }
 
     const repos = await response.json();
-
-    // Filter out forks or empty repos if needed, sort by recently updated
     const validRepos = Array.isArray(repos) && repos.length > 0 ? repos : fallbackProjects;
 
     // Update repository count stat
@@ -122,7 +124,7 @@ function renderProjectCards(container, repos) {
   if (window.lucide) window.lucide.createIcons();
 }
 
-// --- Render Static & Profile Data ---
+// --- Render Static Profile Data ---
 function renderProfileData() {
   const { personal } = portfolioContent;
 
@@ -180,38 +182,157 @@ function renderStats() {
     .join('');
 }
 
-function renderSkills() {
-  const { skills } = portfolioContent;
-  const container = document.getElementById('skills-grid');
-  if (!container) return;
+// --- Featured Winner: Root-Defense Showcase ---
+function renderFeaturedWinner() {
+  const { featuredHackathon } = portfolioContent;
+  if (!featuredHackathon) return;
 
-  container.innerHTML = skills
-    .map(
-      (cat) => `
-    <div class="skill-box">
-      <h3 class="skill-box-title">${cat.category}</h3>
-      <div class="skill-tag-wrap">
-        ${cat.items.map((i) => `<span class="skill-tag">${i}</span>`).join('')}
+  // Tech Chips
+  const techChipsContainer = document.getElementById('winner-tech-chips');
+  if (techChipsContainer) {
+    techChipsContainer.innerHTML = featuredHackathon.techStack
+      .map((t) => `<span class="tech-chip">${t}</span>`)
+      .join('');
+  }
+
+  // 6-Step Pipeline Architecture Diagram
+  const pipelineGrid = document.getElementById('pipeline-steps-grid');
+  if (pipelineGrid) {
+    pipelineGrid.innerHTML = featuredHackathon.pipeline
+      .map(
+        (p) => `
+      <div class="pipeline-step-card">
+        <span class="pipeline-step-num">STEP ${p.step}</span>
+        <span class="pipeline-step-name">${p.name}</span>
+        <span class="pipeline-step-detail">${p.detail}</span>
       </div>
-    </div>
-  `
-    )
-    .join('');
+    `
+      )
+      .join('');
+  }
+
+  // Threat Model Table
+  const threatTbody = document.getElementById('threat-model-tbody');
+  if (threatTbody) {
+    threatTbody.innerHTML = featuredHackathon.caseStudy.threatModel
+      .map(
+        (row) => `
+      <tr>
+        <td><strong>${row.attack}</strong></td>
+        <td>
+          <span class="threat-status-badge ${row.status}">
+            ${row.caught}
+          </span>
+        </td>
+        <td style="font-size: 0.82rem; color: var(--text-muted);">${row.how}</td>
+      </tr>
+    `
+      )
+      .join('');
+  }
+
+  // What I'd Improve Next Cards
+  const improvementsGrid = document.getElementById('improvements-grid');
+  if (improvementsGrid) {
+    improvementsGrid.innerHTML = featuredHackathon.caseStudy.improvementsNext
+      .map(
+        (item) => `
+      <div class="improvement-card">
+        <h5>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          <span>${item.title}</span>
+        </h5>
+        <p>${item.desc}</p>
+      </div>
+    `
+      )
+      .join('');
+  }
 }
 
+// --- Grouped Skills & Filter Tabs ---
+function renderSkills() {
+  const { skillGroups } = portfolioContent;
+  const container = document.getElementById('skills-interactive-grid');
+  const tabsContainer = document.getElementById('skills-filter-tabs');
+  if (!container || !skillGroups) return;
+
+  function renderCards(filter = 'all') {
+    const filtered = filter === 'all' 
+      ? skillGroups 
+      : skillGroups.filter((g) => g.id === filter);
+
+    container.innerHTML = filtered
+      .map(
+        (group) => `
+      <div class="skill-interactive-card" data-group="${group.id}">
+        <div class="skill-card-top">
+          <div class="skill-icon-box">
+            <i data-lucide="${group.icon}" style="width: 20px; height: 20px;"></i>
+          </div>
+          <div class="skill-header-meta">
+            <h3>${group.title}</h3>
+            <p>${group.description}</p>
+          </div>
+        </div>
+        <div class="skill-chips-container">
+          ${group.skills
+            .map(
+              (s) => `
+            <div class="skill-proficiency-chip">
+              <span>${s.name}</span>
+              <span class="skill-level-tag">· ${s.level}</span>
+            </div>
+          `
+            )
+            .join('')}
+        </div>
+      </div>
+    `
+      )
+      .join('');
+
+    if (window.lucide) window.lucide.createIcons();
+  }
+
+  // Filter tab interactions
+  tabsContainer?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.skill-tab-btn');
+    if (!btn) return;
+
+    tabsContainer.querySelectorAll('.skill-tab-btn').forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const filterVal = btn.getAttribute('data-filter') || 'all';
+    renderCards(filterVal);
+  });
+
+  // Initial render
+  renderCards('all');
+}
+
+// --- Hackathons Timeline (Newest First) ---
 function renderHackathons() {
   const { hackathons } = portfolioContent;
-  const container = document.getElementById('hackathons-grid');
+  const container = document.getElementById('hackathons-timeline');
   if (!container) return;
 
   container.innerHTML = hackathons
     .map(
       (h) => `
-    <div class="editorial-card">
-      <span class="editorial-card-badge">${h.level}</span>
-      <h3 class="editorial-card-title">${h.title}</h3>
-      <p class="editorial-card-org">${h.organization}</p>
-      <p class="editorial-card-body">${h.description}</p>
+    <div class="timeline-item-card">
+      <div class="timeline-meta-col">
+        <span class="timeline-badge">${h.level}</span>
+        <span class="timeline-date">${h.date}</span>
+      </div>
+      <div class="timeline-content-col">
+        <h3>${h.title}</h3>
+        <p class="timeline-org">${h.organization}</p>
+        <p class="timeline-desc">${h.description}</p>
+      </div>
     </div>
   `
     )
@@ -262,7 +383,78 @@ function renderEducation() {
     .join('');
 }
 
-// --- Interactive UI ---
+// --- Lightbox Modal for Photo Inspection ---
+function initLightbox() {
+  const modal = document.getElementById('image-lightbox');
+  const modalImg = document.getElementById('lightbox-img');
+  const modalCaption = document.getElementById('lightbox-caption');
+  const closeBtn = document.getElementById('lightbox-close');
+  const awardPhotoWrapper = document.getElementById('award-photo-container');
+
+  function openLightbox(src, caption) {
+    if (!modal || !modalImg) return;
+    modalImg.src = src;
+    if (modalCaption) modalCaption.textContent = caption;
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    if (!modal) return;
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  awardPhotoWrapper?.addEventListener('click', () => {
+    openLightbox(
+      'assets/images/tech-habba-award.webp',
+      'Abhijay Singh receiving 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology'
+    );
+  });
+
+  closeBtn?.addEventListener('click', closeLightbox);
+
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+// --- 3D Parallax Tilt Effect on Portrait Frame ---
+function initPortraitTilt() {
+  const card = document.getElementById('portrait-card');
+  if (!card) return;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (prefersReduced.matches) return;
+
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -6; // Max 6 deg
+    const rotateY = ((x - centerX) / centerX) * 6;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`;
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+  });
+}
+
+// --- Theme Toggle ---
 function initThemeToggle() {
   const toggleBtn = document.getElementById('theme-toggle');
   const savedTheme = localStorage.getItem('site_theme') || 'dark';
@@ -286,6 +478,7 @@ function updateThemeIcon(theme) {
   if (window.lucide) window.lucide.createIcons();
 }
 
+// --- Typewriter Effect ---
 function initTypewriter() {
   const typewriterEl = document.getElementById('typewriter-text');
   const roles = portfolioContent.personal.typewriterRoles;
@@ -323,8 +516,12 @@ function initTypewriter() {
   typeTick();
 }
 
+// --- Sticky Blurred Nav with Active Section Highlight ---
 function initScrollNav() {
   const nav = document.getElementById('navbar');
+  const navLinks = document.querySelectorAll('.nav-item a');
+  const sections = document.querySelectorAll('section[id]');
+
   window.addEventListener('scroll', () => {
     if (window.scrollY > 20) {
       nav?.classList.add('scrolled');
@@ -332,4 +529,28 @@ function initScrollNav() {
       nav?.classList.remove('scrolled');
     }
   });
+
+  // Active section indicator via IntersectionObserver
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -70% 0px',
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach((link) => {
+          if (link.getAttribute('href') === `#${id}`) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach((sec) => observer.observe(sec));
 }
