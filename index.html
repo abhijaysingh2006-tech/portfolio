@@ -149,20 +149,20 @@
             <div class="webgl-frame-header">
               <div class="webgl-header-left">
                 <span class="webgl-status-dot"></span>
-                <span class="webgl-title">FIG. 01 // SPATIAL ROBOTICS CORE</span>
+                <span class="webgl-title">FIG. 01 // AUTONOMOUS AI COMPANION</span>
               </div>
-              <span class="webgl-badge">WEBGL 2.0</span>
+              <span class="webgl-badge">ROS 2 · THREE.JS</span>
             </div>
 
-            <!-- Three.js Canvas Mount -->
-            <div id="webgl-hero-container" class="webgl-canvas-container" title="Drag or move cursor to tilt 3D core"></div>
+            <!-- Three.js Canvas Mount for Interactive Robot -->
+            <div id="webgl-hero-container" class="webgl-canvas-container" title="Interactive Robot: Move cursor to track, click to wave & chat"></div>
 
             <div class="webgl-frame-footer">
               <div class="webgl-hint">
-                <i data-lucide="orbit" style="width: 13px; height: 13px;"></i>
-                <span>Interactive · Move cursor or drag to tilt</span>
+                <i data-lucide="bot" style="width: 14px; height: 14px; color: var(--teal-primary);"></i>
+                <span>Move cursor to track · Click to wave & chat</span>
               </div>
-              <span class="webgl-fps-pill">60 FPS</span>
+              <span class="webgl-fps-pill">REALTIME 60 FPS</span>
             </div>
           </div>
         </div>
@@ -268,10 +268,16 @@
                   <!-- Rendered dynamically -->
                 </div>
 
-                <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
-                  <a href="assets/Root-Defense.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-teal">
+                <div class="winner-actions-strip">
+                  <button id="btn-toggle-project-details" class="btn btn-teal winner-expand-btn" aria-expanded="false" aria-controls="winner-deep-dive-panel">
+                    <i data-lucide="info" style="width: 16px; height: 16px;"></i>
+                    <span id="winner-toggle-text">More About The Project</span>
+                    <i id="winner-toggle-icon" data-lucide="chevron-down" style="width: 16px; height: 16px; transition: transform 0.25s ease;"></i>
+                  </button>
+
+                  <a href="assets/Root-Defense.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
                     <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
-                    <span>Read Whitepaper / Deck (PDF)</span>
+                    <span>Project Whitepaper (PDF)</span>
                   </a>
                 </div>
               </div>
@@ -289,88 +295,91 @@
               </div>
             </div>
 
-            <!-- 6-Step Pipeline Architecture Diagram -->
-            <div class="pipeline-section">
-              <div class="pipeline-header">
-                <div class="pipeline-title">
-                  <i data-lucide="git-merge" style="width: 15px; height: 15px;"></i>
-                  <span>End-to-End Cryptographic Ingestion Pipeline</span>
-                </div>
-                <span class="webgl-fps-pill">Detection Window: Seconds vs. Hours</span>
-              </div>
-              <div class="pipeline-grid" id="pipeline-steps-grid">
-                <!-- Rendered dynamically from content.js -->
-              </div>
-            </div>
-
-            <!-- Case Study & Threat Model Block -->
-            <div class="case-study-box">
-              <div class="case-study-split">
-                <div>
-                  <h4 class="case-block-title">
-                    <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: var(--amber-primary);"></i>
-                    <span>01. The Problem</span>
-                  </h4>
-                  <p class="case-block-desc">
-                    Once attackers gain root access on a server, they can quietly rewrite or wipe auth, syslog, and sudo records that expose their intrusion. Following a breach, proving which logs are genuine to auditors or in court becomes impossible.
-                  </p>
-                  <div class="cert-compliance-strip">
-                    <span class="cert-pill">180 Days Log Retention (CERT-In)</span>
-                    <span class="cert-pill">6 Hours Incident Window</span>
+            <!-- Collapsible Deep-Dive Details Drawer (Revealed when clicking 'More About The Project') -->
+            <div id="winner-deep-dive-panel" class="winner-deep-dive-panel collapsed" aria-hidden="true">
+              <!-- 6-Step Pipeline Architecture Diagram -->
+              <div class="pipeline-section">
+                <div class="pipeline-header">
+                  <div class="pipeline-title">
+                    <i data-lucide="git-merge" style="width: 15px; height: 15px;"></i>
+                    <span>End-to-End Cryptographic Ingestion Pipeline</span>
                   </div>
+                  <span class="webgl-fps-pill">Detection Window: Seconds vs. Hours</span>
                 </div>
-
-                <div>
-                  <h4 class="case-block-title">
-                    <i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
-                    <span>02. The Approach</span>
-                  </h4>
-                  <p class="case-block-desc">
-                    We can't stop root from editing local files. We make every edit <strong>detectable, locatable, and provable</strong>. Logs leave the server in seconds, fold into Merkle roots anchored to Quai Network, and verify via a one-click auditor portal.
-                  </p>
-                  <div class="cert-compliance-strip">
-                    <span class="cert-pill">Proof-of-Work EVM</span>
-                    <span class="cert-pill">Hardhat / Anvil Fallback</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Threat Model Table -->
-              <div>
-                <h4 class="case-block-title" style="margin-bottom: 12px;">
-                  <i data-lucide="shield" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
-                  <span>03. Threat Model (Honest Boundaries & Attack Resistance)</span>
-                </h4>
-                <div class="threat-model-container">
-                  <table class="threat-model-table">
-                    <thead>
-                      <tr>
-                        <th>Attack Vector</th>
-                        <th>Caught?</th>
-                        <th>Mitigation Mechanism</th>
-                      </tr>
-                    </thead>
-                    <tbody id="threat-model-tbody">
-                      <!-- Rendered dynamically from content.js -->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!-- Privacy Guarantee Banner -->
-              <div class="privacy-banner">
-                <i data-lucide="lock" style="width: 18px; height: 18px; color: var(--teal-primary); flex-shrink: 0;"></i>
-                <span><strong>Privacy Guarantee:</strong> Only cryptographic hashes, Merkle roots, and heartbeat digests reach the public blockchain. Raw log contents remain encrypted on the off-host witness, accessible solely by authorized auditors.</span>
-              </div>
-
-              <!-- What I'd Improve Next -->
-              <div>
-                <h4 class="case-block-title" style="margin-bottom: 12px;">
-                  <i data-lucide="trending-up" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
-                  <span>04. What I'd Improve Next</span>
-                </h4>
-                <div class="improvements-grid" id="improvements-grid">
+                <div class="pipeline-grid" id="pipeline-steps-grid">
                   <!-- Rendered dynamically from content.js -->
+                </div>
+              </div>
+
+              <!-- Case Study & Threat Model Block -->
+              <div class="case-study-box">
+                <div class="case-study-split">
+                  <div>
+                    <h4 class="case-block-title">
+                      <i data-lucide="alert-triangle" style="width: 18px; height: 18px; color: var(--amber-primary);"></i>
+                      <span>01. The Problem</span>
+                    </h4>
+                    <p class="case-block-desc">
+                      Once attackers gain root access on a server, they can quietly rewrite or wipe auth, syslog, and sudo records that expose their intrusion. Following a breach, proving which logs are genuine to auditors or in court becomes impossible.
+                    </p>
+                    <div class="cert-compliance-strip">
+                      <span class="cert-pill">180 Days Log Retention (CERT-In)</span>
+                      <span class="cert-pill">6 Hours Incident Window</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 class="case-block-title">
+                      <i data-lucide="check-circle-2" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
+                      <span>02. The Approach</span>
+                    </h4>
+                    <p class="case-block-desc">
+                      We can't stop root from editing local files. We make every edit <strong>detectable, locatable, and provable</strong>. Logs leave the server in seconds, fold into Merkle roots anchored to Quai Network, and verify via a one-click auditor portal.
+                    </p>
+                    <div class="cert-compliance-strip">
+                      <span class="cert-pill">Proof-of-Work EVM</span>
+                      <span class="cert-pill">Hardhat / Anvil Fallback</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Threat Model Table -->
+                <div>
+                  <h4 class="case-block-title" style="margin-bottom: 12px;">
+                    <i data-lucide="shield" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
+                    <span>03. Threat Model (Honest Boundaries & Attack Resistance)</span>
+                  </h4>
+                  <div class="threat-model-container">
+                    <table class="threat-model-table">
+                      <thead>
+                        <tr>
+                          <th>Attack Vector</th>
+                          <th>Caught?</th>
+                          <th>Mitigation Mechanism</th>
+                        </tr>
+                      </thead>
+                      <tbody id="threat-model-tbody">
+                        <!-- Rendered dynamically from content.js -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Privacy Guarantee Banner -->
+                <div class="privacy-banner">
+                  <i data-lucide="lock" style="width: 18px; height: 18px; color: var(--teal-primary); flex-shrink: 0;"></i>
+                  <span><strong>Privacy Guarantee:</strong> Only cryptographic hashes, Merkle roots, and heartbeat digests reach the public blockchain. Raw log contents remain encrypted on the off-host witness, accessible solely by authorized auditors.</span>
+                </div>
+
+                <!-- What I'd Improve Next -->
+                <div>
+                  <h4 class="case-block-title" style="margin-bottom: 12px;">
+                    <i data-lucide="trending-up" style="width: 18px; height: 18px; color: var(--teal-primary);"></i>
+                    <span>04. What I'd Improve Next</span>
+                  </h4>
+                  <div class="improvements-grid" id="improvements-grid">
+                    <!-- Rendered dynamically from content.js -->
+                  </div>
                 </div>
               </div>
             </div>

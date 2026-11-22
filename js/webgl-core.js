@@ -1,40 +1,34 @@
 // =============================================================================
-// WEBGL-CORE.JS - Interactive 3D Spatial Gyroscopic Reactor & Particle Field
-// Butter-smooth Three.js WebGL visualization inspired by spatial computing,
-// robotics, and autonomous systems architecture.
+// WEBGL-CORE.JS - Interactive Autonomous 3D Robot Companion & Spatial Assistant
+// Procedural Three.js 3D Robot with real-time cursor tracking (head, eyes, body),
+// organic hovering physics, LED visor blinking, wave animations, and
+// visitor greeting speech bubble.
 // =============================================================================
 
 export function initWebGLCore() {
   const container = document.getElementById('webgl-hero-container');
   if (!container) return;
 
-  // Verify WebGL availability
-  if (!window.WebGLRenderingContext) {
-    container.classList.add('webgl-fallback');
-    return;
-  }
-
   // Check if THREE is loaded
   if (typeof THREE === 'undefined') {
-    console.warn('Three.js library not detected. Loading dynamically...');
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = () => setupScene(container);
+    script.onload = () => setupRobotScene(container);
     document.head.appendChild(script);
     return;
   }
 
-  setupScene(container);
+  setupRobotScene(container);
 }
 
-function setupScene(container) {
+function setupRobotScene(container) {
   // 1. Scene & Camera Setup
   const scene = new THREE.Scene();
   const width = container.clientWidth || 500;
-  const height = container.clientHeight || 450;
+  const height = container.clientHeight || 420;
 
-  const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-  camera.position.set(0, 0, 7.2);
+  const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
+  camera.position.set(0, 0.2, 6.8);
 
   // 2. High-performance WebGL Renderer
   const renderer = new THREE.WebGLRenderer({
@@ -43,386 +37,554 @@ function setupScene(container) {
     powerPreference: 'high-performance',
   });
   renderer.setSize(width, height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 1.15;
 
   container.innerHTML = '';
   container.appendChild(renderer.domElement);
 
-  // Theme detection
+  // Theme Detection
   const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
-  // Palette definitions
-  const getThemePalette = () => {
+  const getRobotPalette = () => {
     const dark = isDark();
     return {
-      fog: dark ? 0x09090b : 0xfbfbfb,
-      coreSphere: dark ? 0x181822 : 0xf0f0f5,
-      coreMetalness: dark ? 0.75 : 0.4,
-      coreRoughness: dark ? 0.25 : 0.35,
-      wireframe: dark ? 0x38bdf8 : 0x0284c7,
-      wireframeOpacity: dark ? 0.42 : 0.35,
-      ring1: dark ? 0x64748b : 0x94a3b8,
-      ring2: dark ? 0x475569 : 0x64748b,
-      cyan: 0x00e5ff,
-      amber: 0xf59e0b,
-      lightAmbient: dark ? 0.85 : 1.25,
-      lightDirectional: dark ? 1.4 : 1.8,
-      particleColor: dark ? 0xa1a1aa : 0x71717a,
+      armorPrimary: dark ? 0x181e2e : 0xe2e8f0,
+      armorSecondary: dark ? 0x0d121f : 0xcbd5e1,
+      armorHighlight: dark ? 0x242e47 : 0xf1f5f9,
+      metalness: dark ? 0.82 : 0.45,
+      roughness: dark ? 0.24 : 0.32,
+      visorGlass: dark ? 0x030712 : 0x1e293b,
+      eyeGlow: 0x00e5ff,
+      coreGlow: 0x2dd4bf,
+      beaconGlow: 0xf59e0b,
+      lightAmbient: dark ? 1.0 : 1.4,
+      lightDirectional: dark ? 1.5 : 1.8,
+      rimLight: dark ? 0x00e5ff : 0x0284c7,
     };
   };
 
-  let palette = getThemePalette();
+  let palette = getRobotPalette();
 
-  // Subtle depth fog
-  scene.fog = new THREE.Fog(palette.fog, 6, 14);
-
-  // 3. Lighting
+  // 3. Lighting System
   const ambientLight = new THREE.AmbientLight(0xffffff, palette.lightAmbient);
   scene.add(ambientLight);
 
-  const dirLight1 = new THREE.DirectionalLight(0xffffff, palette.lightDirectional);
-  dirLight1.position.set(5, 6, 5);
-  scene.add(dirLight1);
+  const keyLight = new THREE.DirectionalLight(0xffffff, palette.lightDirectional);
+  keyLight.position.set(4, 5, 5);
+  scene.add(keyLight);
 
-  const dirLight2 = new THREE.DirectionalLight(0x00e5ff, 0.8);
-  dirLight2.position.set(-5, -3, -3);
-  scene.add(dirLight2);
+  const rimLight = new THREE.DirectionalLight(palette.rimLight, 1.2);
+  rimLight.position.set(-4, -2, -3);
+  scene.add(rimLight);
 
-  const pointLight = new THREE.PointLight(0xf59e0b, 1.2, 8);
-  pointLight.position.set(2, 2, 2);
-  scene.add(pointLight);
+  const fillLight = new THREE.PointLight(palette.coreGlow, 1.4, 6);
+  fillLight.position.set(0, 0, 1.5);
+  scene.add(fillLight);
 
-  // 4. Main Gyroscopic Reactor Group
-  const masterGroup = new THREE.Group();
-  scene.add(masterGroup);
+  // 4. Robot Assembly
+  const robotRoot = new THREE.Group();
+  scene.add(robotRoot);
 
-  // A. Central Core Sphere
-  const coreGeo = new THREE.SphereGeometry(0.96, 48, 48);
+  // Material Library
+  const primaryMat = new THREE.MeshStandardMaterial({
+    color: palette.armorPrimary,
+    metalness: palette.metalness,
+    roughness: palette.roughness,
+  });
+
+  const secondaryMat = new THREE.MeshStandardMaterial({
+    color: palette.armorSecondary,
+    metalness: palette.metalness * 0.9,
+    roughness: palette.roughness * 1.2,
+  });
+
+  const highlightMat = new THREE.MeshStandardMaterial({
+    color: palette.armorHighlight,
+    metalness: 0.9,
+    roughness: 0.18,
+  });
+
+  const visorMat = new THREE.MeshStandardMaterial({
+    color: palette.visorGlass,
+    metalness: 0.95,
+    roughness: 0.08,
+  });
+
+  const eyeMat = new THREE.MeshBasicMaterial({
+    color: palette.eyeGlow,
+  });
+
   const coreMat = new THREE.MeshStandardMaterial({
-    color: palette.coreSphere,
-    roughness: palette.coreRoughness,
-    metalness: palette.coreMetalness,
-  });
-  const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-  masterGroup.add(coreMesh);
-
-  // B. Outer Icosahedron Constellation Cage
-  const cageGroup = new THREE.Group();
-  masterGroup.add(cageGroup);
-
-  const cageGeo = new THREE.IcosahedronGeometry(1.42, 1);
-  const cageMat = new THREE.MeshBasicMaterial({
-    color: palette.wireframe,
-    wireframe: true,
-    transparent: true,
-    opacity: palette.wireframeOpacity,
-  });
-  const cageMesh = new THREE.Mesh(cageGeo, cageMat);
-  cageGroup.add(cageMesh);
-
-  // Extract unique vertices for glowing constellation node beads
-  const posAttr = cageGeo.attributes.position;
-  const vertexSet = new Set();
-  const nodeBeads = [];
-  const beadGeo = new THREE.SphereGeometry(0.038, 14, 14);
-
-  for (let i = 0; i < posAttr.count; i++) {
-    const x = Number(posAttr.getX(i).toFixed(3));
-    const y = Number(posAttr.getY(i).toFixed(3));
-    const z = Number(posAttr.getZ(i).toFixed(3));
-    const key = `${x},${y},${z}`;
-
-    if (!vertexSet.has(key)) {
-      vertexSet.add(key);
-      const isCyan = (nodeBeads.length % 3 === 0);
-      const beadMat = new THREE.MeshStandardMaterial({
-        color: isCyan ? palette.cyan : palette.amber,
-        emissive: isCyan ? 0x0088aa : 0xaa6600,
-        emissiveIntensity: 0.6,
-        roughness: 0.2,
-        metalness: 0.8,
-      });
-      const bead = new THREE.Mesh(beadGeo, beadMat);
-      bead.position.set(x, y, z);
-      cageGroup.add(bead);
-      nodeBeads.push(bead);
-    }
-  }
-
-  // C. Gyroscopic Orbital Rings
-  // Ring 1: Major tilted torus
-  const ring1Group = new THREE.Group();
-  ring1Group.rotation.set(Math.PI / 3.4, Math.PI / 4.2, 0);
-  masterGroup.add(ring1Group);
-  const ring1Geo = new THREE.TorusGeometry(1.92, 0.026, 20, 100);
-  const ring1Mat = new THREE.MeshStandardMaterial({
-    color: palette.ring1,
-    metalness: 0.65,
-    roughness: 0.28,
-  });
-  const ring1Mesh = new THREE.Mesh(ring1Geo, ring1Mat);
-  ring1Group.add(ring1Mesh);
-
-  // Ring 2: Counter-rotating secondary ring
-  const ring2Group = new THREE.Group();
-  ring2Group.rotation.set(-Math.PI / 3.6, -Math.PI / 4.8, 0);
-  masterGroup.add(ring2Group);
-  const ring2Geo = new THREE.TorusGeometry(1.72, 0.018, 16, 90);
-  const ring2Mat = new THREE.MeshStandardMaterial({
-    color: palette.ring2,
-    metalness: 0.5,
-    roughness: 0.35,
-  });
-  const ring2Mesh = new THREE.Mesh(ring2Geo, ring2Mat);
-  ring2Group.add(ring2Mesh);
-
-  // Ring 3: Wide equatorial orbital track with orbiting beacon
-  const ring3Group = new THREE.Group();
-  ring3Group.rotation.set(Math.PI / 2.2, -Math.PI / 5, 0);
-  masterGroup.add(ring3Group);
-  const ring3Geo = new THREE.TorusGeometry(2.26, 0.015, 16, 100);
-  const ring3Mat = new THREE.MeshStandardMaterial({
-    color: palette.cyan,
-    metalness: 0.4,
+    color: palette.coreGlow,
+    emissive: palette.coreGlow,
+    emissiveIntensity: 0.85,
     roughness: 0.2,
   });
-  const ring3Mesh = new THREE.Mesh(ring3Geo, ring3Mat);
-  ring3Group.add(ring3Mesh);
 
-  // Orbiting satellite beacon on Ring 3
-  const beaconGeo = new THREE.SphereGeometry(0.065, 16, 16);
   const beaconMat = new THREE.MeshStandardMaterial({
-    color: palette.cyan,
-    emissive: palette.cyan,
-    emissiveIntensity: 0.8,
-    metalness: 0.2,
+    color: palette.beaconGlow,
+    emissive: palette.beaconGlow,
+    emissiveIntensity: 0.95,
     roughness: 0.2,
   });
-  const beacon = new THREE.Mesh(beaconGeo, beaconMat);
-  beacon.position.set(2.26, 0, 0);
-  ring3Group.add(beacon);
 
-  // Ring 4: Amber resonance ring
-  const ring4Group = new THREE.Group();
-  ring4Group.rotation.set(-Math.PI / 3.8, Math.PI / 4, 0);
-  masterGroup.add(ring4Group);
-  const ring4Geo = new THREE.TorusGeometry(1.54, 0.016, 16, 80);
-  const ring4Mat = new THREE.MeshStandardMaterial({
-    color: palette.amber,
-    metalness: 0.5,
-    roughness: 0.25,
-  });
-  const ring4Mesh = new THREE.Mesh(ring4Geo, ring4Mat);
-  ring4Group.add(ring4Mesh);
+  // A. Torso Assembly
+  const torsoGroup = new THREE.Group();
+  robotRoot.add(torsoGroup);
 
-  // D. Orbiting Robotics/AI Satellite Nodes
-  const satelliteGroup = new THREE.Group();
-  masterGroup.add(satelliteGroup);
-  const satellites = [
-    { pos: [1.82, 0.72, 0.4], size: 0.075, color: palette.cyan },
-    { pos: [1.45, -0.75, 0.85], size: 0.082, color: palette.amber },
-    { pos: [-1.52, 0.55, 0.65], size: 0.065, color: palette.cyan },
-    { pos: [-1.35, -0.42, 0.85], size: 0.055, color: 0x94a3b8 },
-    { pos: [0.72, -1.35, 0.75], size: 0.05, color: palette.cyan },
-    { pos: [-0.98, 0.95, -0.65], size: 0.055, color: palette.amber },
-  ];
+  // Torso main body
+  const bodyGeo = new THREE.BoxGeometry(1.3, 1.35, 0.95);
+  const bodyMesh = new THREE.Mesh(bodyGeo, primaryMat);
+  bodyMesh.position.y = -0.15;
+  torsoGroup.add(bodyMesh);
 
-  satellites.forEach((sat) => {
-    const sGeo = new THREE.SphereGeometry(sat.size, 20, 20);
-    const sMat = new THREE.MeshStandardMaterial({
-      color: sat.color,
-      metalness: 0.7,
-      roughness: 0.2,
-    });
-    const sMesh = new THREE.Mesh(sGeo, sMat);
-    sMesh.position.set(...sat.pos);
-    satelliteGroup.add(sMesh);
-  });
+  // Front chest armor plate
+  const chestPlateGeo = new THREE.BoxGeometry(1.08, 0.85, 0.18);
+  const chestPlate = new THREE.Mesh(chestPlateGeo, secondaryMat);
+  chestPlate.position.set(0, -0.05, 0.48);
+  torsoGroup.add(chestPlate);
 
-  // E. Atmospheric Particle Cloud
-  const particleCount = 140;
-  const pPositions = new Float32Array(particleCount * 3);
-  for (let i = 0; i < particleCount; i++) {
-    pPositions[i * 3] = (Math.random() - 0.5) * 14;
-    pPositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-    pPositions[i * 3 + 2] = (Math.random() - 0.5) * 8;
-  }
-  const pGeometry = new THREE.BufferGeometry();
-  pGeometry.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
-  const pMaterial = new THREE.PointsMaterial({
-    color: palette.particleColor,
-    size: 0.045,
+  // Arc Reactor Core (Glowing pulsing center)
+  const coreBezelGeo = new THREE.TorusGeometry(0.24, 0.04, 16, 32);
+  const coreBezel = new THREE.Mesh(coreBezelGeo, highlightMat);
+  coreBezel.position.set(0, -0.05, 0.58);
+  torsoGroup.add(coreBezel);
+
+  const coreDiskGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.06, 32);
+  coreDiskGeo.rotateX(Math.PI / 2);
+  const coreDisk = new THREE.Mesh(coreDiskGeo, coreMat);
+  coreDisk.position.set(0, -0.05, 0.57);
+  torsoGroup.add(coreDisk);
+
+  // Shoulder Mount Plates
+  const leftShoulderPadGeo = new THREE.BoxGeometry(0.32, 0.22, 0.92);
+  const leftShoulderPad = new THREE.Mesh(leftShoulderPadGeo, highlightMat);
+  leftShoulderPad.position.set(-0.72, 0.45, 0);
+  torsoGroup.add(leftShoulderPad);
+
+  const rightShoulderPadGeo = new THREE.BoxGeometry(0.32, 0.22, 0.92);
+  const rightShoulderPad = new THREE.Mesh(rightShoulderPadGeo, highlightMat);
+  rightShoulderPad.position.set(0.72, 0.45, 0);
+  torsoGroup.add(rightShoulderPad);
+
+  // Anti-Gravity Thruster Bell at Base
+  const thrusterBellGeo = new THREE.CylinderGeometry(0.38, 0.58, 0.45, 24, 1, true);
+  const thrusterBell = new THREE.Mesh(thrusterBellGeo, secondaryMat);
+  thrusterBell.position.y = -0.92;
+  torsoGroup.add(thrusterBell);
+
+  const thrusterRingGeo = new THREE.TorusGeometry(0.42, 0.05, 16, 32);
+  thrusterRingGeo.rotateX(Math.PI / 2);
+  const thrusterRing = new THREE.Mesh(thrusterRingGeo, coreMat);
+  thrusterRing.position.y = -1.14;
+  torsoGroup.add(thrusterRing);
+
+  // B. Neck & Head Assembly
+  const headGroup = new THREE.Group();
+  headGroup.position.set(0, 0.92, 0);
+  torsoGroup.add(headGroup);
+
+  // Neck joint
+  const neckGeo = new THREE.CylinderGeometry(0.24, 0.28, 0.32, 16);
+  const neckMesh = new THREE.Mesh(neckGeo, highlightMat);
+  neckMesh.position.y = -0.22;
+  headGroup.add(neckMesh);
+
+  // Main Head Helmet
+  const headGeo = new THREE.BoxGeometry(1.24, 0.98, 1.05);
+  const headMesh = new THREE.Mesh(headGeo, primaryMat);
+  headGroup.add(headMesh);
+
+  // Crown curved cap
+  const crownGeo = new THREE.CylinderGeometry(0.52, 0.62, 1.02, 16);
+  crownGeo.rotateZ(Math.PI / 2);
+  const crownMesh = new THREE.Mesh(crownGeo, secondaryMat);
+  crownMesh.position.set(0, 0.48, 0);
+  headGroup.add(crownMesh);
+
+  // Visor Faceplate
+  const visorGeo = new THREE.BoxGeometry(1.06, 0.52, 0.14);
+  const visorMesh = new THREE.Mesh(visorGeo, visorMat);
+  visorMesh.position.set(0, 0.02, 0.52);
+  headGroup.add(visorMesh);
+
+  // Glowing LED Visor Eyes (Blinkable)
+  const eyeLeftGeo = new THREE.BoxGeometry(0.25, 0.09, 0.04);
+  const eyeLeft = new THREE.Mesh(eyeLeftGeo, eyeMat);
+  eyeLeft.position.set(-0.25, 0.04, 0.6);
+  headGroup.add(eyeLeft);
+
+  const eyeRightGeo = new THREE.BoxGeometry(0.25, 0.09, 0.04);
+  const eyeRight = new THREE.Mesh(eyeRightGeo, eyeMat);
+  eyeRight.position.set(0.25, 0.04, 0.6);
+  headGroup.add(eyeRight);
+
+  // Antenna Stalk & Glowing Beacon
+  const antennaStalkGeo = new THREE.CylinderGeometry(0.028, 0.028, 0.52, 8);
+  const antennaStalk = new THREE.Mesh(antennaStalkGeo, highlightMat);
+  antennaStalk.position.set(0, 0.85, 0);
+  headGroup.add(antennaStalk);
+
+  const beaconGeo = new THREE.SphereGeometry(0.09, 16, 16);
+  const beaconMesh = new THREE.Mesh(beaconGeo, beaconMat);
+  beaconMesh.position.set(0, 1.13, 0);
+  headGroup.add(beaconMesh);
+
+  // Ear Pods (Left & Right)
+  const earGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.16, 16);
+  earGeo.rotateZ(Math.PI / 2);
+  const earLeft = new THREE.Mesh(earGeo, highlightMat);
+  earLeft.position.set(-0.68, 0.05, 0);
+  headGroup.add(earLeft);
+
+  const earRight = new THREE.Mesh(earGeo, highlightMat);
+  earRight.position.set(0.68, 0.05, 0);
+  headGroup.add(earRight);
+
+  // C. Left Arm Assembly (Relaxed Stance)
+  const leftArmGroup = new THREE.Group();
+  leftArmGroup.position.set(-0.84, 0.35, 0);
+  torsoGroup.add(leftArmGroup);
+
+  const leftShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), highlightMat);
+  leftArmGroup.add(leftShoulder);
+
+  const leftUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.09, 0.55, 12), secondaryMat);
+  leftUpperArm.position.y = -0.32;
+  leftArmGroup.add(leftUpperArm);
+
+  const leftElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), highlightMat);
+  leftElbow.position.y = -0.62;
+  leftArmGroup.add(leftElbow);
+
+  const leftForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.48, 12), primaryMat);
+  leftForearm.position.set(0, -0.88, 0.08);
+  leftForearm.rotation.x = -0.3;
+  leftArmGroup.add(leftForearm);
+
+  const leftHand = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.08), highlightMat);
+  leftHand.position.set(0, -1.14, 0.16);
+  leftArmGroup.add(leftHand);
+
+  // D. Right Arm Assembly (Animated Waving & Greeting)
+  const rightArmGroup = new THREE.Group();
+  rightArmGroup.position.set(0.84, 0.35, 0);
+  torsoGroup.add(rightArmGroup);
+
+  const rightShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), highlightMat);
+  rightArmGroup.add(rightShoulder);
+
+  const rightUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.09, 0.55, 12), secondaryMat);
+  rightUpperArm.position.y = -0.32;
+  rightArmGroup.add(rightUpperArm);
+
+  const rightElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), highlightMat);
+  rightElbow.position.y = -0.62;
+  rightArmGroup.add(rightElbow);
+
+  const rightForearmGroup = new THREE.Group();
+  rightForearmGroup.position.set(0, -0.62, 0);
+  rightArmGroup.add(rightForearmGroup);
+
+  const rightForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.48, 12), primaryMat);
+  rightForearm.position.y = -0.26;
+  rightForearmGroup.add(rightForearm);
+
+  const rightHand = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.08), highlightMat);
+  rightHand.position.y = -0.52;
+  rightForearmGroup.add(rightHand);
+
+  // E. Floating Orbital Data Halo
+  const haloGeo = new THREE.TorusGeometry(1.85, 0.018, 16, 80);
+  haloGeo.rotateX(Math.PI / 2.3);
+  const haloMat = new THREE.MeshStandardMaterial({
+    color: palette.eyeGlow,
+    emissive: palette.eyeGlow,
+    emissiveIntensity: 0.5,
+    metalness: 0.3,
+    roughness: 0.2,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.65,
   });
-  const particleField = new THREE.Points(pGeometry, pMaterial);
-  scene.add(particleField);
+  const haloMesh = new THREE.Mesh(haloGeo, haloMat);
+  robotRoot.add(haloMesh);
 
-  // 5. Physics Spring Lerping ("Smooth like Butter")
-  const targetRotation = { x: 0, y: 0 };
-  const currentRotation = { x: 0, y: 0 };
-  const velocity = { x: 0, y: 0 };
-  const SPRING = 0.048;
-  const DAMPING = 0.88;
+  // 5. Cursor Tracking & Motion Variables
+  let mouseX = 0;
+  let mouseY = 0;
+  let targetMouseX = 0;
+  let targetMouseY = 0;
 
-  let isDragging = false;
-  let previousMousePos = { x: 0, y: 0 };
+  // Window & Container Mouse Listener
+  const updatePointer = (clientX, clientY) => {
+    const rect = container.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-  // Mouse move over window
-  window.addEventListener('mousemove', (e) => {
-    if (isDragging) return;
-    const nx = (e.clientX / window.innerWidth) * 2 - 1;
-    const ny = -(e.clientY / window.innerHeight) * 2 + 1;
-    targetRotation.y = nx * 0.45;
-    targetRotation.x = -ny * 0.35;
-  }, { passive: true });
-
-  // Drag interaction on canvas for tactile control
-  container.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    previousMousePos = { x: e.clientX, y: e.clientY };
-  });
-
-  window.addEventListener('mouseup', () => {
-    isDragging = false;
-  });
+    // Normalizing between -1 and 1 relative to container center
+    targetMouseX = Math.max(-1.5, Math.min(1.5, (clientX - centerX) / (rect.width * 0.75)));
+    targetMouseY = Math.max(-1.5, Math.min(1.5, (clientY - centerY) / (rect.height * 0.75)));
+  };
 
   window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const deltaX = e.clientX - previousMousePos.x;
-    const deltaY = e.clientY - previousMousePos.y;
-    previousMousePos = { x: e.clientX, y: e.clientY };
-
-    velocity.y += deltaX * 0.003;
-    velocity.x += deltaY * 0.003;
-  });
-
-  // Touch controls for mobile
-  container.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1) {
-      isDragging = true;
-      previousMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-  }, { passive: true });
-
-  window.addEventListener('touchend', () => {
-    isDragging = false;
+    updatePointer(e.clientX, e.clientY);
   });
 
   window.addEventListener('touchmove', (e) => {
-    if (!isDragging || e.touches.length !== 1) return;
-    const deltaX = e.touches[0].clientX - previousMousePos.x;
-    const deltaY = e.touches[0].clientY - previousMousePos.y;
-    previousMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-
-    velocity.y += deltaX * 0.004;
-    velocity.x += deltaY * 0.004;
+    if (e.touches.length > 0) {
+      updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+    }
   }, { passive: true });
 
-  // Scroll reactivity
-  let scrollProgress = 0;
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    scrollProgress = maxScroll > 0 ? Math.min(scrollY / 800, 1) : 0;
-  }, { passive: true });
-
-  // 6. Viewport Visibility & Intersection Observer
-  let isVisible = true;
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      isVisible = entry.isIntersecting;
-    });
-  }, { threshold: 0.1 });
-  observer.observe(container);
-
-  // 7. Theme Sync Mutation Observer
-  const updateThemeColors = () => {
-    palette = getThemePalette();
-    scene.fog.color.setHex(palette.fog);
-    coreMat.color.setHex(palette.coreSphere);
-    coreMat.roughness = palette.coreRoughness;
-    coreMat.metalness = palette.coreMetalness;
-    cageMat.color.setHex(palette.wireframe);
-    cageMat.opacity = palette.wireframeOpacity;
-    ring1Mat.color.setHex(palette.ring1);
-    ring2Mat.color.setHex(palette.ring2);
-    pMaterial.color.setHex(palette.particleColor);
-    ambientLight.intensity = palette.lightAmbient;
-    dirLight1.intensity = palette.lightDirectional;
-  };
-
-  const themeObserver = new MutationObserver(() => {
-    updateThemeColors();
-  });
-  themeObserver.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme'],
+  container.addEventListener('mouseleave', () => {
+    targetMouseX = 0;
+    targetMouseY = 0;
   });
 
-  // 8. Responsive Resize
-  const handleResize = () => {
-    const w = container.clientWidth || 500;
-    const h = container.clientHeight || 450;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-  };
-  window.addEventListener('resize', handleResize);
+  // 6. Waving Animation State Machine
+  let isWaving = true; // Auto wave immediately on visit!
+  let waveTimer = 0;
+  let waveDuration = 3.5; // Wave for 3.5 seconds on visit
 
-  // 9. Main Render Loop
+  exportFunctionTriggerWave = () => {
+    isWaving = true;
+    waveTimer = 0;
+    waveDuration = 3.0;
+  };
+
+  // 7. Interactive Speech Bubble Integration
+  setupRobotSpeechBubble();
+
+  // Clicking robot triggers wave and next dialogue
+  container.addEventListener('click', () => {
+    exportFunctionTriggerWave();
+    advanceRobotDialogue();
+  });
+
+  // 8. Blink Animation Timer
+  let blinkTimer = 0;
+  let nextBlink = 3.0;
+  let isBlinking = false;
+
+  // 9. Render Loop
   const clock = new THREE.Clock();
 
   function animate() {
     requestAnimationFrame(animate);
 
-    if (!isVisible) return;
-
     const delta = clock.getDelta();
-    const elapsedTime = clock.getElapsedTime();
+    const elapsed = clock.getElapsedTime();
 
-    // Spring physics update
-    const diffX = targetRotation.x - currentRotation.x;
-    const diffY = targetRotation.y - currentRotation.y;
-    velocity.x = velocity.x * DAMPING + diffX * SPRING;
-    velocity.y = velocity.y * DAMPING + diffY * SPRING;
+    // Smooth cursor interpolation
+    mouseX += (targetMouseX - mouseX) * 0.08;
+    mouseY += (targetMouseY - mouseY) * 0.08;
 
-    currentRotation.x += velocity.x;
-    currentRotation.y += velocity.y;
+    // A. Head Tracking Cursor (Direct Pitch and Yaw)
+    headGroup.rotation.y = mouseX * 0.85; // Yaw towards mouse
+    headGroup.rotation.x = -mouseY * 0.55; // Pitch up/down
 
-    // Apply master rotation with subtle organic idle drift
-    masterGroup.rotation.x = currentRotation.x + Math.sin(elapsedTime * 0.25) * 0.05;
-    masterGroup.rotation.y = currentRotation.y + elapsedTime * 0.08;
+    // B. Torso Banking & Subtle Follow
+    torsoGroup.rotation.y = mouseX * 0.28;
+    torsoGroup.rotation.z = -mouseX * 0.1;
+    torsoGroup.rotation.x = -mouseY * 0.12;
 
-    // Gentle floating bob & scroll translation
-    const floatOffset = Math.sin(elapsedTime * 0.6) * 0.05;
-    const scrollOffsetY = -scrollProgress * 0.8;
-    const targetScale = Math.max(0.75, 1 - scrollProgress * 0.25);
+    // C. Organic Hovering Float
+    const hoverFloat = Math.sin(elapsed * 2.4) * 0.12;
+    robotRoot.position.y = hoverFloat - (mouseY * 0.15);
+    robotRoot.position.x = mouseX * 0.35;
 
-    masterGroup.position.y = floatOffset + scrollOffsetY;
-    masterGroup.scale.set(targetScale, targetScale, targetScale);
+    // D. Pulsing Core & Beacon
+    const pulse = 0.7 + Math.sin(elapsed * 4.0) * 0.3;
+    coreMat.emissiveIntensity = pulse;
+    beaconMat.emissiveIntensity = 0.6 + Math.sin(elapsed * 6.0) * 0.4;
 
-    // Inner orbital component spins
-    coreMesh.rotation.y += delta * 0.12;
-    cageGroup.rotation.y -= delta * 0.18;
-    cageGroup.rotation.x += delta * 0.08;
+    // Halo gentle rotation
+    haloMesh.rotation.z = elapsed * 0.4;
+    haloMesh.rotation.y = Math.sin(elapsed * 0.5) * 0.2;
 
-    ring1Group.rotation.z -= delta * 0.25;
-    ring2Group.rotation.z += delta * 0.32;
-    ring3Group.rotation.z -= delta * 0.18;
-    ring4Group.rotation.y += delta * 0.22;
+    // E. Waving State Handler
+    if (isWaving) {
+      waveTimer += delta;
+      // Raise right arm to wave position
+      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -1.35, 0.12);
+      rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, -0.45, 0.12);
+      rightForearmGroup.rotation.z = Math.sin(waveTimer * 10.0) * 0.45;
 
-    satelliteGroup.rotation.y += delta * 0.15;
-    satelliteGroup.rotation.x -= delta * 0.05;
+      if (waveTimer >= waveDuration) {
+        isWaving = false;
+      }
+    } else {
+      // Return right arm to relaxed hover posture
+      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 0.08, 0.08);
+      rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 0.0, 0.08);
+      rightForearmGroup.rotation.z = THREE.MathUtils.lerp(rightForearmGroup.rotation.z, 0.0, 0.08);
+    }
 
-    // Particle field slow drift
-    particleField.rotation.y = elapsedTime * 0.02;
+    // F. Eye Blinking Logic
+    blinkTimer += delta;
+    if (blinkTimer >= nextBlink && !isBlinking) {
+      isBlinking = true;
+      eyeLeft.scale.y = 0.08;
+      eyeRight.scale.y = 0.08;
+      setTimeout(() => {
+        eyeLeft.scale.y = 1.0;
+        eyeRight.scale.y = 1.0;
+        isBlinking = false;
+        blinkTimer = 0;
+        nextBlink = 3.5 + Math.random() * 3.0; // Next blink in 3.5 - 6.5s
+      }, 140);
+    }
 
     renderer.render(scene, camera);
   }
 
   animate();
+
+  // 10. Responsive Resizing
+  const handleResize = () => {
+    if (!container) return;
+    const w = container.clientWidth || 500;
+    const h = container.clientHeight || 420;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  // 11. Theme Update Listener
+  const observer = new MutationObserver(() => {
+    palette = getRobotPalette();
+    primaryMat.color.setHex(palette.armorPrimary);
+    primaryMat.metalness = palette.metalness;
+    primaryMat.roughness = palette.roughness;
+
+    secondaryMat.color.setHex(palette.armorSecondary);
+    highlightMat.color.setHex(palette.armorHighlight);
+    visorMat.color.setHex(palette.visorGlass);
+    ambientLight.color.setHex(0xffffff);
+    ambientLight.intensity = palette.lightAmbient;
+    rimLight.color.setHex(palette.rimLight);
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  });
+}
+
+// Global wave trigger reference
+let exportFunctionTriggerWave = () => {};
+
+// Dialogues for the Robot Companion
+const robotDialogues = [
+  "Hi! 👋 Welcome to my portfolio! I track your cursor in real-time. Move around to look!",
+  "Abhijay is an undergraduate in Robotics & AI at VTU Muddenahalli, Karnataka. 🤖",
+  "🏆 Root-Defense won 3rd Prize (₹10,000) at Tech Habba 2026! Check it out below!",
+  "I'm built with Three.js WebGL and procedural inverse kinematics! 🦾",
+  "Explore the Core Languages bar and Repositories below, or tap Résumé to download!"
+];
+
+let currentDialogueIndex = 0;
+
+function advanceRobotDialogue() {
+  currentDialogueIndex = (currentDialogueIndex + 1) % robotDialogues.length;
+  const bubbleText = document.getElementById('robot-speech-text');
+  if (bubbleText) {
+    bubbleText.style.opacity = '0';
+    setTimeout(() => {
+      bubbleText.textContent = robotDialogues[currentDialogueIndex];
+      bubbleText.style.opacity = '1';
+    }, 150);
+  }
+}
+
+// =============================================================================
+// SPEECH BUBBLE & VOICE GREETING
+// =============================================================================
+function setupRobotSpeechBubble() {
+  const container = document.getElementById('webgl-hero-container');
+  if (!container) return;
+
+  const parentFrame = container.closest('.webgl-frame');
+  if (!parentFrame) return;
+
+  // Check if bubble already exists
+  let bubble = document.getElementById('robot-speech-bubble');
+  if (!bubble) {
+    bubble = document.createElement('div');
+    bubble.id = 'robot-speech-bubble';
+    bubble.className = 'robot-speech-bubble visible';
+    bubble.innerHTML = `
+      <div class="speech-header">
+        <div class="speech-bot-title">
+          <span class="speech-bot-avatar">🤖</span>
+          <span class="speech-bot-name">AI COMPANION // ABHI-BOT</span>
+        </div>
+        <div class="speech-header-actions">
+          <button id="robot-voice-btn" class="speech-action-btn" title="Speak greeting" aria-label="Speak greeting aloud">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p id="robot-speech-text" class="speech-body">
+        Hi! 👋 Welcome to my portfolio!
+      </p>
+      <div class="speech-bubble-tail"></div>
+    `;
+
+    parentFrame.appendChild(bubble);
+
+    // Click bubble to cycle dialogue and wave
+    bubble.addEventListener('click', (e) => {
+      // Don't trigger if clicked audio button directly
+      if (e.target.closest('#robot-voice-btn')) return;
+      exportFunctionTriggerWave();
+      advanceRobotDialogue();
+    });
+
+    // Voice synthesis audio button
+    const voiceBtn = bubble.querySelector('#robot-voice-btn');
+    if (voiceBtn) {
+      voiceBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        exportFunctionTriggerWave();
+        speakRobotMessage();
+      });
+    }
+
+    // Attempt gentle speech greeting upon first user interaction
+    const speakFirstGreeting = () => {
+      window.removeEventListener('click', speakFirstGreeting);
+      window.removeEventListener('keydown', speakFirstGreeting);
+      // Optional subtle voice greeting if permitted
+      speakRobotMessage(true);
+    };
+
+    window.addEventListener('click', speakFirstGreeting, { once: true });
+    window.addEventListener('keydown', speakFirstGreeting, { once: true });
+  }
+}
+
+function speakRobotMessage(subtle = false) {
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const text = document.getElementById('robot-speech-text')?.textContent || "Hi! Welcome to my portfolio!";
+      const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/gu, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.rate = 1.05;
+      utterance.pitch = 1.15;
+      if (subtle) utterance.volume = 0.7;
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {
+      // Speech synthesis blocked or unavailable, speech bubble conveys message visually
+    }
+  }
 }

@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollNav();
   initLightbox();
   initPortraitTilt();
+  initProjectDetailsToggle();
 
   // 6. Initialize Icons
   if (window.lucide) {
@@ -484,6 +485,53 @@ function initPortraitTilt() {
 
   card.addEventListener('mouseleave', () => {
     card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+  });
+}
+
+// --- Collapsible Project Deep Dive Toggle ---
+function initProjectDetailsToggle() {
+  const toggleBtn = document.getElementById('btn-toggle-project-details');
+  const panel = document.getElementById('winner-deep-dive-panel');
+  const toggleText = document.getElementById('winner-toggle-text');
+  const toggleIcon = document.getElementById('winner-toggle-icon');
+
+  if (!toggleBtn || !panel) return;
+
+  toggleBtn.addEventListener('click', () => {
+    const isCollapsed = panel.classList.contains('collapsed');
+
+    if (isCollapsed) {
+      panel.classList.remove('collapsed');
+      panel.classList.add('expanded');
+      panel.setAttribute('aria-hidden', 'false');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      if (toggleText) toggleText.textContent = 'Show Less';
+      if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'chevron-up');
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+
+      setTimeout(() => {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    } else {
+      panel.classList.remove('expanded');
+      panel.classList.add('collapsed');
+      panel.setAttribute('aria-hidden', 'true');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      if (toggleText) toggleText.textContent = 'More About The Project';
+      if (toggleIcon) toggleIcon.setAttribute('data-lucide', 'chevron-down');
+
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+
+      const winnerCard = document.getElementById('winner-showcase-card');
+      if (winnerCard) {
+        winnerCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   });
 }
 
