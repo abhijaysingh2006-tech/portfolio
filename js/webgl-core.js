@@ -1,34 +1,44 @@
 // =============================================================================
-// WEBGL-CORE.JS - Interactive Autonomous 3D Robot Companion & Spatial Assistant
-// Procedural Three.js 3D Robot with real-time cursor tracking (head, eyes, body),
-// organic hovering physics, LED visor blinking, wave animations, and
-// visitor greeting speech bubble.
+// WEBGL-CORE.JS - Cheerful 3D Yellow Robot Companion & Falling Skills Catcher
+// Features:
+// 1. Procedural 3D Cheerful Yellow Robot (matching reference design: spherical
+//    yellow helmet, silver crown crest, side headphones, glossy visor, glowing
+//    emerald green eyes with happy '^ ^' squint, and floating yellow boots).
+// 2. Real-time cursor tracking (head, eyes, and torso pitch/yaw).
+// 3. Falling Skills Catch Mini-Game: Authentic skill logos (Python, ROS, C++, etc.)
+//    float down in glowing bubbles; clicking catches them with spark particle FX,
+//    a celebratory "Skill Acquired" toast, and cheerful robot victory cheers!
 // =============================================================================
+
+import { techLogos } from './tech-logos.js';
 
 export function initWebGLCore() {
   const container = document.getElementById('webgl-hero-container');
   if (!container) return;
 
-  // Check if THREE is loaded
   if (typeof THREE === 'undefined') {
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = () => setupRobotScene(container);
+    script.onload = () => setupCheerfulRobotScene(container);
     document.head.appendChild(script);
     return;
   }
 
-  setupRobotScene(container);
+  setupCheerfulRobotScene(container);
 }
 
-function setupRobotScene(container) {
+// Global action triggers between 3D scene and falling skills game
+let triggerCheerfulCatchAnim = () => {};
+let triggerCheerfulSpin = () => {};
+
+function setupCheerfulRobotScene(container) {
   // 1. Scene & Camera Setup
   const scene = new THREE.Scene();
-  const width = container.clientWidth || 500;
+  const width = container.clientWidth || 480;
   const height = container.clientHeight || 420;
 
   const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
-  camera.position.set(0, 0.2, 6.8);
+  camera.position.set(0, 0.1, 6.6);
 
   // 2. High-performance WebGL Renderer
   const renderer = new THREE.WebGLRenderer({
@@ -39,7 +49,7 @@ function setupRobotScene(container) {
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.2;
 
   container.innerHTML = '';
   container.appendChild(renderer.domElement);
@@ -50,18 +60,15 @@ function setupRobotScene(container) {
   const getRobotPalette = () => {
     const dark = isDark();
     return {
-      armorPrimary: dark ? 0x181e2e : 0xe2e8f0,
-      armorSecondary: dark ? 0x0d121f : 0xcbd5e1,
-      armorHighlight: dark ? 0x242e47 : 0xf1f5f9,
-      metalness: dark ? 0.82 : 0.45,
-      roughness: dark ? 0.24 : 0.32,
-      visorGlass: dark ? 0x030712 : 0x1e293b,
-      eyeGlow: 0x00e5ff,
-      coreGlow: 0x2dd4bf,
-      beaconGlow: 0xf59e0b,
-      lightAmbient: dark ? 1.0 : 1.4,
-      lightDirectional: dark ? 1.5 : 1.8,
-      rimLight: dark ? 0x00e5ff : 0x0284c7,
+      yellowBody: dark ? 0xf59e0b : 0xeab308,     // Glossy Bumblebee Yellow / Warm Amber
+      yellowHighlight: dark ? 0xfbbf24 : 0xfde047,
+      silverMetal: 0x94a3b8,                      // Brushed Silver Joint Rods & Soles
+      darkMetal: 0x334155,                        // Dark Titanium Accents
+      visorGlass: dark ? 0x07111e : 0x0f172a,     // Glossy Astronaut Bubble Visor
+      eyeGreen: 0x22c55e,                         // Cheerful Emerald/Mint Green LED Eyes
+      lightAmbient: dark ? 1.1 : 1.4,
+      lightDirectional: dark ? 1.6 : 1.9,
+      keyWarmth: 0xffedd5,
     };
   };
 
@@ -71,271 +78,284 @@ function setupRobotScene(container) {
   const ambientLight = new THREE.AmbientLight(0xffffff, palette.lightAmbient);
   scene.add(ambientLight);
 
-  const keyLight = new THREE.DirectionalLight(0xffffff, palette.lightDirectional);
+  const keyLight = new THREE.DirectionalLight(palette.keyWarmth, palette.lightDirectional);
   keyLight.position.set(4, 5, 5);
   scene.add(keyLight);
 
-  const rimLight = new THREE.DirectionalLight(palette.rimLight, 1.2);
-  rimLight.position.set(-4, -2, -3);
-  scene.add(rimLight);
-
-  const fillLight = new THREE.PointLight(palette.coreGlow, 1.4, 6);
-  fillLight.position.set(0, 0, 1.5);
+  const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.0);
+  fillLight.position.set(-4, -2, -3);
   scene.add(fillLight);
 
-  // 4. Robot Assembly
+  const eyeGlowLight = new THREE.PointLight(palette.eyeGreen, 1.2, 5);
+  eyeGlowLight.position.set(0, 0.8, 1.2);
+  scene.add(eyeGlowLight);
+
+  // 4. Robot Hierarchy & Assembly
   const robotRoot = new THREE.Group();
   scene.add(robotRoot);
 
   // Material Library
-  const primaryMat = new THREE.MeshStandardMaterial({
-    color: palette.armorPrimary,
-    metalness: palette.metalness,
-    roughness: palette.roughness,
+  const yellowMat = new THREE.MeshStandardMaterial({
+    color: palette.yellowBody,
+    metalness: 0.22,
+    roughness: 0.22,
   });
 
-  const secondaryMat = new THREE.MeshStandardMaterial({
-    color: palette.armorSecondary,
-    metalness: palette.metalness * 0.9,
-    roughness: palette.roughness * 1.2,
-  });
-
-  const highlightMat = new THREE.MeshStandardMaterial({
-    color: palette.armorHighlight,
-    metalness: 0.9,
+  const yellowHighlightMat = new THREE.MeshStandardMaterial({
+    color: palette.yellowHighlight,
+    metalness: 0.25,
     roughness: 0.18,
+  });
+
+  const silverMat = new THREE.MeshStandardMaterial({
+    color: palette.silverMetal,
+    metalness: 0.88,
+    roughness: 0.2,
+  });
+
+  const darkMetalMat = new THREE.MeshStandardMaterial({
+    color: palette.darkMetal,
+    metalness: 0.82,
+    roughness: 0.35,
   });
 
   const visorMat = new THREE.MeshStandardMaterial({
     color: palette.visorGlass,
     metalness: 0.95,
-    roughness: 0.08,
+    roughness: 0.06,
   });
 
   const eyeMat = new THREE.MeshBasicMaterial({
-    color: palette.eyeGlow,
+    color: palette.eyeGreen,
   });
 
-  const coreMat = new THREE.MeshStandardMaterial({
-    color: palette.coreGlow,
-    emissive: palette.coreGlow,
-    emissiveIntensity: 0.85,
-    roughness: 0.2,
-  });
-
-  const beaconMat = new THREE.MeshStandardMaterial({
-    color: palette.beaconGlow,
-    emissive: palette.beaconGlow,
-    emissiveIntensity: 0.95,
-    roughness: 0.2,
-  });
-
-  // A. Torso Assembly
+  // A. Torso Assembly (Cute rounded yellow chassis)
   const torsoGroup = new THREE.Group();
   robotRoot.add(torsoGroup);
 
-  // Torso main body
-  const bodyGeo = new THREE.BoxGeometry(1.3, 1.35, 0.95);
-  const bodyMesh = new THREE.Mesh(bodyGeo, primaryMat);
-  bodyMesh.position.y = -0.15;
-  torsoGroup.add(bodyMesh);
+  const chestGeo = new THREE.SphereGeometry(0.72, 24, 24);
+  chestGeo.scale(0.92, 1.05, 0.88);
+  const chestMesh = new THREE.Mesh(chestGeo, yellowMat);
+  chestMesh.position.y = -0.15;
+  torsoGroup.add(chestMesh);
 
-  // Front chest armor plate
-  const chestPlateGeo = new THREE.BoxGeometry(1.08, 0.85, 0.18);
-  const chestPlate = new THREE.Mesh(chestPlateGeo, secondaryMat);
-  chestPlate.position.set(0, -0.05, 0.48);
-  torsoGroup.add(chestPlate);
+  // Center chest badge / dial ("1" dial ring)
+  const dialBezel = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.035, 16, 24), silverMat);
+  dialBezel.position.set(0, -0.12, 0.62);
+  torsoGroup.add(dialBezel);
 
-  // Arc Reactor Core (Glowing pulsing center)
-  const coreBezelGeo = new THREE.TorusGeometry(0.24, 0.04, 16, 32);
-  const coreBezel = new THREE.Mesh(coreBezelGeo, highlightMat);
-  coreBezel.position.set(0, -0.05, 0.58);
-  torsoGroup.add(coreBezel);
+  const dialInner = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.05, 24), darkMetalMat);
+  dialInner.rotateX(Math.PI / 2);
+  dialInner.position.set(0, -0.12, 0.6);
+  torsoGroup.add(dialInner);
 
-  const coreDiskGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.06, 32);
-  coreDiskGeo.rotateX(Math.PI / 2);
-  const coreDisk = new THREE.Mesh(coreDiskGeo, coreMat);
-  coreDisk.position.set(0, -0.05, 0.57);
-  torsoGroup.add(coreDisk);
+  // Neck ball joint
+  const neckMesh = new THREE.Mesh(new THREE.SphereGeometry(0.24, 16, 16), silverMat);
+  neckMesh.position.y = 0.62;
+  torsoGroup.add(neckMesh);
 
-  // Shoulder Mount Plates
-  const leftShoulderPadGeo = new THREE.BoxGeometry(0.32, 0.22, 0.92);
-  const leftShoulderPad = new THREE.Mesh(leftShoulderPadGeo, highlightMat);
-  leftShoulderPad.position.set(-0.72, 0.45, 0);
-  torsoGroup.add(leftShoulderPad);
-
-  const rightShoulderPadGeo = new THREE.BoxGeometry(0.32, 0.22, 0.92);
-  const rightShoulderPad = new THREE.Mesh(rightShoulderPadGeo, highlightMat);
-  rightShoulderPad.position.set(0.72, 0.45, 0);
-  torsoGroup.add(rightShoulderPad);
-
-  // Anti-Gravity Thruster Bell at Base
-  const thrusterBellGeo = new THREE.CylinderGeometry(0.38, 0.58, 0.45, 24, 1, true);
-  const thrusterBell = new THREE.Mesh(thrusterBellGeo, secondaryMat);
-  thrusterBell.position.y = -0.92;
-  torsoGroup.add(thrusterBell);
-
-  const thrusterRingGeo = new THREE.TorusGeometry(0.42, 0.05, 16, 32);
-  thrusterRingGeo.rotateX(Math.PI / 2);
-  const thrusterRing = new THREE.Mesh(thrusterRingGeo, coreMat);
-  thrusterRing.position.y = -1.14;
-  torsoGroup.add(thrusterRing);
-
-  // B. Neck & Head Assembly
+  // B. Head Assembly (Large cute spherical helmet with silver crest & headphone ears)
   const headGroup = new THREE.Group();
-  headGroup.position.set(0, 0.92, 0);
+  headGroup.position.set(0, 0.95, 0);
   torsoGroup.add(headGroup);
 
-  // Neck joint
-  const neckGeo = new THREE.CylinderGeometry(0.24, 0.28, 0.32, 16);
-  const neckMesh = new THREE.Mesh(neckGeo, highlightMat);
-  neckMesh.position.y = -0.22;
-  headGroup.add(neckMesh);
+  // Spherical yellow helmet
+  const helmetGeo = new THREE.SphereGeometry(1.12, 32, 32);
+  helmetGeo.scale(1.0, 0.98, 0.94);
+  const helmetMesh = new THREE.Mesh(helmetGeo, yellowMat);
+  headGroup.add(helmetMesh);
 
-  // Main Head Helmet
-  const headGeo = new THREE.BoxGeometry(1.24, 0.98, 1.05);
-  const headMesh = new THREE.Mesh(headGeo, primaryMat);
-  headGroup.add(headMesh);
+  // Silver crown crest / racing stripe over helmet top
+  const crestGeo = new THREE.CylinderGeometry(1.13, 1.13, 0.22, 32, 1, true);
+  crestGeo.rotateZ(Math.PI / 2);
+  const crestMesh = new THREE.Mesh(crestGeo, silverMat);
+  crestMesh.position.set(0, 0.05, 0);
+  headGroup.add(crestMesh);
 
-  // Crown curved cap
-  const crownGeo = new THREE.CylinderGeometry(0.52, 0.62, 1.02, 16);
-  crownGeo.rotateZ(Math.PI / 2);
-  const crownMesh = new THREE.Mesh(crownGeo, secondaryMat);
-  crownMesh.position.set(0, 0.48, 0);
-  headGroup.add(crownMesh);
-
-  // Visor Faceplate
-  const visorGeo = new THREE.BoxGeometry(1.06, 0.52, 0.14);
+  // Curved dark glossy bubble visor
+  const visorGeo = new THREE.SphereGeometry(1.02, 32, 32, 0, Math.PI, 0, Math.PI * 0.72);
+  visorGeo.rotateY(-Math.PI / 2);
+  visorGeo.rotateX(Math.PI / 10);
   const visorMesh = new THREE.Mesh(visorGeo, visorMat);
-  visorMesh.position.set(0, 0.02, 0.52);
+  visorMesh.position.set(0, 0.05, 0.14);
   headGroup.add(visorMesh);
 
-  // Glowing LED Visor Eyes (Blinkable)
-  const eyeLeftGeo = new THREE.BoxGeometry(0.25, 0.09, 0.04);
+  // Expressive Eyes: Normal pill eyes vs Cheerful happy squint arcs (^ ^)
+  const pillEyesGroup = new THREE.Group();
+  headGroup.add(pillEyesGroup);
+
+  const eyeLeftGeo = new THREE.BoxGeometry(0.24, 0.1, 0.04);
   const eyeLeft = new THREE.Mesh(eyeLeftGeo, eyeMat);
-  eyeLeft.position.set(-0.25, 0.04, 0.6);
-  headGroup.add(eyeLeft);
+  eyeLeft.position.set(-0.28, 0.12, 0.92);
+  pillEyesGroup.add(eyeLeft);
 
-  const eyeRightGeo = new THREE.BoxGeometry(0.25, 0.09, 0.04);
+  const eyeRightGeo = new THREE.BoxGeometry(0.24, 0.1, 0.04);
   const eyeRight = new THREE.Mesh(eyeRightGeo, eyeMat);
-  eyeRight.position.set(0.25, 0.04, 0.6);
-  headGroup.add(eyeRight);
+  eyeRight.position.set(0.28, 0.12, 0.92);
+  pillEyesGroup.add(eyeRight);
 
-  // Antenna Stalk & Glowing Beacon
-  const antennaStalkGeo = new THREE.CylinderGeometry(0.028, 0.028, 0.52, 8);
-  const antennaStalk = new THREE.Mesh(antennaStalkGeo, highlightMat);
-  antennaStalk.position.set(0, 0.85, 0);
-  headGroup.add(antennaStalk);
+  // Cheerful Happy Eyes (^ ^ smiling arcs)
+  const happyEyesGroup = new THREE.Group();
+  happyEyesGroup.visible = false;
+  headGroup.add(happyEyesGroup);
 
-  const beaconGeo = new THREE.SphereGeometry(0.09, 16, 16);
-  const beaconMesh = new THREE.Mesh(beaconGeo, beaconMat);
-  beaconMesh.position.set(0, 1.13, 0);
-  headGroup.add(beaconMesh);
+  const happyArcGeo = new THREE.TorusGeometry(0.12, 0.035, 12, 18, Math.PI);
+  const happyEyeLeft = new THREE.Mesh(happyArcGeo, eyeMat);
+  happyEyeLeft.position.set(-0.28, 0.1, 0.92);
+  happyEyesGroup.add(happyEyeLeft);
 
-  // Ear Pods (Left & Right)
-  const earGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.16, 16);
-  earGeo.rotateZ(Math.PI / 2);
-  const earLeft = new THREE.Mesh(earGeo, highlightMat);
-  earLeft.position.set(-0.68, 0.05, 0);
-  headGroup.add(earLeft);
+  const happyEyeRight = new THREE.Mesh(happyArcGeo, eyeMat);
+  happyEyeRight.position.set(0.28, 0.1, 0.92);
+  happyEyesGroup.add(happyEyeRight);
 
-  const earRight = new THREE.Mesh(earGeo, highlightMat);
-  earRight.position.set(0.68, 0.05, 0);
-  headGroup.add(earRight);
+  // Side Headphone Ear Pods (Left & Right)
+  const earLeftGroup = new THREE.Group();
+  earLeftGroup.position.set(-1.12, 0.08, 0);
+  headGroup.add(earLeftGroup);
 
-  // C. Left Arm Assembly (Relaxed Stance)
+  const earLeftMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.22, 24), darkMetalMat);
+  earLeftMesh.rotateZ(Math.PI / 2);
+  earLeftGroup.add(earLeftMesh);
+
+  const earLeftRing = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.04, 16, 24), silverMat);
+  earLeftRing.rotateY(Math.PI / 2);
+  earLeftRing.position.x = -0.12;
+  earLeftGroup.add(earLeftRing);
+
+  const earRightGroup = new THREE.Group();
+  earRightGroup.position.set(1.12, 0.08, 0);
+  headGroup.add(earRightGroup);
+
+  const earRightMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.22, 24), darkMetalMat);
+  earRightMesh.rotateZ(Math.PI / 2);
+  earRightGroup.add(earRightMesh);
+
+  const earRightRing = new THREE.Mesh(new THREE.TorusGeometry(0.26, 0.04, 16, 24), silverMat);
+  earRightRing.rotateY(Math.PI / 2);
+  earRightRing.position.x = 0.12;
+  earRightGroup.add(earRightRing);
+
+  // C. Left Arm Assembly (Cheerful Outstretched Posture)
   const leftArmGroup = new THREE.Group();
-  leftArmGroup.position.set(-0.84, 0.35, 0);
+  leftArmGroup.position.set(-0.76, 0.32, 0);
   torsoGroup.add(leftArmGroup);
 
-  const leftShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), highlightMat);
+  const leftShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), silverMat);
   leftArmGroup.add(leftShoulder);
 
-  const leftUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.09, 0.55, 12), secondaryMat);
-  leftUpperArm.position.y = -0.32;
+  const leftUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.45, 12), silverMat);
+  leftUpperArm.position.set(-0.16, -0.22, 0.1);
+  leftUpperArm.rotation.set(-0.3, 0, 0.6);
   leftArmGroup.add(leftUpperArm);
 
-  const leftElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), highlightMat);
-  leftElbow.position.y = -0.62;
+  const leftElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), darkMetalMat);
+  leftElbow.position.set(-0.36, -0.42, 0.22);
   leftArmGroup.add(leftElbow);
 
-  const leftForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.48, 12), primaryMat);
-  leftForearm.position.set(0, -0.88, 0.08);
-  leftForearm.rotation.x = -0.3;
+  const leftForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.12, 0.46, 16), yellowMat);
+  leftForearm.position.set(-0.52, -0.62, 0.38);
+  leftForearm.rotation.set(-0.5, 0.3, 0.8);
   leftArmGroup.add(leftForearm);
 
-  const leftHand = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.08), highlightMat);
-  leftHand.position.set(0, -1.14, 0.16);
+  // Articulated silver hand reaching out
+  const leftHand = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.2, 0.08), silverMat);
+  leftHand.position.set(-0.66, -0.82, 0.52);
+  leftHand.rotation.set(-0.3, 0.5, 0.6);
   leftArmGroup.add(leftHand);
 
-  // D. Right Arm Assembly (Animated Waving & Greeting)
+  // D. Right Arm Assembly (Animated Catching & Cheerful Waving)
   const rightArmGroup = new THREE.Group();
-  rightArmGroup.position.set(0.84, 0.35, 0);
+  rightArmGroup.position.set(0.76, 0.32, 0);
   torsoGroup.add(rightArmGroup);
 
-  const rightShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), highlightMat);
+  const rightShoulder = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), silverMat);
   rightArmGroup.add(rightShoulder);
 
-  const rightUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.09, 0.55, 12), secondaryMat);
-  rightUpperArm.position.y = -0.32;
+  const rightUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.07, 0.45, 12), silverMat);
+  rightUpperArm.position.set(0.16, -0.22, 0.1);
+  rightUpperArm.rotation.set(-0.3, 0, -0.6);
   rightArmGroup.add(rightUpperArm);
 
-  const rightElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), highlightMat);
-  rightElbow.position.y = -0.62;
+  const rightElbow = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), darkMetalMat);
+  rightElbow.position.set(0.36, -0.42, 0.22);
   rightArmGroup.add(rightElbow);
 
   const rightForearmGroup = new THREE.Group();
-  rightForearmGroup.position.set(0, -0.62, 0);
+  rightForearmGroup.position.set(0.36, -0.42, 0.22);
   rightArmGroup.add(rightForearmGroup);
 
-  const rightForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.48, 12), primaryMat);
-  rightForearm.position.y = -0.26;
+  const rightForearm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.12, 0.46, 16), yellowMat);
+  rightForearm.position.set(0.16, -0.2, 0.16);
+  rightForearm.rotation.set(-0.5, -0.3, -0.8);
   rightForearmGroup.add(rightForearm);
 
-  const rightHand = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.08), highlightMat);
-  rightHand.position.y = -0.52;
+  const rightHand = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.2, 0.08), silverMat);
+  rightHand.position.set(0.3, -0.4, 0.3);
+  rightHand.rotation.set(-0.3, -0.5, -0.6);
   rightForearmGroup.add(rightHand);
 
-  // E. Floating Orbital Data Halo
-  const haloGeo = new THREE.TorusGeometry(1.85, 0.018, 16, 80);
-  haloGeo.rotateX(Math.PI / 2.3);
-  const haloMat = new THREE.MeshStandardMaterial({
-    color: palette.eyeGlow,
-    emissive: palette.eyeGlow,
-    emissiveIntensity: 0.5,
-    metalness: 0.3,
-    roughness: 0.2,
-    transparent: true,
-    opacity: 0.65,
-  });
-  const haloMesh = new THREE.Mesh(haloGeo, haloMat);
-  robotRoot.add(haloMesh);
+  // E. Legs & Floating Yellow Boots (Just like reference image!)
+  const leftLegGroup = new THREE.Group();
+  leftLegGroup.position.set(-0.34, -0.72, 0);
+  torsoGroup.add(leftLegGroup);
 
-  // 5. Cursor Tracking & Motion Variables
+  const leftHip = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), darkMetalMat);
+  leftLegGroup.add(leftHip);
+
+  const leftThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.35, 14), yellowMat);
+  leftThigh.position.set(-0.06, -0.2, 0.05);
+  leftThigh.rotation.set(-0.35, 0, 0.2);
+  leftLegGroup.add(leftThigh);
+
+  const leftBoot = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.38, 0.58), yellowHighlightMat);
+  leftBoot.position.set(-0.1, -0.48, 0.24);
+  leftBoot.rotation.set(0.4, 0, 0.2);
+  leftLegGroup.add(leftBoot);
+
+  const leftSole = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.08, 0.6), silverMat);
+  leftSole.position.set(-0.1, -0.66, 0.24);
+  leftSole.rotation.set(0.4, 0, 0.2);
+  leftLegGroup.add(leftSole);
+
+  const rightLegGroup = new THREE.Group();
+  rightLegGroup.position.set(0.34, -0.72, 0);
+  torsoGroup.add(rightLegGroup);
+
+  const rightHip = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), darkMetalMat);
+  rightLegGroup.add(rightHip);
+
+  const rightThigh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.35, 14), yellowMat);
+  rightThigh.position.set(0.06, -0.2, -0.05);
+  rightThigh.rotation.set(-0.15, 0, -0.2);
+  rightLegGroup.add(rightThigh);
+
+  const rightBoot = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.38, 0.58), yellowHighlightMat);
+  rightBoot.position.set(0.1, -0.48, 0.12);
+  rightBoot.rotation.set(0.2, 0, -0.2);
+  rightLegGroup.add(rightBoot);
+
+  const rightSole = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.08, 0.6), silverMat);
+  rightSole.position.set(0.1, -0.66, 0.12);
+  rightSole.rotation.set(0.2, 0, -0.2);
+  rightLegGroup.add(rightSole);
+
+  // 5. Cursor Tracking & Motion
   let mouseX = 0;
   let mouseY = 0;
   let targetMouseX = 0;
   let targetMouseY = 0;
 
-  // Window & Container Mouse Listener
   const updatePointer = (clientX, clientY) => {
     const rect = container.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-
-    // Normalizing between -1 and 1 relative to container center
-    targetMouseX = Math.max(-1.5, Math.min(1.5, (clientX - centerX) / (rect.width * 0.75)));
-    targetMouseY = Math.max(-1.5, Math.min(1.5, (clientY - centerY) / (rect.height * 0.75)));
+    targetMouseX = Math.max(-1.5, Math.min(1.5, (clientX - centerX) / (rect.width * 0.7)));
+    targetMouseY = Math.max(-1.5, Math.min(1.5, (clientY - centerY) / (rect.height * 0.7)));
   };
 
-  window.addEventListener('mousemove', (e) => {
-    updatePointer(e.clientX, e.clientY);
-  });
-
+  window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY));
   window.addEventListener('touchmove', (e) => {
-    if (e.touches.length > 0) {
-      updatePointer(e.touches[0].clientX, e.touches[0].clientY);
-    }
+    if (e.touches.length > 0) updatePointer(e.touches[0].clientX, e.touches[0].clientY);
   }, { passive: true });
 
   container.addEventListener('mouseleave', () => {
@@ -343,32 +363,52 @@ function setupRobotScene(container) {
     targetMouseY = 0;
   });
 
-  // 6. Waving Animation State Machine
-  let isWaving = true; // Auto wave immediately on visit!
-  let waveTimer = 0;
-  let waveDuration = 3.5; // Wave for 3.5 seconds on visit
+  // 6. Cheerful Animation States
+  let isCheerfulCatching = false;
+  let cheerfulTimer = 0;
+  let cheerfulBounce = 0;
 
-  exportFunctionTriggerWave = () => {
-    isWaving = true;
-    waveTimer = 0;
-    waveDuration = 3.0;
+  let isSpinning = false;
+  let spinAngle = 0;
+
+  triggerCheerfulCatchAnim = (targetNormX, targetNormY) => {
+    isCheerfulCatching = true;
+    cheerfulTimer = 0;
+    cheerfulBounce = 0.45; // Joyful bounce upward!
+
+    // Switch eyes to happy squint (^ ^)
+    pillEyesGroup.visible = false;
+    happyEyesGroup.visible = true;
+
+    // Direct head toward caught skill
+    targetMouseX = targetNormX || 0;
+    targetMouseY = targetNormY || -0.5;
   };
 
-  // 7. Interactive Speech Bubble Integration
-  setupRobotSpeechBubble();
+  triggerCheerfulSpin = () => {
+    isSpinning = true;
+    spinAngle = 0;
+    pillEyesGroup.visible = false;
+    happyEyesGroup.visible = true;
+    setTimeout(() => {
+      pillEyesGroup.visible = true;
+      happyEyesGroup.visible = false;
+    }, 1800);
+  };
 
-  // Clicking robot triggers wave and next dialogue
-  container.addEventListener('click', () => {
-    exportFunctionTriggerWave();
-    advanceRobotDialogue();
+  container.addEventListener('click', (e) => {
+    // Only spin if clicked canvas directly and not a skill bubble
+    if (!e.target.closest('.falling-skill-orb')) {
+      triggerCheerfulSpin();
+    }
   });
 
-  // 8. Blink Animation Timer
+  // 7. Blinking Logic
   let blinkTimer = 0;
-  let nextBlink = 3.0;
+  let nextBlink = 3.2;
   let isBlinking = false;
 
-  // 9. Render Loop
+  // 8. Render Animation Loop
   const clock = new THREE.Clock();
 
   function animate() {
@@ -381,60 +421,73 @@ function setupRobotScene(container) {
     mouseX += (targetMouseX - mouseX) * 0.08;
     mouseY += (targetMouseY - mouseY) * 0.08;
 
-    // A. Head Tracking Cursor (Direct Pitch and Yaw)
-    headGroup.rotation.y = mouseX * 0.85; // Yaw towards mouse
-    headGroup.rotation.x = -mouseY * 0.55; // Pitch up/down
+    // Head tracks cursor
+    headGroup.rotation.y = mouseX * 0.75;
+    headGroup.rotation.x = -mouseY * 0.45;
 
-    // B. Torso Banking & Subtle Follow
-    torsoGroup.rotation.y = mouseX * 0.28;
+    // Torso banking
+    torsoGroup.rotation.y = mouseX * 0.25;
     torsoGroup.rotation.z = -mouseX * 0.1;
-    torsoGroup.rotation.x = -mouseY * 0.12;
 
-    // C. Organic Hovering Float
-    const hoverFloat = Math.sin(elapsed * 2.4) * 0.12;
-    robotRoot.position.y = hoverFloat - (mouseY * 0.15);
-    robotRoot.position.x = mouseX * 0.35;
+    // Organic cheerful floating hover
+    const hoverY = Math.sin(elapsed * 2.8) * 0.14;
+    robotRoot.position.y = hoverY + cheerfulBounce - (mouseY * 0.12);
+    robotRoot.position.x = mouseX * 0.3;
 
-    // D. Pulsing Core & Beacon
-    const pulse = 0.7 + Math.sin(elapsed * 4.0) * 0.3;
-    coreMat.emissiveIntensity = pulse;
-    beaconMat.emissiveIntensity = 0.6 + Math.sin(elapsed * 6.0) * 0.4;
+    // Playful floating kicking boots
+    leftLegGroup.rotation.x = Math.sin(elapsed * 2.5) * 0.18;
+    rightLegGroup.rotation.x = -Math.sin(elapsed * 2.5) * 0.18;
 
-    // Halo gentle rotation
-    haloMesh.rotation.z = elapsed * 0.4;
-    haloMesh.rotation.y = Math.sin(elapsed * 0.5) * 0.2;
+    // Handling cheerful catch celebration
+    if (isCheerfulCatching) {
+      cheerfulTimer += delta;
+      cheerfulBounce = Math.max(0, cheerfulBounce - delta * 0.7);
 
-    // E. Waving State Handler
-    if (isWaving) {
-      waveTimer += delta;
-      // Raise right arm to wave position
-      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -1.35, 0.12);
-      rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, -0.45, 0.12);
-      rightForearmGroup.rotation.z = Math.sin(waveTimer * 10.0) * 0.45;
+      // Raise both arms in victory celebration!
+      leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, -1.2, 0.15);
+      leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, -0.6, 0.15);
+      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 1.2, 0.15);
+      rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, -0.6, 0.15);
 
-      if (waveTimer >= waveDuration) {
-        isWaving = false;
+      if (cheerfulTimer >= 2.0) {
+        isCheerfulCatching = false;
+        pillEyesGroup.visible = true;
+        happyEyesGroup.visible = false;
       }
     } else {
-      // Return right arm to relaxed hover posture
-      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, 0.08, 0.08);
+      cheerfulBounce = 0;
+      // Cheerful idle outstretched arms
+      leftArmGroup.rotation.z = THREE.MathUtils.lerp(leftArmGroup.rotation.z, 0.1 + Math.sin(elapsed * 2.0) * 0.08, 0.08);
+      leftArmGroup.rotation.x = THREE.MathUtils.lerp(leftArmGroup.rotation.x, 0.0, 0.08);
+      rightArmGroup.rotation.z = THREE.MathUtils.lerp(rightArmGroup.rotation.z, -0.1 - Math.sin(elapsed * 2.0) * 0.08, 0.08);
       rightArmGroup.rotation.x = THREE.MathUtils.lerp(rightArmGroup.rotation.x, 0.0, 0.08);
-      rightForearmGroup.rotation.z = THREE.MathUtils.lerp(rightForearmGroup.rotation.z, 0.0, 0.08);
     }
 
-    // F. Eye Blinking Logic
-    blinkTimer += delta;
-    if (blinkTimer >= nextBlink && !isBlinking) {
-      isBlinking = true;
-      eyeLeft.scale.y = 0.08;
-      eyeRight.scale.y = 0.08;
-      setTimeout(() => {
-        eyeLeft.scale.y = 1.0;
-        eyeRight.scale.y = 1.0;
-        isBlinking = false;
-        blinkTimer = 0;
-        nextBlink = 3.5 + Math.random() * 3.0; // Next blink in 3.5 - 6.5s
-      }, 140);
+    // Full 360 victory spin
+    if (isSpinning) {
+      spinAngle += delta * 8.0;
+      robotRoot.rotation.y = spinAngle;
+      if (spinAngle >= Math.PI * 2) {
+        isSpinning = false;
+        robotRoot.rotation.y = 0;
+      }
+    }
+
+    // Eye blinking
+    if (!happyEyesGroup.visible) {
+      blinkTimer += delta;
+      if (blinkTimer >= nextBlink && !isBlinking) {
+        isBlinking = true;
+        eyeLeft.scale.y = 0.08;
+        eyeRight.scale.y = 0.08;
+        setTimeout(() => {
+          eyeLeft.scale.y = 1.0;
+          eyeRight.scale.y = 1.0;
+          isBlinking = false;
+          blinkTimer = 0;
+          nextBlink = 3.0 + Math.random() * 3.5;
+        }, 130);
+      }
     }
 
     renderer.render(scene, camera);
@@ -442,10 +495,10 @@ function setupRobotScene(container) {
 
   animate();
 
-  // 10. Responsive Resizing
+  // 9. Resize Handling
   const handleResize = () => {
     if (!container) return;
-    const w = container.clientWidth || 500;
+    const w = container.clientWidth || 480;
     const h = container.clientHeight || 420;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -454,50 +507,221 @@ function setupRobotScene(container) {
 
   window.addEventListener('resize', handleResize);
 
-  // 11. Theme Update Listener
+  // 10. Theme Mutation Observer
   const observer = new MutationObserver(() => {
     palette = getRobotPalette();
-    primaryMat.color.setHex(palette.armorPrimary);
-    primaryMat.metalness = palette.metalness;
-    primaryMat.roughness = palette.roughness;
-
-    secondaryMat.color.setHex(palette.armorSecondary);
-    highlightMat.color.setHex(palette.armorHighlight);
+    yellowMat.color.setHex(palette.yellowBody);
+    yellowHighlightMat.color.setHex(palette.yellowHighlight);
     visorMat.color.setHex(palette.visorGlass);
     ambientLight.color.setHex(0xffffff);
     ambientLight.intensity = palette.lightAmbient;
-    rimLight.color.setHex(palette.rimLight);
+    keyLight.intensity = palette.lightDirectional;
   });
 
   observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['data-theme'],
   });
+
+  // 11. Mount Falling Skills Mini-Game & Cheerful Greeting
+  setupFallingSkillsMiniGame(container);
+  setupRobotSpeechBubble();
 }
 
-// Global wave trigger reference
-let exportFunctionTriggerWave = () => {};
+// =============================================================================
+// FALLING SKILLS MINI-GAME & SKILL ACQUIRED MECHANIC
+// =============================================================================
 
-// Dialogues for the Robot Companion
-const robotDialogues = [
-  "Hi! 👋 Welcome to my portfolio! I track your cursor in real-time. Move around to look!",
-  "Abhijay is an undergraduate in Robotics & AI at VTU Muddenahalli, Karnataka. 🤖",
-  "🏆 Root-Defense won 3rd Prize (₹10,000) at Tech Habba 2026! Check it out below!",
-  "I'm built with Three.js WebGL and procedural inverse kinematics! 🦾",
-  "Explore the Core Languages bar and Repositories below, or tap Résumé to download!"
+const skillsCatalog = [
+  { key: 'python', name: 'Python', phrase: 'Autonomous AI pipelines & ML inference unlocked!' },
+  { key: 'cpp', name: 'C++', phrase: 'Real-time high-throughput robotics algorithms activated!' },
+  { key: 'ros', name: 'ROS 2', phrase: 'Robotics nodes & sensor telemetry publishing live!' },
+  { key: 'solidity', name: 'Solidity', phrase: 'Immutable smart contracts & Quai Network anchored!' },
+  { key: 'golang', name: 'Go', phrase: 'Ultra-fast tamper-evident log forwarders deployed!' },
+  { key: 'javascript', name: 'JavaScript', phrase: 'Modern responsive web interfaces running smooth!' },
+  { key: 'typescript', name: 'TypeScript', phrase: 'Strict type safety & scalable systems architecture!' },
+  { key: 'c', name: 'C', phrase: 'Bare-metal microcontroller & firmware mastery!' },
+  { key: 'linux', name: 'Linux', phrase: 'Root access defense & kernel audit logging engaged!' },
+  { key: 'git', name: 'Git', phrase: 'Flawless distributed version control & open-source sync!' },
+  { key: 'arduino', name: 'Arduino', phrase: 'Sensors, actuators & embedded robotics interfacing!' },
+  { key: 'opencv', name: 'OpenCV', phrase: 'Computer vision, object tracking & spatial awareness!' },
+  { key: 'postgresql', name: 'PostgreSQL', phrase: 'Relational data clustering & analytical indexes!' },
+  { key: 'sqlite', name: 'SQLite', phrase: 'Lightweight off-host witness database online!' },
 ];
 
-let currentDialogueIndex = 0;
+const acquiredSkillsSet = new Set();
 
-function advanceRobotDialogue() {
-  currentDialogueIndex = (currentDialogueIndex + 1) % robotDialogues.length;
+function setupFallingSkillsMiniGame(container) {
+  // Create or clean falling skills overlay
+  let fallingLayer = container.querySelector('#falling-skills-layer');
+  if (fallingLayer) fallingLayer.remove();
+
+  fallingLayer = document.createElement('div');
+  fallingLayer.id = 'falling-skills-layer';
+  fallingLayer.className = 'falling-skills-container';
+  container.appendChild(fallingLayer);
+
+  // Spawning timer for falling skill bubbles
+  let isPageVisible = true;
+  document.addEventListener('visibilitychange', () => {
+    isPageVisible = !document.hidden;
+  });
+
+  let skillIndex = 0;
+
+  function spawnFallingSkill() {
+    if (!isPageVisible || !container) return;
+
+    // Select skill from catalog
+    const skill = skillsCatalog[skillIndex % skillsCatalog.length];
+    skillIndex++;
+
+    const orb = document.createElement('div');
+    orb.className = 'falling-skill-orb';
+
+    // Position randomly along top (15% to 80% to stay centered over robot)
+    const startXPercent = 14 + Math.random() * 68;
+    orb.style.left = `${startXPercent}%`;
+    orb.style.top = '-50px';
+
+    // Insert authentic vector logo & tooltip
+    const logoSvg = techLogos[skill.key] || '<svg width="22" height="22"><circle cx="11" cy="11" r="9" fill="#f59e0b"/></svg>';
+    orb.innerHTML = `
+      ${logoSvg}
+      <span class="falling-skill-tooltip">${skill.name}</span>
+    `;
+
+    fallingLayer.appendChild(orb);
+
+    // Falling animation variables
+    let posY = -50;
+    const speed = 1.1 + Math.random() * 0.7; // Gentle fall
+    let animId = null;
+
+    function dropStep() {
+      posY += speed;
+      orb.style.top = `${posY}px`;
+
+      const maxH = container.clientHeight || 420;
+      if (posY > maxH + 40) {
+        cancelAnimationFrame(animId);
+        orb.remove();
+      } else {
+        animId = requestAnimationFrame(dropStep);
+      }
+    }
+
+    animId = requestAnimationFrame(dropStep);
+
+    // Click Catch Handler: Catch skill, pop orb, cheer robot!
+    orb.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cancelAnimationFrame(animId);
+
+      const orbRect = orb.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const relX = orbRect.left - containerRect.left + orbRect.width / 2;
+      const relY = orbRect.top - containerRect.top + orbRect.height / 2;
+
+      // 1. Normalized coordinate for 3D Robot to look and reach toward
+      const normX = ((relX / containerRect.width) - 0.5) * 2;
+      const normY = ((relY / containerRect.height) - 0.5) * 2;
+
+      // 2. Trigger Cheerful Robot Catch Animation
+      triggerCheerfulCatchAnim(normX, normY);
+
+      // 3. Burst Particle FX
+      spawnBurstParticles(fallingLayer, relX, relY);
+
+      // 4. Floating "Skill Acquired" Toast
+      spawnSkillAcquiredToast(fallingLayer, relX, relY, skill.name);
+
+      // 5. Update Acquired Skills Counter
+      acquiredSkillsSet.add(skill.key);
+      updateScorePill();
+
+      // 6. Update Speech Bubble with Cheerful Praise
+      updateCheerfulSpeech(skill);
+
+      // Remove orb
+      orb.remove();
+    });
+  }
+
+  // Periodic spawn loop: every 2.0s
+  setInterval(spawnFallingSkill, 2000);
+  // Initial immediate spawn
+  setTimeout(spawnFallingSkill, 600);
+}
+
+function updateScorePill() {
+  const pill = document.getElementById('skills-acquired-pill');
+  if (pill) {
+    pill.textContent = `ACQUIRED: ${acquiredSkillsSet.size} / ${skillsCatalog.length}`;
+    pill.style.color = '#10b981';
+    pill.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+  }
+}
+
+function spawnBurstParticles(parent, x, y) {
+  const colors = ['#f59e0b', '#fbbf24', '#22c55e', '#ffffff', '#38bdf8'];
+  for (let i = 0; i < 12; i++) {
+    const spark = document.createElement('div');
+    spark.className = 'skill-burst-spark';
+    spark.style.left = `${x}px`;
+    spark.style.top = `${y}px`;
+    spark.style.background = colors[i % colors.length];
+
+    const angle = (i / 12) * Math.PI * 2 + Math.random() * 0.4;
+    const dist = 32 + Math.random() * 38;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+
+    spark.style.setProperty('--dx', `${dx}px`);
+    spark.style.setProperty('--dy', `${dy}px`);
+
+    parent.appendChild(spark);
+    setTimeout(() => spark.remove(), 600);
+  }
+}
+
+function spawnSkillAcquiredToast(parent, x, y, skillName) {
+  const toast = document.createElement('div');
+  toast.className = 'skill-acquired-toast';
+  toast.style.left = `${x}px`;
+  toast.style.top = `${y}px`;
+  toast.innerHTML = `
+    <span>✨</span>
+    <span>Skill Acquired: ${skillName}!</span>
+  `;
+  parent.appendChild(toast);
+  setTimeout(() => toast.remove(), 1400);
+}
+
+function updateCheerfulSpeech(skill) {
   const bubbleText = document.getElementById('robot-speech-text');
   if (bubbleText) {
     bubbleText.style.opacity = '0';
     setTimeout(() => {
-      bubbleText.textContent = robotDialogues[currentDialogueIndex];
+      bubbleText.innerHTML = `Yay! 🎉 <strong>Skill Acquired: ${skill.name}!</strong> ${skill.phrase} ⭐`;
       bubbleText.style.opacity = '1';
-    }, 150);
+    }, 120);
+  }
+
+  // Optional Voice Utterance
+  speakMessage(`Skill acquired: ${skill.name}!`);
+}
+
+function speakMessage(text) {
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.1;
+      utterance.pitch = 1.25;
+      utterance.volume = 0.75;
+      window.speechSynthesis.speak(utterance);
+    } catch (err) {}
   }
 }
 
@@ -511,7 +735,6 @@ function setupRobotSpeechBubble() {
   const parentFrame = container.closest('.webgl-frame');
   if (!parentFrame) return;
 
-  // Check if bubble already exists
   let bubble = document.getElementById('robot-speech-bubble');
   if (!bubble) {
     bubble = document.createElement('div');
@@ -521,7 +744,7 @@ function setupRobotSpeechBubble() {
       <div class="speech-header">
         <div class="speech-bot-title">
           <span class="speech-bot-avatar">🤖</span>
-          <span class="speech-bot-name">AI COMPANION // ABHI-BOT</span>
+          <span class="speech-bot-name">CHEERFUL BOT // VTU-AI</span>
         </div>
         <div class="speech-header-actions">
           <button id="robot-voice-btn" class="speech-action-btn" title="Speak greeting" aria-label="Speak greeting aloud">
@@ -534,57 +757,25 @@ function setupRobotSpeechBubble() {
         </div>
       </div>
       <p id="robot-speech-text" class="speech-body">
-        Hi! 👋 Welcome to my portfolio!
+        Hi! 👋 Click falling skill logos to catch & acquire them with me!
       </p>
       <div class="speech-bubble-tail"></div>
     `;
 
     parentFrame.appendChild(bubble);
 
-    // Click bubble to cycle dialogue and wave
     bubble.addEventListener('click', (e) => {
-      // Don't trigger if clicked audio button directly
       if (e.target.closest('#robot-voice-btn')) return;
-      exportFunctionTriggerWave();
-      advanceRobotDialogue();
+      triggerCheerfulSpin();
     });
 
-    // Voice synthesis audio button
     const voiceBtn = bubble.querySelector('#robot-voice-btn');
     if (voiceBtn) {
       voiceBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        exportFunctionTriggerWave();
-        speakRobotMessage();
+        const text = document.getElementById('robot-speech-text')?.textContent || "Hi! Welcome to my portfolio!";
+        speakMessage(text);
       });
-    }
-
-    // Attempt gentle speech greeting upon first user interaction
-    const speakFirstGreeting = () => {
-      window.removeEventListener('click', speakFirstGreeting);
-      window.removeEventListener('keydown', speakFirstGreeting);
-      // Optional subtle voice greeting if permitted
-      speakRobotMessage(true);
-    };
-
-    window.addEventListener('click', speakFirstGreeting, { once: true });
-    window.addEventListener('keydown', speakFirstGreeting, { once: true });
-  }
-}
-
-function speakRobotMessage(subtle = false) {
-  if ('speechSynthesis' in window) {
-    try {
-      window.speechSynthesis.cancel();
-      const text = document.getElementById('robot-speech-text')?.textContent || "Hi! Welcome to my portfolio!";
-      const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/gu, '');
-      const utterance = new SpeechSynthesisUtterance(cleanText);
-      utterance.rate = 1.05;
-      utterance.pitch = 1.15;
-      if (subtle) utterance.volume = 0.7;
-      window.speechSynthesis.speak(utterance);
-    } catch (err) {
-      // Speech synthesis blocked or unavailable, speech bubble conveys message visually
     }
   }
 }

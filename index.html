@@ -143,26 +143,26 @@
           </div>
         </div>
 
-        <!-- Right 3D WebGL Spatial Core Viewport -->
+        <!-- Right 3D WebGL Cheerful Robot & Falling Skills Viewport -->
         <div class="hero-webgl-col">
           <div class="webgl-frame">
             <div class="webgl-frame-header">
               <div class="webgl-header-left">
-                <span class="webgl-status-dot"></span>
-                <span class="webgl-title">FIG. 01 // AUTONOMOUS AI COMPANION</span>
+                <span class="webgl-status-dot" style="background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></span>
+                <span class="webgl-title">FIG. 01 // CHEERFUL SKILL CATCHER</span>
               </div>
-              <span class="webgl-badge">ROS 2 · THREE.JS</span>
+              <span class="webgl-badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">CATCH SKILLS</span>
             </div>
 
-            <!-- Three.js Canvas Mount for Interactive Robot -->
-            <div id="webgl-hero-container" class="webgl-canvas-container" title="Interactive Robot: Move cursor to track, click to wave & chat"></div>
+            <!-- Three.js Canvas Mount for Cheerful Robot & Falling Skills -->
+            <div id="webgl-hero-container" class="webgl-canvas-container" title="Click falling skill logos to catch & acquire them!"></div>
 
             <div class="webgl-frame-footer">
               <div class="webgl-hint">
-                <i data-lucide="bot" style="width: 14px; height: 14px; color: var(--teal-primary);"></i>
-                <span>Move cursor to track · Click to wave & chat</span>
+                <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #f59e0b;"></i>
+                <span id="skill-catcher-hint">Click falling skill orbs to catch & acquire!</span>
               </div>
-              <span class="webgl-fps-pill">REALTIME 60 FPS</span>
+              <span class="webgl-fps-pill" id="skills-acquired-pill" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.35);">ACQUIRED: 0 / 14</span>
             </div>
           </div>
         </div>

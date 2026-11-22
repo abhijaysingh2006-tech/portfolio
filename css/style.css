@@ -587,6 +587,149 @@ a {
   display: block;
 }
 
+/* Falling Skills Catch Mini-Game */
+.falling-skills-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 15;
+}
+
+.falling-skill-orb {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(245, 158, 11, 0.7);
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35), inset 0 0 10px rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  animation: orbSway 2.5s ease-in-out infinite alternate;
+}
+
+[data-theme="light"] .falling-skill-orb {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(217, 119, 6, 0.65);
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);
+}
+
+.falling-skill-orb:hover {
+  transform: scale(1.22);
+  border-color: #f59e0b;
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.8);
+}
+
+.falling-skill-orb svg {
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+}
+
+.falling-skill-tooltip {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(9, 9, 11, 0.9);
+  color: #fbbf24;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.falling-skill-orb:hover .falling-skill-tooltip {
+  opacity: 1;
+}
+
+/* Acquired Skill Floating Celebration Toast */
+.skill-acquired-toast {
+  position: absolute;
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  box-shadow: 0 4px 22px rgba(245, 158, 11, 0.6);
+  pointer-events: none;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  animation: skillAcquiredAnim 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes skillAcquiredAnim {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -22px) scale(1.1);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -48px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -64px) scale(0.9);
+  }
+}
+
+/* Burst Particle FX */
+.skill-burst-spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 28;
+  animation: sparkFly 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes sparkFly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.1);
+  }
+}
+
+@keyframes orbSway {
+  0% {
+    margin-left: -10px;
+  }
+  100% {
+    margin-left: 10px;
+  }
+}
+
 /* Robot Visitor Greeting Speech Bubble */
 .robot-speech-bubble {
   position: absolute;
