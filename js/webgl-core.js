@@ -170,19 +170,18 @@ function setupCheerfulRobotScene(container) {
   const helmetMesh = new THREE.Mesh(helmetGeo, yellowMat);
   headGroup.add(helmetMesh);
 
-  // Silver crown crest / racing stripe over helmet top
-  const crestGeo = new THREE.CylinderGeometry(1.13, 1.13, 0.22, 32, 1, true);
-  crestGeo.rotateZ(Math.PI / 2);
+  // Silver crown crest arching over helmet from back to front
+  const crestGeo = new THREE.TorusGeometry(1.13, 0.048, 16, 64, Math.PI);
+  crestGeo.rotateY(Math.PI / 2);
   const crestMesh = new THREE.Mesh(crestGeo, silverMat);
-  crestMesh.position.set(0, 0.05, 0);
+  crestMesh.position.set(0, 0, 0);
   headGroup.add(crestMesh);
 
-  // Curved dark glossy bubble visor
-  const visorGeo = new THREE.SphereGeometry(1.02, 32, 32, 0, Math.PI, 0, Math.PI * 0.72);
-  visorGeo.rotateY(-Math.PI / 2);
-  visorGeo.rotateX(Math.PI / 10);
+  // Symmetrical curved dark glossy bubble visor on the front face
+  const visorGeo = new THREE.SphereGeometry(0.96, 32, 32);
+  visorGeo.scale(0.94, 0.82, 0.48);
   const visorMesh = new THREE.Mesh(visorGeo, visorMat);
-  visorMesh.position.set(0, 0.05, 0.14);
+  visorMesh.position.set(0, 0.08, 0.62);
   headGroup.add(visorMesh);
 
   // ===========================================================================
@@ -191,25 +190,27 @@ function setupCheerfulRobotScene(container) {
   const faceGroup = new THREE.Group();
   headGroup.add(faceGroup);
 
-  // 1. Left Oval Eye (Vertical Oval with glowing rim)
+  // 1. Left Oval Eye (Vertical Oval with glowing rim placed directly in front of visor)
   const leftEyeGroup = new THREE.Group();
-  leftEyeGroup.position.set(-0.28, 0.16, 0.94);
+  leftEyeGroup.position.set(-0.28, 0.16, 1.12);
+  leftEyeGroup.rotation.y = -0.12;
   faceGroup.add(leftEyeGroup);
 
-  const eyeCylGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.04, 32);
+  const eyeCylGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.04, 32);
   eyeCylGeo.rotateX(Math.PI / 2);
   eyeCylGeo.scale(0.88, 1.48, 1.0); // Vertical oval shape
   const leftEyeMesh = new THREE.Mesh(eyeCylGeo, cyanEyeMat);
   leftEyeGroup.add(leftEyeMesh);
 
-  const eyeRimGeo = new THREE.TorusGeometry(0.14, 0.032, 16, 32);
+  const eyeRimGeo = new THREE.TorusGeometry(0.13, 0.032, 16, 32);
   eyeRimGeo.scale(0.88, 1.48, 1.0);
   const leftEyeRim = new THREE.Mesh(eyeRimGeo, cyanEyeMat);
   leftEyeGroup.add(leftEyeRim);
 
   // 2. Right Oval Eye
   const rightEyeGroup = new THREE.Group();
-  rightEyeGroup.position.set(0.28, 0.16, 0.94);
+  rightEyeGroup.position.set(0.28, 0.16, 1.12);
+  rightEyeGroup.rotation.y = 0.12;
   faceGroup.add(rightEyeGroup);
 
   const rightEyeMesh = new THREE.Mesh(eyeCylGeo, cyanEyeMat);
@@ -219,11 +220,11 @@ function setupCheerfulRobotScene(container) {
   rightEyeGroup.add(rightEyeRim);
 
   // 3. Cute Curved Glowing Smile Mouth (◡)
-  const smileGeo = new THREE.TorusGeometry(0.24, 0.036, 16, 32, Math.PI);
+  const smileGeo = new THREE.TorusGeometry(0.24, 0.038, 16, 32, Math.PI);
   smileGeo.rotateZ(Math.PI); // Invert arch so it curves into a cheerful upward smile!
-  smileGeo.rotateX(Math.PI / 12);
+  smileGeo.rotateX(Math.PI / 10);
   const smileMesh = new THREE.Mesh(smileGeo, cyanEyeMat);
-  smileMesh.position.set(0, -0.16, 0.96);
+  smileMesh.position.set(0, -0.16, 1.14);
   faceGroup.add(smileMesh);
 
   // 4. Cheerful Happy Eyes (^ ^) for skill-catching victory celebration!
@@ -233,6 +234,12 @@ function setupCheerfulRobotScene(container) {
 
   const happyArcGeo = new THREE.TorusGeometry(0.13, 0.036, 12, 18, Math.PI);
   const happyEyeLeft = new THREE.Mesh(happyArcGeo, cyanEyeMat);
+  happyEyeLeft.position.set(-0.28, 0.15, 1.12);
+  happyEyesGroup.add(happyEyeLeft);
+
+  const happyEyeRight = new THREE.Mesh(happyArcGeo, cyanEyeMat);
+  happyEyeRight.position.set(0.28, 0.15, 1.12);
+  happyEyesGroup.add(happyEyeRight);
   happyEyeLeft.position.set(-0.28, 0.14, 0.94);
   happyEyesGroup.add(happyEyeLeft);
 
