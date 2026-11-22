@@ -157,6 +157,22 @@
             <!-- Three.js Canvas Mount for Cheerful Robot & Falling Skills -->
             <div id="webgl-hero-container" class="webgl-canvas-container" title="Click falling skill logos to catch & acquire them!"></div>
 
+            <!-- Cheerful Robot Dialogue & Acquired Skill Status Bar (Positioned Below Canvas so Robot is 100% visible) -->
+            <div id="robot-status-bar" class="robot-status-bar">
+              <div class="status-bar-header">
+                <div class="status-bot-title">
+                  <span class="status-bot-avatar">🤖</span>
+                  <span class="status-bot-name">CHEERFUL BOT // VTU-AI</span>
+                </div>
+                <button id="robot-voice-btn" class="status-voice-btn" title="Speak message aloud" aria-label="Speak message aloud">
+                  <i data-lucide="volume-2" style="width: 14px; height: 14px;"></i>
+                </button>
+              </div>
+              <p id="robot-speech-text" class="status-body-text">
+                Hi! 👋 Click falling skill logos to catch & acquire them with me!
+              </p>
+            </div>
+
             <div class="webgl-frame-footer">
               <div class="webgl-hint">
                 <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #f59e0b;"></i>

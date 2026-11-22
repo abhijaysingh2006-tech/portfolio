@@ -1,13 +1,17 @@
 // =============================================================================
 // WEBGL-CORE.JS - Cheerful 3D Yellow Robot Companion & Falling Skills Catcher
 // Features:
-// 1. Procedural 3D Cheerful Yellow Robot (matching reference design: spherical
-//    yellow helmet, silver crown crest, side headphones, glossy visor, glowing
-//    emerald green eyes with happy '^ ^' squint, and floating yellow boots).
+// 1. Procedural 3D Cheerful Yellow Robot with:
+//    - Expressive glowing face (cyan oval eyes + cute smiling mouth ◡ from reference image)
+//    - Spherical yellow helmet, silver crest band, side ear headphone pods
+//    - Floating zero-g yellow boots with silver soles
 // 2. Real-time cursor tracking (head, eyes, and torso pitch/yaw).
-// 3. Falling Skills Catch Mini-Game: Authentic skill logos (Python, ROS, C++, etc.)
-//    float down in glowing bubbles; clicking catches them with spark particle FX,
-//    a celebratory "Skill Acquired" toast, and cheerful robot victory cheers!
+// 3. Falling Skills Catch Mini-Game:
+//    - Authentic skill logos (Python, ROS, C++, etc.) float down in glowing bubbles
+//    - INSTANT single-click / touch catch (pointerdown + touchstart + hit-box)
+//    - Sparkle burst particle FX & celebratory "✨ Skill Acquired" toast
+//    - Cheerful robot victory cheers with happy squint eyes (^ ^)
+// 4. Status Bar positioned BELOW the canvas so the robot is 100% visible!
 // =============================================================================
 
 import { techLogos } from './tech-logos.js';
@@ -27,7 +31,7 @@ export function initWebGLCore() {
   setupCheerfulRobotScene(container);
 }
 
-// Global action triggers between 3D scene and falling skills game
+// Global action triggers
 let triggerCheerfulCatchAnim = () => {};
 let triggerCheerfulSpin = () => {};
 
@@ -49,7 +53,7 @@ function setupCheerfulRobotScene(container) {
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
+  renderer.toneMappingExposure = 1.25;
 
   container.innerHTML = '';
   container.appendChild(renderer.domElement);
@@ -65,7 +69,7 @@ function setupCheerfulRobotScene(container) {
       silverMetal: 0x94a3b8,                      // Brushed Silver Joint Rods & Soles
       darkMetal: 0x334155,                        // Dark Titanium Accents
       visorGlass: dark ? 0x07111e : 0x0f172a,     // Glossy Astronaut Bubble Visor
-      eyeGreen: 0x22c55e,                         // Cheerful Emerald/Mint Green LED Eyes
+      eyeCyan: 0x38bdf8,                          // Cheerful Cyan LED Face (Eyes & Smile)
       lightAmbient: dark ? 1.1 : 1.4,
       lightDirectional: dark ? 1.6 : 1.9,
       keyWarmth: 0xffedd5,
@@ -82,13 +86,13 @@ function setupCheerfulRobotScene(container) {
   keyLight.position.set(4, 5, 5);
   scene.add(keyLight);
 
-  const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.0);
+  const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.1);
   fillLight.position.set(-4, -2, -3);
   scene.add(fillLight);
 
-  const eyeGlowLight = new THREE.PointLight(palette.eyeGreen, 1.2, 5);
-  eyeGlowLight.position.set(0, 0.8, 1.2);
-  scene.add(eyeGlowLight);
+  const faceGlowLight = new THREE.PointLight(palette.eyeCyan, 1.4, 5);
+  faceGlowLight.position.set(0, 0.8, 1.3);
+  scene.add(faceGlowLight);
 
   // 4. Robot Hierarchy & Assembly
   const robotRoot = new THREE.Group();
@@ -125,8 +129,9 @@ function setupCheerfulRobotScene(container) {
     roughness: 0.06,
   });
 
-  const eyeMat = new THREE.MeshBasicMaterial({
-    color: palette.eyeGreen,
+  // Glowing Cyan Face Material (Matches Reference Face Image!)
+  const cyanEyeMat = new THREE.MeshBasicMaterial({
+    color: palette.eyeCyan,
   });
 
   // A. Torso Assembly (Cute rounded yellow chassis)
@@ -180,32 +185,59 @@ function setupCheerfulRobotScene(container) {
   visorMesh.position.set(0, 0.05, 0.14);
   headGroup.add(visorMesh);
 
-  // Expressive Eyes: Normal pill eyes vs Cheerful happy squint arcs (^ ^)
-  const pillEyesGroup = new THREE.Group();
-  headGroup.add(pillEyesGroup);
+  // ===========================================================================
+  // GLOWING ROBOT FACE (Matching Reference Image: Cyan Oval Eyes + Cheerful Smile ◡)
+  // ===========================================================================
+  const faceGroup = new THREE.Group();
+  headGroup.add(faceGroup);
 
-  const eyeLeftGeo = new THREE.BoxGeometry(0.24, 0.1, 0.04);
-  const eyeLeft = new THREE.Mesh(eyeLeftGeo, eyeMat);
-  eyeLeft.position.set(-0.28, 0.12, 0.92);
-  pillEyesGroup.add(eyeLeft);
+  // 1. Left Oval Eye (Vertical Oval with glowing rim)
+  const leftEyeGroup = new THREE.Group();
+  leftEyeGroup.position.set(-0.28, 0.16, 0.94);
+  faceGroup.add(leftEyeGroup);
 
-  const eyeRightGeo = new THREE.BoxGeometry(0.24, 0.1, 0.04);
-  const eyeRight = new THREE.Mesh(eyeRightGeo, eyeMat);
-  eyeRight.position.set(0.28, 0.12, 0.92);
-  pillEyesGroup.add(eyeRight);
+  const eyeCylGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.04, 32);
+  eyeCylGeo.rotateX(Math.PI / 2);
+  eyeCylGeo.scale(0.88, 1.48, 1.0); // Vertical oval shape
+  const leftEyeMesh = new THREE.Mesh(eyeCylGeo, cyanEyeMat);
+  leftEyeGroup.add(leftEyeMesh);
 
-  // Cheerful Happy Eyes (^ ^ smiling arcs)
+  const eyeRimGeo = new THREE.TorusGeometry(0.14, 0.032, 16, 32);
+  eyeRimGeo.scale(0.88, 1.48, 1.0);
+  const leftEyeRim = new THREE.Mesh(eyeRimGeo, cyanEyeMat);
+  leftEyeGroup.add(leftEyeRim);
+
+  // 2. Right Oval Eye
+  const rightEyeGroup = new THREE.Group();
+  rightEyeGroup.position.set(0.28, 0.16, 0.94);
+  faceGroup.add(rightEyeGroup);
+
+  const rightEyeMesh = new THREE.Mesh(eyeCylGeo, cyanEyeMat);
+  rightEyeGroup.add(rightEyeMesh);
+
+  const rightEyeRim = new THREE.Mesh(eyeRimGeo, cyanEyeMat);
+  rightEyeGroup.add(rightEyeRim);
+
+  // 3. Cute Curved Glowing Smile Mouth (◡)
+  const smileGeo = new THREE.TorusGeometry(0.24, 0.036, 16, 32, Math.PI);
+  smileGeo.rotateZ(Math.PI); // Invert arch so it curves into a cheerful upward smile!
+  smileGeo.rotateX(Math.PI / 12);
+  const smileMesh = new THREE.Mesh(smileGeo, cyanEyeMat);
+  smileMesh.position.set(0, -0.16, 0.96);
+  faceGroup.add(smileMesh);
+
+  // 4. Cheerful Happy Eyes (^ ^) for skill-catching victory celebration!
   const happyEyesGroup = new THREE.Group();
   happyEyesGroup.visible = false;
   headGroup.add(happyEyesGroup);
 
-  const happyArcGeo = new THREE.TorusGeometry(0.12, 0.035, 12, 18, Math.PI);
-  const happyEyeLeft = new THREE.Mesh(happyArcGeo, eyeMat);
-  happyEyeLeft.position.set(-0.28, 0.1, 0.92);
+  const happyArcGeo = new THREE.TorusGeometry(0.13, 0.036, 12, 18, Math.PI);
+  const happyEyeLeft = new THREE.Mesh(happyArcGeo, cyanEyeMat);
+  happyEyeLeft.position.set(-0.28, 0.14, 0.94);
   happyEyesGroup.add(happyEyeLeft);
 
-  const happyEyeRight = new THREE.Mesh(happyArcGeo, eyeMat);
-  happyEyeRight.position.set(0.28, 0.1, 0.92);
+  const happyEyeRight = new THREE.Mesh(happyArcGeo, cyanEyeMat);
+  happyEyeRight.position.set(0.28, 0.14, 0.94);
   happyEyesGroup.add(happyEyeRight);
 
   // Side Headphone Ear Pods (Left & Right)
@@ -257,7 +289,6 @@ function setupCheerfulRobotScene(container) {
   leftForearm.rotation.set(-0.5, 0.3, 0.8);
   leftArmGroup.add(leftForearm);
 
-  // Articulated silver hand reaching out
   const leftHand = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.2, 0.08), silverMat);
   leftHand.position.set(-0.66, -0.82, 0.52);
   leftHand.rotation.set(-0.3, 0.5, 0.6);
@@ -294,7 +325,7 @@ function setupCheerfulRobotScene(container) {
   rightHand.rotation.set(-0.3, -0.5, -0.6);
   rightForearmGroup.add(rightHand);
 
-  // E. Legs & Floating Yellow Boots (Just like reference image!)
+  // E. Legs & Floating Yellow Boots
   const leftLegGroup = new THREE.Group();
   leftLegGroup.position.set(-0.34, -0.72, 0);
   torsoGroup.add(leftLegGroup);
@@ -376,9 +407,11 @@ function setupCheerfulRobotScene(container) {
     cheerfulTimer = 0;
     cheerfulBounce = 0.45; // Joyful bounce upward!
 
-    // Switch eyes to happy squint (^ ^)
-    pillEyesGroup.visible = false;
+    // Switch eyes to happy squint (^ ^) and smile grows
+    leftEyeGroup.visible = false;
+    rightEyeGroup.visible = false;
     happyEyesGroup.visible = true;
+    smileMesh.scale.set(1.2, 1.2, 1.2);
 
     // Direct head toward caught skill
     targetMouseX = targetNormX || 0;
@@ -388,11 +421,15 @@ function setupCheerfulRobotScene(container) {
   triggerCheerfulSpin = () => {
     isSpinning = true;
     spinAngle = 0;
-    pillEyesGroup.visible = false;
+    leftEyeGroup.visible = false;
+    rightEyeGroup.visible = false;
     happyEyesGroup.visible = true;
+    smileMesh.scale.set(1.2, 1.2, 1.2);
     setTimeout(() => {
-      pillEyesGroup.visible = true;
+      leftEyeGroup.visible = true;
+      rightEyeGroup.visible = true;
       happyEyesGroup.visible = false;
+      smileMesh.scale.set(1.0, 1.0, 1.0);
     }, 1800);
   };
 
@@ -451,8 +488,10 @@ function setupCheerfulRobotScene(container) {
 
       if (cheerfulTimer >= 2.0) {
         isCheerfulCatching = false;
-        pillEyesGroup.visible = true;
+        leftEyeGroup.visible = true;
+        rightEyeGroup.visible = true;
         happyEyesGroup.visible = false;
+        smileMesh.scale.set(1.0, 1.0, 1.0);
       }
     } else {
       cheerfulBounce = 0;
@@ -478,11 +517,11 @@ function setupCheerfulRobotScene(container) {
       blinkTimer += delta;
       if (blinkTimer >= nextBlink && !isBlinking) {
         isBlinking = true;
-        eyeLeft.scale.y = 0.08;
-        eyeRight.scale.y = 0.08;
+        leftEyeGroup.scale.y = 0.08;
+        rightEyeGroup.scale.y = 0.08;
         setTimeout(() => {
-          eyeLeft.scale.y = 1.0;
-          eyeRight.scale.y = 1.0;
+          leftEyeGroup.scale.y = 1.0;
+          rightEyeGroup.scale.y = 1.0;
           isBlinking = false;
           blinkTimer = 0;
           nextBlink = 3.0 + Math.random() * 3.5;
@@ -523,13 +562,13 @@ function setupCheerfulRobotScene(container) {
     attributeFilter: ['data-theme'],
   });
 
-  // 11. Mount Falling Skills Mini-Game & Cheerful Greeting
+  // 11. Mount Falling Skills Mini-Game & Status Bar
   setupFallingSkillsMiniGame(container);
-  setupRobotSpeechBubble();
+  setupRobotStatusBar();
 }
 
 // =============================================================================
-// FALLING SKILLS MINI-GAME & SKILL ACQUIRED MECHANIC
+// FALLING SKILLS MINI-GAME & INSTANT SINGLE-CLICK CATCH MECHANIC
 // =============================================================================
 
 const skillsCatalog = [
@@ -552,7 +591,6 @@ const skillsCatalog = [
 const acquiredSkillsSet = new Set();
 
 function setupFallingSkillsMiniGame(container) {
-  // Create or clean falling skills overlay
   let fallingLayer = container.querySelector('#falling-skills-layer');
   if (fallingLayer) fallingLayer.remove();
 
@@ -561,7 +599,6 @@ function setupFallingSkillsMiniGame(container) {
   fallingLayer.className = 'falling-skills-container';
   container.appendChild(fallingLayer);
 
-  // Spawning timer for falling skill bubbles
   let isPageVisible = true;
   document.addEventListener('visibilitychange', () => {
     isPageVisible = !document.hidden;
@@ -572,20 +609,17 @@ function setupFallingSkillsMiniGame(container) {
   function spawnFallingSkill() {
     if (!isPageVisible || !container) return;
 
-    // Select skill from catalog
     const skill = skillsCatalog[skillIndex % skillsCatalog.length];
     skillIndex++;
 
     const orb = document.createElement('div');
     orb.className = 'falling-skill-orb';
 
-    // Position randomly along top (15% to 80% to stay centered over robot)
     const startXPercent = 14 + Math.random() * 68;
     orb.style.left = `${startXPercent}%`;
-    orb.style.top = '-50px';
+    orb.style.top = '-55px';
 
-    // Insert authentic vector logo & tooltip
-    const logoSvg = techLogos[skill.key] || '<svg width="22" height="22"><circle cx="11" cy="11" r="9" fill="#f59e0b"/></svg>';
+    const logoSvg = techLogos[skill.key] || '<svg width="24" height="24"><circle cx="12" cy="12" r="10" fill="#f59e0b"/></svg>';
     orb.innerHTML = `
       ${logoSvg}
       <span class="falling-skill-tooltip">${skill.name}</span>
@@ -593,9 +627,8 @@ function setupFallingSkillsMiniGame(container) {
 
     fallingLayer.appendChild(orb);
 
-    // Falling animation variables
-    let posY = -50;
-    const speed = 1.1 + Math.random() * 0.7; // Gentle fall
+    let posY = -55;
+    const speed = 1.1 + Math.random() * 0.7;
     let animId = null;
 
     function dropStep() {
@@ -603,7 +636,7 @@ function setupFallingSkillsMiniGame(container) {
       orb.style.top = `${posY}px`;
 
       const maxH = container.clientHeight || 420;
-      if (posY > maxH + 40) {
+      if (posY > maxH + 45) {
         cancelAnimationFrame(animId);
         orb.remove();
       } else {
@@ -613,9 +646,20 @@ function setupFallingSkillsMiniGame(container) {
 
     animId = requestAnimationFrame(dropStep);
 
-    // Click Catch Handler: Catch skill, pop orb, cheer robot!
-    orb.addEventListener('click', (e) => {
-      e.stopPropagation();
+    // =========================================================================
+    // INSTANT SINGLE-CLICK / TOUCH CATCH HANDLER
+    // (Uses pointerdown + touchstart for instant 0ms response on very first tap!)
+    // =========================================================================
+    let caught = false;
+    const handleCatch = (e) => {
+      if (caught) return;
+      caught = true;
+
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
       cancelAnimationFrame(animId);
 
       const orbRect = orb.getBoundingClientRect();
@@ -623,35 +667,39 @@ function setupFallingSkillsMiniGame(container) {
       const relX = orbRect.left - containerRect.left + orbRect.width / 2;
       const relY = orbRect.top - containerRect.top + orbRect.height / 2;
 
-      // 1. Normalized coordinate for 3D Robot to look and reach toward
+      // Normalized coordinates for 3D Robot to look and reach toward
       const normX = ((relX / containerRect.width) - 0.5) * 2;
       const normY = ((relY / containerRect.height) - 0.5) * 2;
 
-      // 2. Trigger Cheerful Robot Catch Animation
+      // 1. Trigger Cheerful Robot Catch Animation
       triggerCheerfulCatchAnim(normX, normY);
 
-      // 3. Burst Particle FX
+      // 2. Burst Particle FX
       spawnBurstParticles(fallingLayer, relX, relY);
 
-      // 4. Floating "Skill Acquired" Toast
+      // 3. Floating "Skill Acquired" Toast
       spawnSkillAcquiredToast(fallingLayer, relX, relY, skill.name);
 
-      // 5. Update Acquired Skills Counter
+      // 4. Update Acquired Skills Counter
       acquiredSkillsSet.add(skill.key);
       updateScorePill();
 
-      // 6. Update Speech Bubble with Cheerful Praise
+      // 5. Update Status Bar below canvas with Cheerful Praise
       updateCheerfulSpeech(skill);
 
-      // Remove orb
+      // Remove orb immediately
       orb.remove();
-    });
+    };
+
+    // Instant registration: pointerdown fires on very first click/touchdown
+    orb.addEventListener('pointerdown', handleCatch);
+    orb.addEventListener('touchstart', handleCatch, { passive: false });
+    orb.addEventListener('click', handleCatch);
   }
 
-  // Periodic spawn loop: every 2.0s
+  // Periodic spawn loop
   setInterval(spawnFallingSkill, 2000);
-  // Initial immediate spawn
-  setTimeout(spawnFallingSkill, 600);
+  setTimeout(spawnFallingSkill, 500);
 }
 
 function updateScorePill() {
@@ -664,16 +712,16 @@ function updateScorePill() {
 }
 
 function spawnBurstParticles(parent, x, y) {
-  const colors = ['#f59e0b', '#fbbf24', '#22c55e', '#ffffff', '#38bdf8'];
-  for (let i = 0; i < 12; i++) {
+  const colors = ['#f59e0b', '#fbbf24', '#38bdf8', '#ffffff', '#22c55e'];
+  for (let i = 0; i < 14; i++) {
     const spark = document.createElement('div');
     spark.className = 'skill-burst-spark';
     spark.style.left = `${x}px`;
     spark.style.top = `${y}px`;
     spark.style.background = colors[i % colors.length];
 
-    const angle = (i / 12) * Math.PI * 2 + Math.random() * 0.4;
-    const dist = 32 + Math.random() * 38;
+    const angle = (i / 14) * Math.PI * 2 + Math.random() * 0.4;
+    const dist = 32 + Math.random() * 40;
     const dx = Math.cos(angle) * dist;
     const dy = Math.sin(angle) * dist;
 
@@ -699,16 +747,15 @@ function spawnSkillAcquiredToast(parent, x, y, skillName) {
 }
 
 function updateCheerfulSpeech(skill) {
-  const bubbleText = document.getElementById('robot-speech-text');
-  if (bubbleText) {
-    bubbleText.style.opacity = '0';
+  const statusText = document.getElementById('robot-speech-text');
+  if (statusText) {
+    statusText.style.opacity = '0';
     setTimeout(() => {
-      bubbleText.innerHTML = `Yay! 🎉 <strong>Skill Acquired: ${skill.name}!</strong> ${skill.phrase} ⭐`;
-      bubbleText.style.opacity = '1';
-    }, 120);
+      statusText.innerHTML = `Yay! 🎉 <strong>Skill Acquired: ${skill.name}!</strong> ${skill.phrase} ⭐`;
+      statusText.style.opacity = '1';
+    }, 100);
   }
 
-  // Optional Voice Utterance
   speakMessage(`Skill acquired: ${skill.name}!`);
 }
 
@@ -716,7 +763,8 @@ function speakMessage(text) {
   if ('speechSynthesis' in window) {
     try {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
+      const cleanText = text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/gu, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.rate = 1.1;
       utterance.pitch = 1.25;
       utterance.volume = 0.75;
@@ -726,56 +774,23 @@ function speakMessage(text) {
 }
 
 // =============================================================================
-// SPEECH BUBBLE & VOICE GREETING
+// STATUS BAR INTERACTION (Positioned Below Canvas)
 // =============================================================================
-function setupRobotSpeechBubble() {
-  const container = document.getElementById('webgl-hero-container');
-  if (!container) return;
+function setupRobotStatusBar() {
+  const statusBar = document.getElementById('robot-status-bar');
+  if (!statusBar) return;
 
-  const parentFrame = container.closest('.webgl-frame');
-  if (!parentFrame) return;
-
-  let bubble = document.getElementById('robot-speech-bubble');
-  if (!bubble) {
-    bubble = document.createElement('div');
-    bubble.id = 'robot-speech-bubble';
-    bubble.className = 'robot-speech-bubble visible';
-    bubble.innerHTML = `
-      <div class="speech-header">
-        <div class="speech-bot-title">
-          <span class="speech-bot-avatar">🤖</span>
-          <span class="speech-bot-name">CHEERFUL BOT // VTU-AI</span>
-        </div>
-        <div class="speech-header-actions">
-          <button id="robot-voice-btn" class="speech-action-btn" title="Speak greeting" aria-label="Speak greeting aloud">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-      <p id="robot-speech-text" class="speech-body">
-        Hi! 👋 Click falling skill logos to catch & acquire them with me!
-      </p>
-      <div class="speech-bubble-tail"></div>
-    `;
-
-    parentFrame.appendChild(bubble);
-
-    bubble.addEventListener('click', (e) => {
-      if (e.target.closest('#robot-voice-btn')) return;
-      triggerCheerfulSpin();
+  const voiceBtn = statusBar.querySelector('#robot-voice-btn');
+  if (voiceBtn) {
+    voiceBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const text = document.getElementById('robot-speech-text')?.textContent || "Hi! Welcome to my portfolio!";
+      speakMessage(text);
     });
-
-    const voiceBtn = bubble.querySelector('#robot-voice-btn');
-    if (voiceBtn) {
-      voiceBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const text = document.getElementById('robot-speech-text')?.textContent || "Hi! Welcome to my portfolio!";
-        speakMessage(text);
-      });
-    }
   }
+
+  statusBar.addEventListener('click', (e) => {
+    if (e.target.closest('#robot-voice-btn')) return;
+    triggerCheerfulSpin();
+  });
 }
