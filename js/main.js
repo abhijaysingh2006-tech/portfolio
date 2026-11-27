@@ -6,6 +6,7 @@
 import { portfolioContent } from './content.js';
 import { initWebGLCore } from './webgl-core.js';
 import { initShootingStars } from './shooting-stars.js';
+import { initRealisticMoon } from './moon.js?v=20261127_6';
 import { techLogos } from './tech-logos.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -28,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Initialize Animated Canvas Shooting Stars & Starfield
   initShootingStars();
 
-  // 5. Interactive UI Listeners
+  // 5. Initialize Live Astronomical 3D Moon with Axial Rotation & Synodic Phases
+  initRealisticMoon();
+
+  // 6. Interactive UI Listeners
   initThemeToggle();
   initTypewriter();
   initScrollNav();

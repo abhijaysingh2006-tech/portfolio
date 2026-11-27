@@ -37,6 +37,7 @@ export function initWebGLCore() {
 // Global action triggers
 let triggerBuddyCatchAnim = () => {};
 let triggerBuddySpin = () => {};
+let lastSkillCatchTime = 0;
 
 // =============================================================================
 // CHEERFUL ROBOT VOICE & AUDIO SYNTHESIS
@@ -489,7 +490,11 @@ function setupBuddyRobotScene(container) {
     spinAngle = 0;
     setExpr('wow');
     playCheerfulChime();
-    speakSkillVoice('buddy', "Hi! I am Buddy!");
+    
+    // Only speak buddy intro if not currently celebrating a caught skill
+    if (Date.now() - lastSkillCatchTime > 3000) {
+      speakSkillVoice('buddy', "Hi! I am Buddy!");
+    }
 
     setTimeout(() => {
       setExpr('happy');
@@ -497,6 +502,10 @@ function setupBuddyRobotScene(container) {
   };
 
   container.addEventListener('click', (e) => {
+    // Ignore synthetic ghost clicks triggered right after catching a skill on mobile devices
+    if (Date.now() - lastSkillCatchTime < 900) {
+      return;
+    }
     if (!e.target.closest('.falling-skill-orb')) {
       triggerBuddySpin();
     }
@@ -724,11 +733,21 @@ function setupFallingSkillsMiniGame(container) {
       acquiredSkillsSet.add(skill.key);
       updateScorePill();
 
+      // Record timestamp to block downstream simulated mobile clicks from overriding voice
+      lastSkillCatchTime = Date.now();
+
       // 6. Update Status Bar below canvas with Cheerful Praise & Voice
       updateCheerfulSpeech(skill);
 
-      // Remove orb immediately
-      orb.remove();
+      // Hide orb immediately so it can't be interacted with again
+      orb.style.pointerEvents = 'none';
+      orb.style.opacity = '0';
+      orb.style.transform = 'scale(0)';
+
+      // Remove orb after event cycle to prevent touch-to-click target reassignment on mobile
+      setTimeout(() => {
+        try { orb.remove(); } catch (_) {}
+      }, 350);
     };
 
     orb.addEventListener('pointerdown', handleCatch);
@@ -823,6 +842,7 @@ function setupRobotStatusBar() {
 
   statusBar.addEventListener('click', (e) => {
     if (e.target.closest('#robot-voice-btn')) return;
+    if (Date.now() - lastSkillCatchTime < 900) return;
     triggerBuddySpin();
   });
 }
