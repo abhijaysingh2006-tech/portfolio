@@ -658,7 +658,7 @@ function initLenis() {
 
   window.lenis = lenis;
 
-  const progressBar = document.getElementById('lenis-progress-bar');
+  const progressBar = document.getElementById('scroll-progress-bar') || document.getElementById('lenis-progress-bar');
   const nav = document.getElementById('navbar');
 
   // Sync scroll events with top reading progress bar and navbar blur
