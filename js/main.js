@@ -662,7 +662,9 @@ function initLenis() {
   const progressBar = document.getElementById('scroll-progress-bar') || document.getElementById('lenis-progress-bar');
   const nav = document.getElementById('navbar');
 
-  // Sync scroll events with top reading progress bar and navbar blur
+  const footerElem = document.getElementById('contact');
+
+  // Sync scroll events with top reading progress bar and navbar blur & inversion
   lenis.on('scroll', ({ scroll, limit, progress }) => {
     if (progressBar && limit > 0) {
       progressBar.style.transform = `scaleX(${Math.max(0, Math.min(1, progress))})`;
@@ -672,6 +674,15 @@ function initLenis() {
       nav?.classList.add('scrolled');
     } else {
       nav?.classList.remove('scrolled');
+    }
+
+    if (footerElem) {
+      const footerRect = footerElem.getBoundingClientRect();
+      if (footerRect.top <= 64) {
+        nav?.classList.add('nav-inverted');
+      } else {
+        nav?.classList.remove('nav-inverted');
+      }
     }
   });
 
