@@ -372,18 +372,19 @@ html.lenis-smooth {
   gap: 12px;
 }
 
-/* Button Component Styles */
+/* Button Component Styles (Lenis / Darkroom Studio Pill Buttons) */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 9px 18px;
-  font-size: 0.88rem;
+  padding: 10px 22px;
+  font-size: 0.86rem;
   font-weight: 600;
-  border-radius: var(--radius-sm);
+  letter-spacing: 0.02em;
+  border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.24s cubic-bezier(0.19, 1, 0.22, 1);
   white-space: nowrap;
 }
 
@@ -454,6 +455,83 @@ html.lenis-smooth {
 .theme-toggle-btn:hover {
   border-color: var(--teal-primary);
   color: var(--teal-primary);
+}
+
+/* Mobile Menu Toggle Button (Darkroom / Lenis Style) */
+.mobile-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobile-menu-btn:hover {
+  border-color: var(--teal-primary);
+}
+
+/* Fullscreen Mobile Drawer */
+.mobile-nav-overlay {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.96);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 36px 24px 32px 24px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.28s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+[data-theme="light"] .mobile-nav-overlay {
+  background: rgba(239, 239, 239, 0.98);
+}
+
+.mobile-nav-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.mobile-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mobile-nav-link {
+  font-family: var(--font-anton), var(--font-sans);
+  font-size: 2.2rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  transition: color var(--transition-fast);
+  display: block;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link:active {
+  color: var(--teal-primary);
+}
+
+.mobile-nav-footer {
+  padding-top: 24px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 /* =============================================================================
@@ -1201,12 +1279,15 @@ html.lenis-smooth {
 }
 
 .winner-project-name {
-  font-size: 2.2rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(135deg, var(--text-main), var(--teal-primary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: var(--font-anton), var(--font-sans);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--text-main);
+  background: none;
+  -webkit-text-fill-color: initial;
 }
 
 .winner-project-tagline {
@@ -2173,22 +2254,115 @@ html.lenis-smooth {
 }
 
 /* =============================================================================
-   FOOTER
+   EDITORIAL FOOTER & CONTACT HEADLINE (LENIS / DARKROOM AESTHETIC)
    ============================================================================= */
+.contact-headline {
+  font-family: var(--font-anton), var(--font-sans);
+  font-size: clamp(2.4rem, 5.5vw, 4.4rem);
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin-bottom: 16px;
+}
+
+.contact-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 640px;
+  margin: 0 auto 28px auto;
+  line-height: 1.6;
+}
+
 .footer-clean {
-  padding: 36px 0;
+  padding: 64px 0 32px 0;
   background: var(--bg-surface);
   border-top: 1px solid var(--border-subtle);
-  font-size: 0.85rem;
   color: var(--text-muted);
 }
 
-.footer-row {
+.footer-top-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+
+.footer-brand-title {
+  font-family: var(--font-anton), var(--font-sans);
+  font-size: 2.2rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.footer-brand-sub {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  max-width: 440px;
+  color: var(--text-muted);
+}
+
+.footer-col-heading {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal-primary);
+  margin-bottom: 16px;
+}
+
+.footer-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.88rem;
+}
+
+.footer-nav-list a {
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.footer-nav-list a:hover {
+  color: var(--text-main);
+}
+
+.footer-bottom-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-faint);
   flex-wrap: wrap;
   gap: 16px;
+}
+
+.system-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.system-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseDot 2s infinite;
+}
+
+.footer-copy {
+  color: var(--text-faint);
+  letter-spacing: 0.05em;
 }
 
 /* =============================================================================
@@ -2260,6 +2434,12 @@ html.lenis-smooth {
   }
   .nav-actions {
     gap: 8px;
+  }
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+  .mobile-nav-overlay {
+    top: 56px;
   }
   .nav-actions .btn {
     padding: 6px 10px;
@@ -2506,10 +2686,14 @@ html.lenis-smooth {
     width: 100%;
     justify-content: center;
   }
-  .footer-row {
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .footer-bottom-row {
     flex-direction: column;
     text-align: center;
-    gap: 10px;
+    gap: 12px;
   }
 }
 

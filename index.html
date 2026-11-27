@@ -72,14 +72,38 @@
         </button>
 
         <!-- Direct GitHub Profile -->
-        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-outline github-profile-link" style="padding: 6px 12px; font-size: 0.82rem;">
+        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-outline github-profile-link" style="padding: 6px 14px; font-size: 0.82rem;">
           <i data-lucide="github" style="width: 15px; height: 15px;"></i>
           <span>GitHub</span>
         </a>
 
         <!-- Let's Talk CTA -->
-        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link" style="padding: 6px 14px; font-size: 0.82rem;">
+        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link" style="padding: 6px 16px; font-size: 0.82rem;">
           <span>Get in touch</span>
+        </a>
+
+        <!-- Mobile Menu Toggle Button (Darkroom Style) -->
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle Navigation Menu" aria-expanded="false">
+          <i data-lucide="menu" id="menu-icon-bars" style="width: 20px; height: 20px;"></i>
+          <i data-lucide="x" id="menu-icon-close" style="width: 20px; height: 20px; display: none;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobile-nav-overlay" class="mobile-nav-overlay" aria-hidden="true">
+      <ul class="mobile-nav-list">
+        <li><a href="#about" class="mobile-nav-link">About</a></li>
+        <li><a href="#winner" class="mobile-nav-link">Winner (₹10K)</a></li>
+        <li><a href="#skills" class="mobile-nav-link">Skills & Arsenal</a></li>
+        <li><a href="#projects" class="mobile-nav-link">Repositories</a></li>
+        <li><a href="#hackathons" class="mobile-nav-link">Hackathons</a></li>
+        <li><a href="#leadership" class="mobile-nav-link">Leadership</a></li>
+        <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+      </ul>
+      <div class="mobile-nav-footer">
+        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link" style="width: 100%; justify-content: center; padding: 12px 20px;">
+          <span>Initiate WhatsApp Chat</span>
         </a>
       </div>
     </div>
@@ -236,7 +260,7 @@
       </div>
     </section>
 
-    <!-- Section 01: Overview & About with Portrait (Whole Photo Fully in Frame) -->
+    <!-- Section 01: Overview & About with Portrait -->
     <section class="section" id="about">
       <div class="container">
         <div class="about-grid-wrapper">
@@ -248,7 +272,7 @@
                 <img src="assets/images/profile-portrait.jpg" alt="Abhijay Singh — Robotics & AI Systems Engineering" width="682" height="1024" loading="lazy" class="portrait-img">
               </picture>
             </div>
-            <!-- Clean Badge Positioned Below Photo (Never Obscures Person) -->
+            <!-- Clean Badge Positioned Below Photo -->
             <div class="portrait-footer-chip">
               <span class="portrait-loc-tag">VTU Muddenahalli · Bengaluru</span>
               <span class="chip-status">
@@ -260,7 +284,7 @@
 
           <!-- Overview Text Column -->
           <div class="about-bio-col">
-            <div class="section-label">01 // Overview</div>
+            <div class="section-label">01 // PROFILE OVERVIEW</div>
             <h2 class="section-heading">Engineering Autonomous & Verifiable Systems</h2>
             <p class="about-bio-text" id="about-bio-text">
               <!-- Rendered dynamically from content.js -->
@@ -291,7 +315,7 @@
     <!-- Section 02: Featured Winner — Root-Defense (Tech Habba 2026) -->
     <section class="section" id="winner">
       <div class="container">
-        <div class="section-label">02 // Featured Hackathon Winner</div>
+        <div class="section-label">02 // FEATURED WINNER (₹10,000 AWARD)</div>
         <h2 class="section-heading">Root-Defense — Tamper-Evident Security Logs</h2>
         <p class="section-subtext">
           Awarded 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology, Bengaluru by Team Flute on 21 November 2026.
@@ -449,7 +473,7 @@
     <!-- Section 03: Skills & Technical Domains (With Brand Vector Logos) -->
     <section class="section" id="skills">
       <div class="container">
-        <div class="section-label">03 // Capabilities</div>
+        <div class="section-label">03 // TECHNICAL ARSENAL</div>
         <h2 class="section-heading">Skills & Technical Domains</h2>
         <p class="section-subtext">Verified programming languages, robotics toolchains, and security architectures with authentic vector logos.</p>
 
@@ -485,8 +509,8 @@
       <div class="container">
         <div class="projects-header-bar">
           <div>
-            <div class="section-label">04 // Open Source Repositories</div>
-            <h2 class="section-heading">GitHub Projects</h2>
+            <div class="section-label">04 // PRODUCTION REPOSITORIES</div>
+            <h2 class="section-heading">Open Source & Systems Code</h2>
           </div>
           <div class="live-sync-indicator">
             <span class="live-sync-dot"></span>
@@ -507,8 +531,8 @@
     <!-- Section 05: Hackathons Timeline (Newest First) -->
     <section class="section" id="hackathons">
       <div class="container">
-        <div class="section-label">05 // Competitive Sprints</div>
-        <h2 class="section-heading">Hackathon Track Record</h2>
+        <div class="section-label">05 // COMPETITIVE RECORD</div>
+        <h2 class="section-heading">Hackathon Track Record & Honors</h2>
         <p class="section-subtext">Intensive prototyping under strict deadlines with national-level real-world evaluation.</p>
 
         <div class="hackathon-timeline" id="hackathons-timeline">
@@ -520,7 +544,7 @@
     <!-- Section 06: Leadership Section -->
     <section class="section" id="leadership">
       <div class="container">
-        <div class="section-label">06 // Student Governance</div>
+        <div class="section-label">06 // LEADERSHIP & GOVERNANCE</div>
         <h2 class="section-heading">Leadership Experience</h2>
         <p class="section-subtext">Organizational leadership, stakeholder coordination, and technical mentorship.</p>
 
@@ -533,7 +557,7 @@
     <!-- Section 07: Education Section -->
     <section class="section" id="education">
       <div class="container">
-        <div class="section-label">07 // Academics</div>
+        <div class="section-label">07 // ACADEMICS & RESEARCH</div>
         <h2 class="section-heading">Education</h2>
 
         <div class="editorial-cards-grid" id="education-grid">
@@ -542,13 +566,14 @@
       </div>
     </section>
 
-    <!-- Section 08: Contact Block -->
-    <section class="section" id="contact">
+    <!-- Section 08: Editorial Contact & Collaboration -->
+    <section class="section contact-section" id="contact">
       <div class="container">
         <div class="contact-block">
-          <h2>Initiate Collaboration</h2>
-          <p>
-            Seeking internship and engineering roles in Robotics, Embedded AI, Machine Learning, and Systems Security.
+          <div class="section-label">08 // INITIATE COLLABORATION</div>
+          <h2 class="contact-headline">LET'S BUILD RESILIENT SYSTEMS.</h2>
+          <p class="contact-desc">
+            Seeking engineering and research roles in Robotics, Embedded AI, Machine Learning, and Cryptographic Systems Security.
           </p>
           <div class="contact-actions">
             <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link">
@@ -571,16 +596,44 @@
     </section>
   </main>
 
-  <!-- Clean Editorial Footer -->
+  <!-- Editorial Footer (Darkroom / Lenis Aesthetic) -->
   <footer class="footer-clean">
-    <div class="container footer-row">
-      <div>
-        © 2026 Abhijay Singh. Robotics & AI Undergraduate · VTU Muddenahalli
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand-col">
+          <div class="footer-brand-title">ABHIJAY SINGH</div>
+          <p class="footer-brand-sub">Robotics & AI Undergraduate · Visvesvaraya Technological University (VTU), Muddenahalli.</p>
+        </div>
+        <div class="footer-links-col">
+          <div class="footer-col-heading">NAVIGATION</div>
+          <ul class="footer-nav-list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#winner">Winner (₹10K)</a></li>
+            <li><a href="#skills">Skills & Arsenal</a></li>
+            <li><a href="#projects">Repositories</a></li>
+            <li><a href="#hackathons">Hackathons</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links-col">
+          <div class="footer-col-heading">DIRECT CHANNELS</div>
+          <ul class="footer-nav-list">
+            <li><a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer">WhatsApp: +91 7004793221</a></li>
+            <li><a href="mailto:abhijaysingh2006@gmail.com">abhijaysingh2006@gmail.com</a></li>
+            <li><a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer">github.com/abhijaysingh2006-tech</a></li>
+            <li><a href="assets/Root-Defense.pdf" target="_blank" rel="noopener noreferrer">Root-Defense Whitepaper (PDF)</a></li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: var(--teal-primary); text-decoration: underline;">
-          github.com/abhijaysingh2006-tech
-        </a>
+
+      <div class="footer-bottom-row">
+        <div class="system-status-indicator">
+          <span class="system-status-dot"></span>
+          <span>ALL SYSTEMS VERIFIED & OPERATIONAL // BANGALORE, INDIA</span>
+        </div>
+        <div class="footer-copy">
+          © 2026 ABHIJAY SINGH. ALL RIGHTS RESERVED.
+        </div>
       </div>
     </div>
   </footer>

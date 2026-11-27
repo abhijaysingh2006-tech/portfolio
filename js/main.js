@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 5. Interactive UI Listeners
   initLenis();
+  initMobileMenu();
   initThemeToggle();
   initTypewriter();
   initScrollNav();
@@ -694,4 +695,37 @@ function initLenis() {
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
+}
+
+// --- Mobile Navigation Menu (Darkroom / Lenis Style) ---
+function initMobileMenu() {
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const overlay = document.getElementById('mobile-nav-overlay');
+  const barsIcon = document.getElementById('menu-icon-bars');
+  const closeIcon = document.getElementById('menu-icon-close');
+  if (!menuBtn || !overlay) return;
+
+  function toggleMenu(open) {
+    const shouldOpen = open !== undefined ? open : !overlay.classList.contains('open');
+    if (shouldOpen) {
+      overlay.classList.add('open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      if (barsIcon) barsIcon.style.display = 'none';
+      if (closeIcon) closeIcon.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    } else {
+      overlay.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      if (barsIcon) barsIcon.style.display = 'block';
+      if (closeIcon) closeIcon.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  menuBtn.addEventListener('click', () => toggleMenu());
+
+  // Close overlay when any link inside it is clicked
+  overlay.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => toggleMenu(false));
+  });
 }

@@ -7,7 +7,7 @@
 export const portfolioContent = {
   // --- Personal & Profile Info ---
   personal: {
-    name: "Abhijay Singh",
+    name: "ABHIJAY SINGH",
     shortName: "Abhijay",
     title: "Robotics & Artificial Intelligence Undergraduate",
     institution: "VTU Muddenahalli, Karnataka",
