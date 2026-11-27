@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initShootingStars();
 
   // 5. Interactive UI Listeners
+  initLenis();
   initThemeToggle();
   initTypewriter();
   initScrollNav();
@@ -634,4 +635,63 @@ function initScrollNav() {
   }, observerOptions);
 
   sections.forEach((sec) => observer.observe(sec));
+}
+
+// --- Lenis.dev Smooth Scroll Engine ---
+function initLenis() {
+  if (typeof Lenis === 'undefined') {
+    console.warn("Lenis smooth scroll library not loaded; using standard browser scroll.");
+    return;
+  }
+
+  // Smooth scroll instance matching lenis.dev parameters & physics
+  const lenis = new Lenis({
+    duration: 1.25,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // ease-out-expo curve from lenis.dev
+    orientation: 'vertical',
+    gestureOrientation: 'vertical',
+    smoothWheel: true,
+    wheelMultiplier: 1.05,
+    touchMultiplier: 1.2,
+    infinite: false,
+  });
+
+  window.lenis = lenis;
+
+  const progressBar = document.getElementById('lenis-progress-bar');
+  const nav = document.getElementById('navbar');
+
+  // Sync scroll events with top reading progress bar and navbar blur
+  lenis.on('scroll', ({ scroll, limit, progress }) => {
+    if (progressBar && limit > 0) {
+      progressBar.style.transform = `scaleX(${Math.max(0, Math.min(1, progress))})`;
+    }
+
+    if (scroll > 20) {
+      nav?.classList.add('scrolled');
+    } else {
+      nav?.classList.remove('scrolled');
+    }
+  });
+
+  // Intercept all in-page hash links for fluid Lenis scrolling
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
+      const targetId = anchor.getAttribute('href');
+      if (targetId && targetId !== '#') {
+        const targetElem = document.querySelector(targetId);
+        if (targetElem) {
+          e.preventDefault();
+          lenis.scrollTo(targetElem, { offset: -70 });
+        }
+      }
+    });
+  });
+
+  // Continuous animation frame loop
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
 }
