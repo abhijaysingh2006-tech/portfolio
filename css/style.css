@@ -7,25 +7,19 @@
 
 :root,
 [data-theme="light"] {
-  /* Minimalist Studio Light Mode (#efefef from lenis.dev) */
-  --bg-main: #efefef;
-  --bg-subtle: #e5e5e5;
+  /* Editorial Light Mode (Warm Linen, Rich Forest Teal & Amber) */
+  --bg-main: #f6f3ec;
+  --bg-subtle: #ede9df;
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #fafafa;
-  --bg-glass: rgba(239, 239, 239, 0.92);
+  --bg-surface-elevated: #ffffff;
+  --bg-glass: rgba(246, 243, 236, 0.94);
 
   --text-main: #111827;
   --text-muted: #374151;
   --text-faint: #6b7280;
 
-  --border-subtle: rgba(0, 0, 0, 0.09);
-  --border-strong: rgba(0, 0, 0, 0.18);
-
-  /* Signature Darkroom / Lenis Accents */
-  --color-pink: #ff98a2;
-  --color-pink-subtle: rgba(255, 152, 162, 0.14);
-  --color-pink-border: rgba(255, 152, 162, 0.35);
-  --color-maroon-glow: #3b2027;
+  --border-subtle: #dcd6c8;
+  --border-strong: #0d9488;
 
   /* Brand Accents */
   --teal-primary: #0d9488;
@@ -52,12 +46,6 @@
 
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-  --font-anton: 'Anton', 'Inter', sans-serif;
-
-  /* Lenis.dev Signature Accents */
-  --lenis-pink: #ff98a2;
-  --lenis-pink-glow: rgba(255, 152, 162, 0.4);
-  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -69,26 +57,20 @@
   --transition-smooth: 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Midnight Pitch Black Mode (#000000 from lenis.dev) */
+/* Midnight Dark Mode with High-Legibility Contrast */
 [data-theme="dark"] {
-  --bg-main: #000000;
-  --bg-subtle: #08080c;
-  --bg-surface: #0e0e13;
-  --bg-surface-elevated: #15151e;
-  --bg-glass: rgba(0, 0, 0, 0.9);
+  --bg-main: #09090b;
+  --bg-subtle: #111624;
+  --bg-surface: #141a29;
+  --bg-surface-elevated: #1a2236;
+  --bg-glass: rgba(9, 9, 11, 0.88);
 
-  --text-main: #efefef;
-  --text-muted: #b0b0b0;
-  --text-faint: #757575;
+  --text-main: #f8fafc;
+  --text-muted: #cbd5e1;
+  --text-faint: #94a3b8;
 
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-
-  /* Signature Darkroom / Lenis Accents */
-  --color-pink: #ff98a2;
-  --color-pink-subtle: rgba(255, 152, 162, 0.16);
-  --color-pink-border: rgba(255, 152, 162, 0.38);
-  --color-maroon-glow: #3b2027;
+  --border-subtle: #273349;
+  --border-strong: #38bdf8;
 
   --teal-primary: #2dd4bf;
   --teal-accent: #5eead4;
@@ -215,89 +197,6 @@ a {
 }
 
 /* =============================================================================
-   LENIS.DEV SMOOTH SCROLL INTEGRATION & TOP PROGRESS BAR
-   ============================================================================= */
-html.lenis,
-html.lenis-smooth {
-  height: auto;
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-/* Reading Progress Bar (Exact Editorial Feature) */
-.scroll-progress-bar-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  z-index: 10000;
-  pointer-events: none;
-  background: transparent;
-}
-
-.scroll-progress-bar {
-  height: 100%;
-  width: 100%;
-  transform-origin: 0% 50%;
-  transform: scaleX(0);
-  background: var(--color-pink);
-  box-shadow: 0 0 12px rgba(255, 152, 162, 0.85);
-  transition: transform 0.04s linear;
-}
-
-/* Editorial Continuous Marquee Banner (Darkroom / Lenis Aesthetic) */
-.editorial-ticker-container {
-  width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 14px 0;
-  margin-top: -10px;
-  margin-bottom: 24px;
-  user-select: none;
-}
-
-.editorial-ticker-track {
-  display: inline-flex;
-  align-items: center;
-  gap: 28px;
-  animation: tickerScroll 30s linear infinite;
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: 1.15rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.editorial-ticker-track:hover {
-  animation-play-state: paused;
-}
-
-.ticker-dot {
-  color: var(--color-pink);
-  font-size: 0.85rem;
-}
-
-@keyframes tickerScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* =============================================================================
    NAVIGATION HEADER
    ============================================================================= */
 .nav-header {
@@ -315,20 +214,7 @@ html.lenis-smooth {
 
 .nav-header.scrolled {
   box-shadow: var(--shadow-sm);
-  border-color: var(--border-strong);
-}
-
-.nav-header.nav-inverted {
-  background: rgba(245, 243, 244, 0.94);
-  border-bottom-color: rgba(0, 0, 0, 0.14);
-}
-
-.nav-header.nav-inverted .nav-item a {
-  color: #374151;
-}
-
-.nav-header.nav-inverted .nav-item a:hover {
-  color: #000000;
+  border-color: var(--teal-border);
 }
 
 .nav-wrapper {
@@ -346,29 +232,6 @@ html.lenis-smooth {
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--text-main);
-  text-decoration: none;
-}
-
-.nav-brand-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  background: var(--color-pink);
-  color: #000000;
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: 1.1rem;
-  text-decoration: none;
-  font-weight: 400;
-  box-shadow: 0 0 12px rgba(255, 152, 162, 0.45);
-  transition: transform 0.2s ease;
-  line-height: 1;
-}
-
-.nav-brand-badge:hover {
-  transform: scale(1.08);
 }
 
 .nav-brand-dot {
@@ -420,19 +283,18 @@ html.lenis-smooth {
   gap: 12px;
 }
 
-/* Button Component Styles (Lenis / Darkroom Studio Pill Buttons) */
+/* Button Component Styles */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 22px;
-  font-size: 0.86rem;
+  padding: 9px 18px;
+  font-size: 0.88rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.24s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all var(--transition-fast);
   white-space: nowrap;
 }
 
@@ -486,65 +348,6 @@ html.lenis-smooth {
   transform: translateY(-1px);
 }
 
-/* Lenis Signature Pill Buttons (Darkroom Style) */
-.lenis-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 6px 20px 6px 8px;
-  border-radius: var(--radius-full);
-  font-family: var(--font-sans);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.28s cubic-bezier(0.19, 1, 0.22, 1);
-  white-space: nowrap;
-}
-
-.lenis-btn-primary {
-  background: var(--color-pink);
-  color: #000000;
-  border: 1px solid var(--color-pink);
-}
-
-.lenis-btn-primary:hover {
-  background: #ffb3bb;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255, 152, 162, 0.35);
-}
-
-.lenis-btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text-main);
-  border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(10px);
-}
-
-.lenis-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--color-pink);
-  color: var(--color-pink);
-  transform: translateY(-2px);
-}
-
-.btn-icon-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.25);
-  color: inherit;
-}
-
-.lenis-btn-secondary .btn-icon-box {
-  background: rgba(255, 255, 255, 0.1);
-}
-
 .theme-toggle-btn {
   display: flex;
   align-items: center;
@@ -562,83 +365,6 @@ html.lenis-smooth {
 .theme-toggle-btn:hover {
   border-color: var(--teal-primary);
   color: var(--teal-primary);
-}
-
-/* Mobile Menu Toggle Button (Darkroom / Lenis Style) */
-.mobile-menu-btn {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-main);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.mobile-menu-btn:hover {
-  border-color: var(--teal-primary);
-}
-
-/* Fullscreen Mobile Drawer */
-.mobile-nav-overlay {
-  position: fixed;
-  top: 64px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.96);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 36px 24px 32px 24px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition: all 0.28s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-[data-theme="light"] .mobile-nav-overlay {
-  background: rgba(239, 239, 239, 0.98);
-}
-
-.mobile-nav-overlay.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.mobile-nav-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.mobile-nav-link {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: 2.2rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--text-main);
-  transition: color var(--transition-fast);
-  display: block;
-}
-
-.mobile-nav-link:hover,
-.mobile-nav-link:active {
-  color: var(--teal-primary);
-}
-
-.mobile-nav-footer {
-  padding-top: 24px;
-  border-top: 1px solid var(--border-subtle);
 }
 
 /* =============================================================================
@@ -695,15 +421,13 @@ html.lenis-smooth {
 }
 
 .hero-title {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(3.2rem, 7.5vw, 6.2rem);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 0.94;
-  text-transform: uppercase;
-  color: var(--text-main);
-  background: none;
-  -webkit-text-fill-color: initial;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  background: linear-gradient(135deg, var(--text-main) 30%, var(--teal-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .typewriter-line {
@@ -1137,11 +861,9 @@ html.lenis-smooth {
 }
 
 .stat-num {
-  font-family: var(--font-anton), var(--font-mono);
-  font-size: clamp(2.2rem, 4vw, 3.2rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.02em;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--text-main);
 }
 
@@ -1162,26 +884,18 @@ html.lenis-smooth {
 
 .section-label {
   font-family: var(--font-mono);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
   color: var(--teal-primary);
   text-transform: uppercase;
-  margin-bottom: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .section-heading {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(2rem, 4.4vw, 3.4rem);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1.05;
-  text-transform: uppercase;
-  color: var(--text-main);
-  margin-bottom: 14px;
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
 }
 
 .section-subtext {
@@ -1386,15 +1100,12 @@ html.lenis-smooth {
 }
 
 .winner-project-name {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(2.4rem, 5vw, 3.8rem);
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  line-height: 1;
-  color: var(--text-main);
-  background: none;
-  -webkit-text-fill-color: initial;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--text-main), var(--teal-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .winner-project-tagline {
@@ -2361,418 +2072,22 @@ html.lenis-smooth {
 }
 
 /* =============================================================================
-   LENIS RECONSTRUCTION: HERO EXTENDED TYPOGRAPHY
+   FOOTER
    ============================================================================= */
-.lenis-hero-top-row {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 24px;
-}
-
-.lenis-hero-wordmark {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(3.6rem, 10vw, 8.8rem);
-  letter-spacing: 0.015em;
-  line-height: 0.88;
-  text-transform: uppercase;
-  color: var(--color-pink);
-  margin: 0;
-  padding: 0;
-}
-
-.lenis-hero-subhead {
-  font-family: var(--font-sans);
-  font-size: clamp(0.95rem, 2vw, 1.55rem);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-align: right;
-  color: var(--text-main);
-  margin-top: 6px;
-  line-height: 1.1;
-}
-
-.lenis-hero-scroll-indicator {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.lenis-scroll-bar {
-  width: 3px;
-  height: 36px;
-  background: var(--color-pink);
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-
-.lenis-scroll-text {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: 0.95rem;
-  line-height: 1.05;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-main);
-}
-
-.lenis-hero-meta-desc {
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  line-height: 1.45;
-}
-
-/* =============================================================================
-   LENIS RECONSTRUCTION: ASYMMETRIC STICKY TWO-COLUMN ("WHY SMOOTH SCROLL")
-   ============================================================================= */
-.resilience-section {
-  padding: 110px 0 90px 0;
-  position: relative;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.resilience-grid {
-  display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 60px;
-  align-items: start;
-}
-
-.sticky-left-col {
-  position: sticky;
-  top: 120px;
-}
-
-.lenis-sticky-heading {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(2.8rem, 6.2vw, 5.2rem);
-  line-height: 0.92;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: var(--text-main);
-  margin-bottom: 20px;
-}
-
-.scrolling-right-col {
-  display: flex;
-  flex-direction: column;
-  gap: 56px;
-}
-
-.lenis-lead-text {
-  font-size: 1.18rem;
-  line-height: 1.65;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 32px;
-}
-
-.lenis-feature-block {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.lenis-feature-title {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: 1.55rem;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--color-pink);
-  line-height: 1.1;
-}
-
-.lenis-feature-desc {
-  font-size: 1.02rem;
-  line-height: 1.65;
-  color: var(--text-muted);
-}
-
-/* =============================================================================
-   LENIS RECONSTRUCTION: HORIZONTAL SHOWCASE CAROUSEL ("LENIS RUNS THE WEB")
-   ============================================================================= */
-.showcase-section {
-  padding: 100px 0;
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.showcase-header-grid {
-  display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 32px;
-  margin-bottom: 44px;
-  align-items: baseline;
-}
-
-.showcase-heading {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-  line-height: 0.95;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: var(--text-main);
-}
-
-.showcase-lead {
-  font-size: 1.02rem;
-  line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.showcase-track-container {
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 12px 0 24px 0;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 152, 162, 0.4) transparent;
-  cursor: grab;
-}
-
-.showcase-track-container::-webkit-scrollbar {
-  height: 6px;
-}
-
-.showcase-track-container::-webkit-scrollbar-thumb {
-  background: rgba(255, 152, 162, 0.35);
-  border-radius: 3px;
-}
-
-.showcase-track {
-  display: inline-flex;
-  gap: 20px;
-  padding: 0 4px;
-}
-
-.showcase-card {
-  display: flex;
-  flex-direction: column;
-  width: 292px;
-  flex-shrink: 0;
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.28s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.showcase-card:hover {
-  transform: translateY(-4px);
-}
-
-.showcase-media-frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border-radius: 10px;
-  overflow: hidden;
+.footer-clean {
+  padding: 36px 0;
   background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.showcase-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.showcase-card:hover .showcase-img {
-  transform: scale(1.05);
-}
-
-.showcase-card-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.showcase-pill-badge {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  background: var(--color-pink);
-  color: #000000;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  z-index: 2;
-}
-
-.showcase-hover-arrow {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--color-pink);
-  color: #000000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: all 0.24s cubic-bezier(0.19, 1, 0.22, 1);
-  z-index: 2;
-}
-
-.showcase-card:hover .showcase-hover-arrow {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.showcase-meta {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.showcase-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-main);
-  transition: color 0.2s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.showcase-card:hover .showcase-title {
-  color: var(--color-pink);
-}
-
-.showcase-subtitle {
-  font-size: 0.78rem;
-  font-family: var(--font-mono);
-  color: var(--text-faint);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.showcase-bottom-cta-row {
-  margin-top: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 24px;
   border-top: 1px solid var(--border-subtle);
-  flex-wrap: wrap;
-  gap: 16px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
-.showcase-cta-text {
-  font-size: 1.05rem;
-  color: var(--text-main);
-  font-weight: 500;
-}
-
-/* =============================================================================
-   LENIS RECONSTRUCTION: INVERTED LIGHT EDITORIAL FOOTER
-   ============================================================================= */
-.inverted-footer {
-  background: #f5f3f4;
-  color: #000000;
-  padding: 84px 0 36px 0;
-  position: relative;
-  overflow: hidden;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-.inverted-footer-glow {
-  position: absolute;
-  bottom: -150px;
-  right: -100px;
-  width: 540px;
-  height: 540px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 152, 162, 0.45) 0%, rgba(245, 243, 244, 0) 70%);
-  pointer-events: none;
-}
-
-.inverted-footer-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 36px;
-  margin-bottom: 54px;
-}
-
-.inverted-footer-hero {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(3rem, 7.5vw, 6.2rem);
-  line-height: 0.9;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: #000000;
-}
-
-.inverted-footer-hero span.pink-accent {
-  color: #e06070;
-}
-
-.inverted-footer-subhero {
-  font-family: var(--font-anton), var(--font-sans);
-  font-size: clamp(1.4rem, 3.2vw, 2.6rem);
-  line-height: 1.05;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #374151;
-  text-align: right;
-}
-
-.inverted-footer-actions {
+.footer-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.inverted-footer-utility {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 24px;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: #555555;
   flex-wrap: wrap;
   gap: 16px;
-}
-
-.inverted-footer-links {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-  flex-wrap: wrap;
-}
-
-.inverted-footer-links a {
-  color: #000000;
-  text-decoration: none;
-  font-weight: 700;
-  transition: color 0.2s ease;
-}
-
-.inverted-footer-links a:hover {
-  color: #e06070;
 }
 
 /* =============================================================================
@@ -2789,20 +2104,6 @@ html.lenis-smooth {
     max-width: 580px;
     margin: 0 auto;
     width: 100%;
-  }
-  .resilience-grid {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
-  .sticky-left-col {
-    position: static;
-  }
-  .showcase-header-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .inverted-footer-subhero {
-    text-align: left;
   }
   .about-grid-wrapper {
     grid-template-columns: 1fr;
@@ -2859,12 +2160,6 @@ html.lenis-smooth {
   .nav-actions {
     gap: 8px;
   }
-  .mobile-menu-btn {
-    display: inline-flex;
-  }
-  .mobile-nav-overlay {
-    top: 56px;
-  }
   .nav-actions .btn {
     padding: 6px 10px;
     font-size: 0.78rem;
@@ -2876,11 +2171,8 @@ html.lenis-smooth {
     padding-bottom: 36px;
   }
   .hero-title {
-    font-family: var(--font-anton), var(--font-sans);
     font-size: 2.6rem;
-    line-height: 0.96;
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
+    line-height: 1.15;
     margin-bottom: 12px;
   }
   .typewriter-line {
@@ -3110,24 +2402,17 @@ html.lenis-smooth {
     width: 100%;
     justify-content: center;
   }
-  .footer-top-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  .footer-bottom-row {
+  .footer-row {
     flex-direction: column;
     text-align: center;
-    gap: 12px;
+    gap: 10px;
   }
 }
 
 /* Small Smartphone Displays (<= 460px) */
 @media (max-width: 460px) {
   .hero-title {
-    font-family: var(--font-anton), var(--font-sans);
     font-size: 2.15rem;
-    line-height: 0.96;
-    letter-spacing: 0.01em;
   }
   .hero-actions {
     grid-template-columns: 1fr;

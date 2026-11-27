@@ -7,7 +7,7 @@
   
   <!-- SEO & Social Meta -->
   <meta name="description" content="Portfolio of Abhijay Singh — Robotics & AI undergraduate at VTU Muddenahalli, 3rd Prize Winner at Tech Habba 2026 for Root-Defense (tamper-evident security logging), SIH Round 1 selection, and former IEEE Student Chairman." />
-  <meta name="theme-color" content="#000000" />
+  <meta name="theme-color" content="#09090b" />
 
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website" />
@@ -15,16 +15,13 @@
   <meta property="og:description" content="Robotics & AI undergraduate, 3rd Prize Winner at Tech Habba 2026, Smart India Hackathon Round 1 selected, and former IEEE Student Chairman." />
   <meta property="og:image" content="assets/images/profile-portrait.webp" />
 
-  <!-- Google Fonts: Anton, Inter, Roboto & JetBrains Mono -->
+  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Lenis Smooth Scroll Engine (from lenis.dev) -->
-  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
 
   <!-- Three.js WebGL Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -34,39 +31,28 @@
 </head>
 <body>
 
-  <!-- Smooth Inertia Scroll Progress Indicator -->
-  <div class="scroll-progress-bar-container" aria-hidden="true">
-    <div id="scroll-progress-bar" class="scroll-progress-bar"></div>
-  </div>
-
   <!-- Full-Screen Interactive Canvas Starfield (Twinkling Stars + Diagonal Meteors) -->
   <canvas id="star-canvas" class="star-canvas" aria-hidden="true"></canvas>
 
   <!-- Hairline Grid Texture Overlay -->
   <div class="page-grid-overlay" aria-hidden="true"></div>
 
-  <!-- Fixed Header (Lenis Symmetric Layout) -->
+  <!-- Minimalist Fixed Header -->
   <header id="navbar" class="nav-header">
     <div class="container nav-wrapper">
-      <!-- Left Navigation Links -->
-      <nav aria-label="Main Navigation Left" class="nav-links-left">
+      <a href="#" class="nav-brand">
+        <span class="nav-brand-dot"></span>
+        <span>abhijay.singh</span>
+      </a>
+
+      <nav aria-label="Main Navigation">
         <ul class="nav-links">
           <li class="nav-item"><a href="#about">About</a></li>
           <li class="nav-item"><a href="#winner">Winner</a></li>
-          <li class="nav-item"><a href="#resilience">Why Resilience</a></li>
-        </ul>
-      </nav>
-
-      <!-- Center Monogram Brand Badge (Darkroom / Lenis Signature) -->
-      <a href="#" class="nav-brand-badge" aria-label="Abhijay Singh Home">
-        <span>AS</span>
-      </a>
-
-      <!-- Right Navigation Links & Actions -->
-      <nav aria-label="Main Navigation Right" class="nav-links-right">
-        <ul class="nav-links">
-          <li class="nav-item"><a href="#showcase">Showcase</a></li>
           <li class="nav-item"><a href="#skills">Skills</a></li>
+          <li class="nav-item"><a href="#projects">Repositories</a></li>
+          <li class="nav-item"><a href="#hackathons">Hackathons</a></li>
+          <li class="nav-item"><a href="#leadership">Leadership</a></li>
           <li class="nav-item"><a href="#contact">Contact</a></li>
         </ul>
       </nav>
@@ -78,189 +64,126 @@
         </button>
 
         <!-- Direct GitHub Profile -->
-        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-outline github-profile-link" style="padding: 6px 14px; font-size: 0.82rem;">
+        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-outline github-profile-link" style="padding: 6px 12px; font-size: 0.82rem;">
           <i data-lucide="github" style="width: 15px; height: 15px;"></i>
           <span>GitHub</span>
         </a>
 
         <!-- Let's Talk CTA -->
-        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link" style="padding: 6px 16px; font-size: 0.82rem;">
+        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link" style="padding: 6px 14px; font-size: 0.82rem;">
           <span>Get in touch</span>
-        </a>
-
-        <!-- Mobile Menu Toggle Button (Darkroom Style) -->
-        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle Navigation Menu" aria-expanded="false">
-          <i data-lucide="menu" id="menu-icon-bars" style="width: 20px; height: 20px;"></i>
-          <i data-lucide="x" id="menu-icon-close" style="width: 20px; height: 20px; display: none;"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Navigation Overlay -->
-    <div id="mobile-nav-overlay" class="mobile-nav-overlay" aria-hidden="true">
-      <ul class="mobile-nav-list">
-        <li><a href="#about" class="mobile-nav-link">About</a></li>
-        <li><a href="#winner" class="mobile-nav-link">Winner (₹10K)</a></li>
-        <li><a href="#resilience" class="mobile-nav-link">Why Resilience</a></li>
-        <li><a href="#showcase" class="mobile-nav-link">Showcase</a></li>
-        <li><a href="#skills" class="mobile-nav-link">Skills & Arsenal</a></li>
-        <li><a href="#projects" class="mobile-nav-link">Repositories</a></li>
-        <li><a href="#hackathons" class="mobile-nav-link">Hackathons</a></li>
-        <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
-      </ul>
-      <div class="mobile-nav-footer">
-        <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link" style="width: 100%; justify-content: center; padding: 12px 20px;">
-          <span>Initiate WhatsApp Chat</span>
         </a>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- Monumental Hero Section (Lenis Signature Anatomy) -->
+    <!-- Hero Section with Interactive 3D WebGL Spatial Core -->
     <section class="hero-section" id="hero">
-      <div class="container">
-        <!-- Giant Lenis Monumental Typographic Lockup -->
-        <div class="lenis-hero-top-row">
-          <h1 class="lenis-hero-wordmark" id="hero-name">ABHIJAY SINGH</h1>
-          <div class="lenis-hero-subhead">ROBOTICS & EMBEDDED AI</div>
-        </div>
-
-        <div class="hero-grid-wrapper">
-          <!-- Left Editorial Details -->
-          <div class="hero-content-col">
-            <!-- Scroll to explore + Subline lockup -->
-            <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
-              <div class="lenis-hero-scroll-indicator">
-                <span class="lenis-scroll-bar"></span>
-                <span class="lenis-scroll-text">SCROLL<br>TO EXPLORE</span>
-              </div>
-              <div class="lenis-hero-meta-desc">
-                AUTONOMOUS INTELLIGENCE & CRYPTOGRAPHIC DEFENSE<br>
-                <span id="hero-institution">VTU MUDDENAHALLI · BENGALURU</span>
-              </div>
-            </div>
-
-            <div class="typewriter-line">
-              <span>&gt; </span>
-              <span id="typewriter-text"></span>
-              <span class="cursor-blink"></span>
-            </div>
-
-            <p class="hero-description" id="hero-tagline">
-              Building resilient autonomous systems, machine learning pipelines, and tamper-evident security architectures.
-            </p>
-
-            <!-- Verified Track Record Highlights -->
-            <div class="hero-highlights-strip">
-              <a href="#winner" class="hero-highlight-pill highlight-winner">
-                <i data-lucide="trophy" style="width: 14px; height: 14px;"></i>
-                <span>Tech Habba 2026 Winner (3rd Prize · ₹10,000)</span>
-              </a>
-              <span class="hero-highlight-pill">
-                <i data-lucide="award" style="width: 13px; height: 13px;"></i>
-                <span>SIH Internal Round Selected</span>
-              </span>
-              <span class="hero-highlight-pill">
-                <i data-lucide="compass" style="width: 13px; height: 13px;"></i>
-                <span>ISRO Antariksh Hackathon</span>
-              </span>
-              <span class="hero-highlight-pill">
-                <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
-                <span>Former IEEE Chairman</span>
-              </span>
-            </div>
-
-            <!-- Lenis Pill CTA Buttons -->
-            <div class="hero-actions">
-              <a href="#winner" class="lenis-btn lenis-btn-primary">
-                <span class="btn-icon-box"><i data-lucide="trophy" style="width: 16px; height: 16px;"></i></span>
-                <span>CASE STUDY (₹10K WINNER) ↗</span>
-              </a>
-
-              <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="lenis-btn lenis-btn-secondary">
-                <span class="btn-icon-box"><i data-lucide="github" style="width: 16px; height: 16px;"></i></span>
-                <span>VIEW GITHUB CODE ↗</span>
-              </a>
-            </div>
+      <div class="container hero-grid-wrapper">
+        <!-- Left Editorial Column -->
+        <div class="hero-content-col">
+          <div class="hero-meta-badge">
+            <span class="hero-pulse-dot"></span>
+            <span id="hero-institution">Robotics & AI — VTU Muddenahalli</span>
           </div>
 
-          <!-- Right 3D WebGL Cheerful Robot & Falling Skills Viewport -->
-          <div class="hero-webgl-col">
-            <div class="webgl-frame">
-              <div class="webgl-frame-header">
-                <div class="webgl-header-left">
-                  <span class="webgl-status-dot" style="background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></span>
-                  <span class="webgl-title">FIG. 01 // BUDDY THE ROBOT</span>
-                </div>
-                <span class="webgl-badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">CATCH SKILLS</span>
-              </div>
+          <h1 class="hero-title" id="hero-name">Abhijay Singh</h1>
 
-              <!-- Three.js Canvas Mount for Cheerful Robot & Falling Skills -->
-              <div id="webgl-hero-container" class="webgl-canvas-container" title="Click falling skill logos to catch & acquire them!"></div>
+          <div class="typewriter-line">
+            <span>&gt; </span>
+            <span id="typewriter-text"></span>
+            <span class="cursor-blink"></span>
+          </div>
 
-              <!-- Cheerful Robot Dialogue & Acquired Skill Status Bar -->
-              <div id="robot-status-bar" class="robot-status-bar">
-                <div class="status-bar-header">
-                  <div class="status-bot-title">
-                    <span class="status-bot-avatar">🤖</span>
-                    <span class="status-bot-name">BUDDY // PORTFOLIO ROBOT</span>
-                  </div>
-                  <button id="robot-voice-btn" class="status-voice-btn" title="Speak message aloud" aria-label="Speak message aloud">
-                    <i data-lucide="volume-2" style="width: 14px; height: 14px;"></i>
-                  </button>
-                </div>
-                <p id="robot-speech-text" class="status-body-text">
-                  Hi! 👋 Click falling skill logos to catch & acquire them with me!
-                </p>
-              </div>
+          <p class="hero-description" id="hero-tagline">
+            Building resilient autonomous systems, machine learning pipelines, and tamper-evident security architectures.
+          </p>
 
-              <div class="webgl-frame-footer">
-                <div class="webgl-hint">
-                  <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #f59e0b;"></i>
-                  <span id="skill-catcher-hint">Click falling skill orbs to catch & acquire!</span>
-                </div>
-                <span class="webgl-fps-pill" id="skills-acquired-pill" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.35);">ACQUIRED: 0 / 14</span>
+          <!-- Verified Track Record Highlights -->
+          <div class="hero-highlights-strip">
+            <a href="#winner" class="hero-highlight-pill highlight-winner">
+              <i data-lucide="trophy" style="width: 14px; height: 14px;"></i>
+              <span>Tech Habba 2026 Winner (3rd Prize)</span>
+            </a>
+            <span class="hero-highlight-pill">
+              <i data-lucide="award" style="width: 13px; height: 13px;"></i>
+              <span>SIH Internal Round Selected</span>
+            </span>
+            <span class="hero-highlight-pill">
+              <i data-lucide="compass" style="width: 13px; height: 13px;"></i>
+              <span>ISRO Antariksh Hackathon</span>
+            </span>
+            <span class="hero-highlight-pill">
+              <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
+              <span>Former IEEE Chairman</span>
+            </span>
+          </div>
+
+          <div class="hero-actions">
+            <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-solid github-profile-link">
+              <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+              <span>GitHub Profile</span>
+            </a>
+
+            <a href="#projects" class="btn btn-outline">
+              <i data-lucide="folder-git-2" style="width: 16px; height: 16px;"></i>
+              <span>Explore Projects</span>
+            </a>
+
+            <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-outline whatsapp-link">
+              <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+              <span>WhatsApp</span>
+            </a>
+
+            <a id="hero-resume-btn" href="assets/resume.pdf" class="btn btn-outline" download>
+              <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+              <span>Résumé</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right 3D WebGL Cheerful Robot & Falling Skills Viewport -->
+        <div class="hero-webgl-col">
+          <div class="webgl-frame">
+            <div class="webgl-frame-header">
+              <div class="webgl-header-left">
+                <span class="webgl-status-dot" style="background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></span>
+                <span class="webgl-title">FIG. 01 // BUDDY THE ROBOT</span>
               </div>
+              <span class="webgl-badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);">CATCH SKILLS</span>
+            </div>
+
+            <!-- Three.js Canvas Mount for Cheerful Robot & Falling Skills -->
+            <div id="webgl-hero-container" class="webgl-canvas-container" title="Click falling skill logos to catch & acquire them!"></div>
+
+            <!-- Cheerful Robot Dialogue & Acquired Skill Status Bar (Positioned Below Canvas so Robot is 100% visible) -->
+            <div id="robot-status-bar" class="robot-status-bar">
+              <div class="status-bar-header">
+                <div class="status-bot-title">
+                  <span class="status-bot-avatar">🤖</span>
+                  <span class="status-bot-name">BUDDY // PORTFOLIO ROBOT</span>
+                </div>
+                <button id="robot-voice-btn" class="status-voice-btn" title="Speak message aloud" aria-label="Speak message aloud">
+                  <i data-lucide="volume-2" style="width: 14px; height: 14px;"></i>
+                </button>
+              </div>
+              <p id="robot-speech-text" class="status-body-text">
+                Hi! 👋 Click falling skill logos to catch & acquire them with me!
+              </p>
+            </div>
+
+            <div class="webgl-frame-footer">
+              <div class="webgl-hint">
+                <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #f59e0b;"></i>
+                <span id="skill-catcher-hint">Click falling skill orbs to catch & acquire!</span>
+              </div>
+              <span class="webgl-fps-pill" id="skills-acquired-pill" style="color: #f59e0b; border-color: rgba(245, 158, 11, 0.35);">ACQUIRED: 0 / 14</span>
             </div>
           </div>
         </div>
       </div>
     </section>
-
-    <!-- Editorial Continuous Marquee Banner (Darkroom / Lenis Aesthetic) -->
-    <div class="editorial-ticker-container" aria-hidden="true">
-      <div class="editorial-ticker-track">
-        <span>ROBOTICS & EMBEDDED AI</span>
-        <span class="ticker-dot">✦</span>
-        <span>TECH HABBA 2026 WINNER (3RD PRIZE · ₹10,000)</span>
-        <span class="ticker-dot">✦</span>
-        <span>ROOT-DEFENSE TAMPER-EVIDENT LOGS</span>
-        <span class="ticker-dot">✦</span>
-        <span>QUAI NETWORK SMART CONTRACTS</span>
-        <span class="ticker-dot">✦</span>
-        <span>ROS 2 TELEMETRY</span>
-        <span class="ticker-dot">✦</span>
-        <span>SMART INDIA HACKATHON SELECTED</span>
-        <span class="ticker-dot">✦</span>
-        <span>MACHINE LEARNING PIPELINES</span>
-        <span class="ticker-dot">✦</span>
-        <span>ROBOTICS & EMBEDDED AI</span>
-        <span class="ticker-dot">✦</span>
-        <span>TECH HABBA 2026 WINNER (3RD PRIZE · ₹10,000)</span>
-        <span class="ticker-dot">✦</span>
-        <span>ROOT-DEFENSE TAMPER-EVIDENT LOGS</span>
-        <span class="ticker-dot">✦</span>
-        <span>QUAI NETWORK SMART CONTRACTS</span>
-        <span class="ticker-dot">✦</span>
-        <span>ROS 2 TELEMETRY</span>
-        <span class="ticker-dot">✦</span>
-        <span>SMART INDIA HACKATHON SELECTED</span>
-        <span class="ticker-dot">✦</span>
-        <span>MACHINE LEARNING PIPELINES</span>
-        <span class="ticker-dot">✦</span>
-      </div>
-    </div>
 
     <!-- Verified Stats Strip -->
     <section class="stats-strip">
@@ -271,7 +194,7 @@
       </div>
     </section>
 
-    <!-- Section 01: Overview & About with Portrait -->
+    <!-- Section 01: Overview & About with Portrait (Whole Photo Fully in Frame) -->
     <section class="section" id="about">
       <div class="container">
         <div class="about-grid-wrapper">
@@ -283,7 +206,7 @@
                 <img src="assets/images/profile-portrait.jpg" alt="Abhijay Singh — Robotics & AI Systems Engineering" width="682" height="1024" loading="lazy" class="portrait-img">
               </picture>
             </div>
-            <!-- Clean Badge Positioned Below Photo -->
+            <!-- Clean Badge Positioned Below Photo (Never Obscures Person) -->
             <div class="portrait-footer-chip">
               <span class="portrait-loc-tag">VTU Muddenahalli · Bengaluru</span>
               <span class="chip-status">
@@ -295,7 +218,7 @@
 
           <!-- Overview Text Column -->
           <div class="about-bio-col">
-            <div class="section-label">01 // PROFILE OVERVIEW</div>
+            <div class="section-label">01 // Overview</div>
             <h2 class="section-heading">Engineering Autonomous & Verifiable Systems</h2>
             <p class="about-bio-text" id="about-bio-text">
               <!-- Rendered dynamically from content.js -->
@@ -323,194 +246,10 @@
       </div>
     </section>
 
-    <!-- Lenis Signature Section: Asymmetric Sticky Two-Column ("Why Smooth Scroll" Reconstruction) -->
-    <section class="resilience-section" id="resilience">
-      <div class="container">
-        <div class="resilience-grid">
-          <!-- Sticky Left Display Column -->
-          <div class="sticky-left-col">
-            <div class="section-label" style="margin-bottom: 16px;">THE PHILOSOPHY</div>
-            <h2 class="lenis-sticky-heading">WHY<br>AUTONOMOUS<br>RESILIENCE?</h2>
-            <div style="margin-top: 24px;">
-              <a href="#showcase" class="lenis-btn lenis-btn-secondary">
-                <span class="btn-icon-box"><i data-lucide="arrow-down" style="width: 14px; height: 14px;"></i></span>
-                <span>EXPLORE ARTIFACTS ↓</span>
-              </a>
-            </div>
-          </div>
-
-          <!-- Scrolling Right Feature Blocks -->
-          <div class="scrolling-right-col">
-            <p class="lenis-lead-text">
-              Autonomous robotics and distributed infrastructure are often built in silos—leaving nodes vulnerable to physical capture, untrusted telemetry, and silent log alteration. My engineering work couples real-time edge intelligence with cryptographic tamper-evidence so systems remain verifiable even under complete root compromise.
-            </p>
-
-            <div class="lenis-feature-block">
-              <h3 class="lenis-feature-title">01 / FAULT-TOLERANT EMBEDDED AGENTS</h3>
-              <p class="lenis-feature-desc">
-                Sub-second sensor telemetry fusion, computer vision inference, ROS 2 control loops, and microcontroller interfacing engineered for unassisted physical operation.
-              </p>
-            </div>
-
-            <div class="lenis-feature-block">
-              <h3 class="lenis-feature-title">02 / IMMUTABLE LOGGING, NO ROOT OVERWRITE</h3>
-              <p class="lenis-feature-desc">
-                Root-Defense architecture: each log entry is hashed, signed, and batched to off-host witnesses and Quai Network blockchain so an attacker with root privileges cannot quietly erase intrusion evidence.
-              </p>
-            </div>
-
-            <div class="lenis-feature-block">
-              <h3 class="lenis-feature-title">03 / REAL-TIME MACHINE LEARNING INFERENCE</h3>
-              <p class="lenis-feature-desc">
-                High-throughput perception pipelines optimized with TensorRT, PyTorch, and YOLO on NVIDIA Jetson architectures, ensuring low-latency obstacle avoidance and state estimation.
-              </p>
-            </div>
-
-            <div class="lenis-feature-block">
-              <h3 class="lenis-feature-title">04 / CONSENSUS PROOFS IN A SINGLE BATCH</h3>
-              <p class="lenis-feature-desc">
-                Quai Network smart contracts with cryptographic Merkle batching for immutable audit verification in seconds while slashing blockchain gas overhead.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Lenis Signature Section: Horizontal Showcase Track ("Lenis Runs The Web" Reconstruction) -->
-    <section class="showcase-section" id="showcase">
-      <div class="container">
-        <div class="showcase-header-grid">
-          <div>
-            <div class="section-label">CURATED ARTIFACTS</div>
-            <h2 class="showcase-heading">ENGINEERING RUNS THE EDGE</h2>
-          </div>
-          <p class="showcase-lead">
-            What began in the lab is now deployed across competitive hackathons, robotics testbeds, and production distributed systems. Here are the core artifacts.
-          </p>
-        </div>
-
-        <div class="showcase-track-container">
-          <div class="showcase-track">
-            <!-- Card 1: Root-Defense -->
-            <a href="#winner" class="showcase-card">
-              <div class="showcase-media-frame">
-                <picture>
-                  <source srcset="assets/images/tech-habba-award-600.webp" type="image/webp">
-                  <img src="assets/images/tech-habba-award.jpg" alt="Root-Defense Tech Habba Award" class="showcase-img">
-                </picture>
-                <span class="showcase-pill-badge">FEATURED // ₹10K AWARD</span>
-                <div class="showcase-hover-arrow">
-                  <i data-lucide="arrow-up-right"></i>
-                </div>
-              </div>
-              <div class="showcase-meta">
-                <h4 class="showcase-title">Root-Defense (Tech Habba 2026 Winner)</h4>
-                <span class="showcase-subtitle">Acharya Institute · Team Flute · Quai Network</span>
-              </div>
-            </a>
-
-            <!-- Card 2: Autonomous Navigation ROS 2 -->
-            <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="showcase-card">
-              <div class="showcase-media-frame">
-                <div class="showcase-card-placeholder" style="background: linear-gradient(135deg, #101624 0%, #17223b 100%);">
-                  <i data-lucide="navigation" style="width: 52px; height: 52px; color: var(--color-pink);"></i>
-                </div>
-                <span class="showcase-pill-badge">ROBOTICS</span>
-                <div class="showcase-hover-arrow">
-                  <i data-lucide="arrow-up-right"></i>
-                </div>
-              </div>
-              <div class="showcase-meta">
-                <h4 class="showcase-title">ROS 2 Autonomous Navigation</h4>
-                <span class="showcase-subtitle">LiDAR SLAM · Nav2 Costmaps · Odometry</span>
-              </div>
-            </a>
-
-            <!-- Card 3: Quai Merkle Batcher -->
-            <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="showcase-card">
-              <div class="showcase-media-frame">
-                <div class="showcase-card-placeholder" style="background: linear-gradient(135deg, #1a1426 0%, #2b1f40 100%);">
-                  <i data-lucide="layers" style="width: 52px; height: 52px; color: #a378a4;"></i>
-                </div>
-                <span class="showcase-pill-badge">BLOCKCHAIN</span>
-                <div class="showcase-hover-arrow">
-                  <i data-lucide="arrow-up-right"></i>
-                </div>
-              </div>
-              <div class="showcase-meta">
-                <h4 class="showcase-title">Quai Merkle Batcher Engine</h4>
-                <span class="showcase-subtitle">Solidity · Proof-of-Entropy · Ratchet</span>
-              </div>
-            </a>
-
-            <!-- Card 4: Buddy the Robot Companion -->
-            <a href="#skills" class="showcase-card">
-              <div class="showcase-media-frame">
-                <div class="showcase-card-placeholder" style="background: linear-gradient(135deg, #2a1c12 0%, #3e2818 100%);">
-                  <i data-lucide="bot" style="width: 52px; height: 52px; color: #f59e0b;"></i>
-                </div>
-                <span class="showcase-pill-badge">INTERACTIVE 3D</span>
-                <div class="showcase-hover-arrow">
-                  <i data-lucide="arrow-up-right"></i>
-                </div>
-              </div>
-              <div class="showcase-meta">
-                <h4 class="showcase-title">Buddy the Robot Companion</h4>
-                <span class="showcase-subtitle">3D WebGL Mini-Game · ElevenLabs Audio</span>
-              </div>
-            </a>
-
-            <!-- Card 5: Smart India Hackathon -->
-            <a href="#hackathons" class="showcase-card">
-              <div class="showcase-media-frame">
-                <div class="showcase-card-placeholder" style="background: linear-gradient(135deg, #12241e 0%, #1b382d 100%);">
-                  <i data-lucide="award" style="width: 52px; height: 52px; color: #2dd4bf;"></i>
-                </div>
-                <span class="showcase-pill-badge">NATIONAL HONORS</span>
-                <div class="showcase-hover-arrow">
-                  <i data-lucide="arrow-up-right"></i>
-                </div>
-              </div>
-              <div class="showcase-meta">
-                <h4 class="showcase-title">Smart India Hackathon (SIH)</h4>
-                <span class="showcase-subtitle">Internal Selection Winner · Ministry Track</span>
-              </div>
-            </a>
-
-            <!-- Card 6: IEEE Leadership -->
-            <a href="#leadership" class="showcase-card">
-              <div class="showcase-media-frame">
-                <div class="showcase-card-placeholder" style="background: linear-gradient(135deg, #181d28 0%, #222938 100%);">
-                  <i data-lucide="users" style="width: 52px; height: 52px; color: #38bdf8;"></i>
-                </div>
-                <span class="showcase-pill-badge">LEADERSHIP</span>
-                <div class="showcase-hover-arrow">
-                  <i data-lucide="arrow-up-right"></i>
-                </div>
-              </div>
-              <div class="showcase-meta">
-                <h4 class="showcase-title">IEEE Student Branch Chairman</h4>
-                <span class="showcase-subtitle">Technical Leadership · VTU Muddenahalli</span>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <div class="showcase-bottom-cta-row">
-          <span class="showcase-cta-text">Want to explore all repositories and technical whitepapers?</span>
-          <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="lenis-btn lenis-btn-primary">
-            <span class="btn-icon-box"><i data-lucide="arrow-up-right"></i></span>
-            <span>EXPLORE GITHUB SHOWCASE ↗</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
     <!-- Section 02: Featured Winner — Root-Defense (Tech Habba 2026) -->
     <section class="section" id="winner">
       <div class="container">
-        <div class="section-label">02 // FEATURED WINNER (₹10,000 AWARD)</div>
+        <div class="section-label">02 // Featured Hackathon Winner</div>
         <h2 class="section-heading">Root-Defense — Tamper-Evident Security Logs</h2>
         <p class="section-subtext">
           Awarded 3rd Prize (₹10,000) at Tech Habba 2026, Acharya Institute of Technology, Bengaluru by Team Flute on 21 November 2026.
@@ -668,7 +407,7 @@
     <!-- Section 03: Skills & Technical Domains (With Brand Vector Logos) -->
     <section class="section" id="skills">
       <div class="container">
-        <div class="section-label">03 // TECHNICAL ARSENAL</div>
+        <div class="section-label">03 // Capabilities</div>
         <h2 class="section-heading">Skills & Technical Domains</h2>
         <p class="section-subtext">Verified programming languages, robotics toolchains, and security architectures with authentic vector logos.</p>
 
@@ -704,8 +443,8 @@
       <div class="container">
         <div class="projects-header-bar">
           <div>
-            <div class="section-label">04 // PRODUCTION REPOSITORIES</div>
-            <h2 class="section-heading">Open Source & Systems Code</h2>
+            <div class="section-label">04 // Open Source Repositories</div>
+            <h2 class="section-heading">GitHub Projects</h2>
           </div>
           <div class="live-sync-indicator">
             <span class="live-sync-dot"></span>
@@ -726,8 +465,8 @@
     <!-- Section 05: Hackathons Timeline (Newest First) -->
     <section class="section" id="hackathons">
       <div class="container">
-        <div class="section-label">05 // COMPETITIVE RECORD</div>
-        <h2 class="section-heading">Hackathon Track Record & Honors</h2>
+        <div class="section-label">05 // Competitive Sprints</div>
+        <h2 class="section-heading">Hackathon Track Record</h2>
         <p class="section-subtext">Intensive prototyping under strict deadlines with national-level real-world evaluation.</p>
 
         <div class="hackathon-timeline" id="hackathons-timeline">
@@ -739,7 +478,7 @@
     <!-- Section 06: Leadership Section -->
     <section class="section" id="leadership">
       <div class="container">
-        <div class="section-label">06 // LEADERSHIP & GOVERNANCE</div>
+        <div class="section-label">06 // Student Governance</div>
         <h2 class="section-heading">Leadership Experience</h2>
         <p class="section-subtext">Organizational leadership, stakeholder coordination, and technical mentorship.</p>
 
@@ -752,7 +491,7 @@
     <!-- Section 07: Education Section -->
     <section class="section" id="education">
       <div class="container">
-        <div class="section-label">07 // ACADEMICS & RESEARCH</div>
+        <div class="section-label">07 // Academics</div>
         <h2 class="section-heading">Education</h2>
 
         <div class="editorial-cards-grid" id="education-grid">
@@ -761,53 +500,45 @@
       </div>
     </section>
 
+    <!-- Section 08: Contact Block -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-block">
+          <h2>Initiate Collaboration</h2>
+          <p>
+            Seeking internship and engineering roles in Robotics, Embedded AI, Machine Learning, and Systems Security.
+          </p>
+          <div class="contact-actions">
+            <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="btn btn-teal whatsapp-link">
+              <i data-lucide="message-square" style="width: 16px; height: 16px;"></i>
+              <span>WhatsApp Chat</span>
+            </a>
+
+            <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="btn btn-outline github-profile-link">
+              <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+              <span>GitHub Profile</span>
+            </a>
+
+            <a id="contact-email-btn" href="mailto:abhijaysingh2006@gmail.com" class="btn btn-outline">
+              <i data-lucide="mail" style="width: 16px; height: 16px;"></i>
+              <span>Email Directly</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- Lenis Signature: Inverted Light Editorial Footer & Direct Collaboration -->
-  <footer class="inverted-footer" id="contact">
-    <div class="inverted-footer-glow"></div>
-    <div class="container">
-      <div class="inverted-footer-top">
-        <div class="inverted-footer-hero">
-          ABHIJAY IS<br>
-          <span class="pink-accent">AVAILABLE FOR HIRE</span>
-        </div>
-        <div class="inverted-footer-subhero">
-          OPEN TO RESEARCH<br>
-          AND ENGINEERING ROLES
-        </div>
+  <!-- Clean Editorial Footer -->
+  <footer class="footer-clean">
+    <div class="container footer-row">
+      <div>
+        © 2026 Abhijay Singh. Robotics & AI Undergraduate · VTU Muddenahalli
       </div>
-
-      <div class="inverted-footer-actions">
-        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-          <a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer" class="lenis-btn lenis-btn-primary" style="font-size: 0.95rem; padding: 10px 24px 10px 10px;">
-            <span class="btn-icon-box" style="width: 38px; height: 38px; background: rgba(0, 0, 0, 0.2);"><i data-lucide="message-square"></i></span>
-            <span>INITIATE WHATSAPP CHAT ↗</span>
-          </a>
-
-          <a id="contact-email-btn" href="mailto:abhijaysingh2006@gmail.com" class="lenis-btn lenis-btn-secondary" style="background: rgba(0, 0, 0, 0.05); color: #000000; border-color: rgba(0, 0, 0, 0.2); font-size: 0.95rem; padding: 10px 24px 10px 10px;">
-            <span class="btn-icon-box" style="width: 38px; height: 38px; background: rgba(0, 0, 0, 0.08);"><i data-lucide="mail"></i></span>
-            <span>EMAIL DIRECTLY ↗</span>
-          </a>
-        </div>
-
-        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" class="lenis-btn lenis-btn-secondary github-profile-link" style="background: rgba(0, 0, 0, 0.05); color: #000000; border-color: rgba(0, 0, 0, 0.2); font-size: 0.95rem; padding: 10px 24px 10px 10px;">
-          <span class="btn-icon-box" style="width: 38px; height: 38px; background: rgba(0, 0, 0, 0.08);"><i data-lucide="github"></i></span>
-          <span>GITHUB PROFILE ↗</span>
+      <div>
+        <a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer" style="color: var(--teal-primary); text-decoration: underline;">
+          github.com/abhijaysingh2006-tech
         </a>
-      </div>
-
-      <div class="inverted-footer-utility">
-        <ul class="inverted-footer-links">
-          <li><a href="https://github.com/abhijaysingh2006-tech" target="_blank" rel="noopener noreferrer">GITHUB</a></li>
-          <li><a href="https://wa.me/917004793221" target="_blank" rel="noopener noreferrer">WHATSAPP (+91 7004793221)</a></li>
-          <li><a href="mailto:abhijaysingh2006@gmail.com">EMAIL</a></li>
-          <li><a href="assets/Root-Defense.pdf" target="_blank" rel="noopener noreferrer">ROOT-DEFENSE WHITEPAPER (PDF)</a></li>
-          <li><span>BANGALORE, INDIA</span></li>
-        </ul>
-        <div>
-          © 2026 ABHIJAY SINGH // VTU MUDDENAHALLI
-        </div>
       </div>
     </div>
   </footer>

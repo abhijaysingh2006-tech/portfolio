@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initShootingStars();
 
   // 5. Interactive UI Listeners
-  initLenis();
-  initMobileMenu();
   initThemeToggle();
   initTypewriter();
   initScrollNav();
@@ -636,107 +634,4 @@ function initScrollNav() {
   }, observerOptions);
 
   sections.forEach((sec) => observer.observe(sec));
-}
-
-// --- Lenis.dev Smooth Scroll Engine ---
-function initLenis() {
-  if (typeof Lenis === 'undefined') {
-    console.warn("Lenis smooth scroll library not loaded; using standard browser scroll.");
-    return;
-  }
-
-  // Smooth scroll instance matching lenis.dev parameters & physics
-  const lenis = new Lenis({
-    duration: 1.25,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // ease-out-expo curve from lenis.dev
-    orientation: 'vertical',
-    gestureOrientation: 'vertical',
-    smoothWheel: true,
-    wheelMultiplier: 1.05,
-    touchMultiplier: 1.2,
-    infinite: false,
-  });
-
-  window.lenis = lenis;
-
-  const progressBar = document.getElementById('scroll-progress-bar') || document.getElementById('lenis-progress-bar');
-  const nav = document.getElementById('navbar');
-
-  const footerElem = document.getElementById('contact');
-
-  // Sync scroll events with top reading progress bar and navbar blur & inversion
-  lenis.on('scroll', ({ scroll, limit, progress }) => {
-    if (progressBar && limit > 0) {
-      progressBar.style.transform = `scaleX(${Math.max(0, Math.min(1, progress))})`;
-    }
-
-    if (scroll > 20) {
-      nav?.classList.add('scrolled');
-    } else {
-      nav?.classList.remove('scrolled');
-    }
-
-    if (footerElem) {
-      const footerRect = footerElem.getBoundingClientRect();
-      if (footerRect.top <= 64) {
-        nav?.classList.add('nav-inverted');
-      } else {
-        nav?.classList.remove('nav-inverted');
-      }
-    }
-  });
-
-  // Intercept all in-page hash links for fluid Lenis scrolling
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', (e) => {
-      const targetId = anchor.getAttribute('href');
-      if (targetId && targetId !== '#') {
-        const targetElem = document.querySelector(targetId);
-        if (targetElem) {
-          e.preventDefault();
-          lenis.scrollTo(targetElem, { offset: -70 });
-        }
-      }
-    });
-  });
-
-  // Continuous animation frame loop
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-}
-
-// --- Mobile Navigation Menu (Darkroom / Lenis Style) ---
-function initMobileMenu() {
-  const menuBtn = document.getElementById('mobile-menu-btn');
-  const overlay = document.getElementById('mobile-nav-overlay');
-  const barsIcon = document.getElementById('menu-icon-bars');
-  const closeIcon = document.getElementById('menu-icon-close');
-  if (!menuBtn || !overlay) return;
-
-  function toggleMenu(open) {
-    const shouldOpen = open !== undefined ? open : !overlay.classList.contains('open');
-    if (shouldOpen) {
-      overlay.classList.add('open');
-      menuBtn.setAttribute('aria-expanded', 'true');
-      if (barsIcon) barsIcon.style.display = 'none';
-      if (closeIcon) closeIcon.style.display = 'block';
-      document.body.style.overflow = 'hidden';
-    } else {
-      overlay.classList.remove('open');
-      menuBtn.setAttribute('aria-expanded', 'false');
-      if (barsIcon) barsIcon.style.display = 'block';
-      if (closeIcon) closeIcon.style.display = 'none';
-      document.body.style.overflow = '';
-    }
-  }
-
-  menuBtn.addEventListener('click', () => toggleMenu());
-
-  // Close overlay when any link inside it is clicked
-  overlay.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => toggleMenu(false));
-  });
 }
